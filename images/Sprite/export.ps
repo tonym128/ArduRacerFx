@@ -1,0 +1,9 @@
+$files = gci . *.png -rec -Name | where { ! $_.PSIsContainer }
+
+Remove-Item bitmaps.h
+foreach ($file in $files)
+{
+	$command="java -jar compressor2.0.jar .\$file -anp $file >> bitmaps.h"
+	iex $command
+}
+

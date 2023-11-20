@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="-1" width="10" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export format="csv"/>
+ </editorsettings>
+ <tileset firstgid="1" source="SpriteSheet64.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="10" height="10">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCQAM0DAKJECgpArOcJRekEtZ0Cb49w0XPCkzfHlTMrFWqxR6kliNoH9nfg6dCNI3cCJaiR3XGx/Q1QglHArQMR8IQwEyFL3TObWnREIykbvmj6EM09LsheXDbe/HIx+gvuwb34q19V5f9178TAN9dSPHiRwZp7BnM9nnUjqAE=
+  </data>
+ </layer>
+</map>
