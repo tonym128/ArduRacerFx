@@ -10,7 +10,7 @@ constexpr uint16_t FX_DATA_PAGE  = 0xffa5;
 constexpr uint24_t FX_DATA_BYTES = 18972;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
-constexpr uint24_t FX_SAVE_BYTES = 24;
+constexpr uint24_t FX_SAVE_BYTES = 25;
 
 constexpr uint24_t FX_DATA_1 = 0x000000;
 constexpr uint24_t FX_DATA_2 = 0x00005B;

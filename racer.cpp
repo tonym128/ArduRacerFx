@@ -471,24 +471,26 @@ void displayGameMode()
   }
  
   // Draw Map
-  uint8_t levelTile = 0;
-  uint8_t mapX = 118;
-  uint8_t mapY = 7;
-  inlinex = FIXP_TO_INT(gameState->player1.X) / 64;
-  inliney = FIXP_TO_INT(gameState->player1.Y) / 64;
+  if (saveData.map) {
+    uint8_t levelTile = 0;
+    uint8_t mapX = 118;
+    uint8_t mapY = 7;
+    inlinex = FIXP_TO_INT(gameState->player1.X) / 64;
+    inliney = FIXP_TO_INT(gameState->player1.Y) / 64;
 
-  for (uint8_t j = 0; j < 10; j++) {
-    for (uint8_t i = 0; i < 10; i++) {
-      if (inlinex == i && inliney == j) {
-          cross_drawPixel(mapX+i,mapY+j,(gameState->laptimes[(gameState->curlap)]/100)%2==0);
-          continue;
-      }
+    for (uint8_t j = 0; j < 10; j++) {
+      for (uint8_t i = 0; i < 10; i++) {
+        if (inlinex == i && inliney == j) {
+            cross_drawPixel(mapX+i,mapY+j,(gameState->laptimes[(gameState->curlap)]/100)%2==0);
+            continue;
+        }
 
-      levelTile = getLevelTile(gameState->levelMap, i, j);
-      if ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24)) {
-          cross_drawPixel(mapX+i,mapY+j,1);
-      } else {
-          cross_drawPixel(mapX+i,mapY+j,0);
+        levelTile = getLevelTile(gameState->levelMap, i, j);
+        if ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24)) {
+            cross_drawPixel(mapX+i,mapY+j,1);
+        } else {
+            cross_drawPixel(mapX+i,mapY+j,0);
+        }
       }
     }
   }
@@ -533,18 +535,17 @@ void racerSetup()
 void processMenu()
 {
   // Debounce input
-  if (doTimeout()) {}
+  if (doTimeout()) return;
 
   // Check for up button
-  else if (cross_input_up())
+  if (cross_input_up())
   {
     if (gameState->menuItem == 0)
       gameState->menuItem = 3;
     else
       gameState->menuItem -= 1;
-      setTimeout(100);
+    setTimeout(100);
   }
-
   // Check for down button
   else if (cross_input_down())
   {
@@ -552,12 +553,18 @@ void processMenu()
       gameState->menuItem = 0;
     else
       gameState->menuItem += 1;
-      setTimeout(100);
+    setTimeout(100);
   }
+  // Check for button press
   else if (cross_input_a())
   {
     gameState->enter = true;
     setTimeout(100);
+  }
+  else if (cross_input_b()) {
+    gameState->mode = 0;
+    gameState->menuItem = 0;
+    gameState->enter = false;
   }
 }
 
@@ -578,10 +585,12 @@ void displayOptionsMenu(int menuItem)
                 dbmMasked /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
   cross_print(90, 30 + 0, 1, ("About"));
   cross_print(90, 30 + 8, 1, ("Sound"));
-  cross_print(90, 30 + 16, 1, ("Delete"));
-  cross_print(90, 30 + 24, 1, ("Back"));
+  cross_print(90, 30 + 16, 1, ("Map"));
+  cross_print(90, 30 + 24, 1, ("Delete"));
   if (saveData.sound > 0)
     cross_print(90 + 5 * 6, 30 + 8, 1, ("*"));
+  if (saveData.map > 0)
+    cross_print(90 + 5 * 6, 30 + 16, 1, ("*"));
 
   cross_print(84, 30 + menuItem * 8, 1, ("*"));
 }
@@ -602,33 +611,47 @@ void displayAbout() {
 }
 
 void updateOptionsMenu() {
-if (gameState->enter)
-  switch (gameState->menuItem) {
-    case 0:
-      gameState->mode = 3;
-      gameState->enter = false;
-      setTimeout(1000);
-    case 1:
-      // Toggle Sound
-      if (saveData.sound == 0) { saveData.sound = 1;}
-      else saveData.sound = 0;
+  if (gameState->enter)
+    switch (gameState->menuItem) {
+      case 0:
+        if (doTimeout()) return;
+        gameState->mode = 3;
+        gameState->enter = false;
+        setTimeout(100);
+      case 1:
+        // Toggle Sound
+        if (doTimeout()) return;
+        if (saveData.sound == 0) { saveData.sound = 1;}
+        else saveData.sound = 0;
 
-      gameState->enter = false;
-      setTimeout(100);
-      cross_save(saveData);
-      break;
-    case 2:
-      // Clear Data
-      gameState->mode = 99;
-      break;
-    case 3:
-      //Back
-      gameState->mode = 1;
-      gameState->enter = false;
-      gameState->menuItem = 3;
-      setTimeout(100);
-      break;
-  }
+        gameState->enter = false;
+        setTimeout(100);
+        cross_save(saveData);
+        break;
+      case 2:
+        // Toggle Map
+        if (doTimeout()) return;
+        if (saveData.map == 0) { saveData.map = 1;}
+        else saveData.map = 0;
+
+        gameState->enter = false;
+        setTimeout(100);
+        cross_save(saveData);
+        break;
+      case 3:
+        // Clear Data
+        if (doTimeout()) return;
+        gameState->mode = 99;
+        break;
+      case 99:
+        //Back
+        if (doTimeout()) return;
+        gameState->mode = 1;
+        gameState->enter = false;
+        gameState->menuItem = 3;
+        setTimeout(100);
+        break;
+    }
 }
 
 void updateMenu()
@@ -656,7 +679,7 @@ void updateMenu()
     case 3:
       // Options Menu
       gameState->mode = 2;
-      setTimeout(1000);
+      setTimeout(100);
       gameState->menuItem = 0;
       gameState->enter = false;
       break;
@@ -1078,6 +1101,7 @@ void update() {
     if (gameState->lastmode != gameState->mode)
     {
       gameState->lastmode = gameState->mode;
+      setTimeout(100);
     }
     if (!doTimeout()) {
       if (cross_input_a() || cross_input_b()) {

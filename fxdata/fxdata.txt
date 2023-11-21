@@ -540,5 +540,6 @@ image_t FX_DATA_ABOUT   = "../assets/me.png"
 savesection
 uint16_t {0,0,0,0,0,0,0,0,0,0}; // Saved Best LapTimes
 uint8_t 1 // Max Level
-uint8_t 0 // sound = 0;
+uint8_t 1 // sound = 0;
+uint8_t 1 // map = 0;
 uint16_t 0xFFFF //end of save data / beginning of free space
