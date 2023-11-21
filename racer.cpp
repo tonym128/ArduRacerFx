@@ -668,10 +668,10 @@ void displayMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, ("Cont"));
+  cross_print(90, 30 + 0, 1, ("Continue"));
   cross_print(90, 30 + 8, 1, ("Start"));
   cross_print(90, 30 + 16, 1, ("Times"));
-  cross_print(90, 30 + 24, 1, ("Option"));
+  cross_print(90, 30 + 24, 1, ("Options"));
 
   cross_print(84, 30 + menuItem * 8, 1, ("*"));
 }
