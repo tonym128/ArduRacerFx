@@ -373,12 +373,7 @@ void displayGameMode()
           tilemap = levelTile;
       }
 
-      FX::drawBitmap(inlinex,                      // although this function is called drawBitmap it can also draw masked sprites
-                    inliney, 
-                    FX_DATA_TILES,                  // the ball sprites masked bitmap offset in external flash memory
-                    tilemap,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                    //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                    dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+      FX::drawBitmap(inlinex, inliney, FX_DATA_TILES_64, tilemap, dbmNormal);
 
       if (levelTile > 23)
       {
@@ -450,12 +445,7 @@ void displayGameMode()
   // Draw Car
   uint8_t carDirection = getCarDirection(((FIXPOINT)(gameState->player1.rotation * 10)));
 
-  FX::drawBitmap(carx,                      // although this function is called drawBitmap it can also draw masked sprites
-                 cary, 
-                 FX_DATA_CAR2,                  // the ball sprites masked bitmap offset in external flash memory
-                 carDirection,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                 //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                 dbmMasked /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+  FX::drawBitmap(carx, cary, FX_DATA_CAR2, carDirection, dbmMasked);
 
   sprintf(string, ("%c-%2u.%02u %d/%d\n%c-%2u.%02u"), gameState->curlap + 1 + 48, gameState->laptimes[(gameState->curlap)] / 1000, gameState->laptimes[(gameState->curlap)] / 10 % 100, gameState->checkpointpassed, gameState->checkpoints, gameState->newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState->level - 1]  / 1000, saveData.BestLapTimes[gameState->level - 1]  / 10 % 100);
   cross_print(0, 0, 1, string);
@@ -570,19 +560,9 @@ void processMenu()
 
 void displayOptionsMenu(int menuItem)
 {
-  FX::drawBitmap(0,                      // although this function is called drawBitmap it can also draw masked sprites
-                0, 
-                FX_DATA_LOGO,                  // the ball sprites masked bitmap offset in external flash memory
-                0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+  FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
+  FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  FX::drawBitmap(50,                      // although this function is called drawBitmap it can also draw masked sprites
-                15, 
-                FX_DATA_LOGO_FX,                  // the ball sprites masked bitmap offset in external flash memory
-                0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                dbmMasked /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
   cross_print(90, 30 + 0, 1, ("About"));
   cross_print(90, 30 + 8, 1, ("Sound"));
   cross_print(90, 30 + 16, 1, ("Map"));
@@ -596,11 +576,7 @@ void displayOptionsMenu(int menuItem)
 }
 
 void displayAbout() {
-  FX::drawBitmap(0,
-                 0,
-                 FX_DATA_ABOUT,
-                 0,
-                 dbmNormal);
+  FX::drawBitmap(0, 0, FX_DATA_ABOUT, 0, dbmNormal);
 
   cross_print(60, 0, 1, ("Made By"));
   cross_print(60, 20, 1, ("github"));
@@ -689,18 +665,8 @@ void updateMenu()
 
 void displayMenu(int menuItem)
 {
-  FX::drawBitmap(0,                      // although this function is called drawBitmap it can also draw masked sprites
-                0, 
-                FX_DATA_LOGO,                  // the ball sprites masked bitmap offset in external flash memory
-                0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
-  FX::drawBitmap(50,                      // although this function is called drawBitmap it can also draw masked sprites
-                15, 
-                FX_DATA_LOGO_FX,                  // the ball sprites masked bitmap offset in external flash memory
-                0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                dbmMasked /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+  FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
+  FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
   cross_print(90, 30 + 0, 1, ("Cont"));
   cross_print(90, 30 + 8, 1, ("Start"));
@@ -735,13 +701,7 @@ void displayMap()
           tilemap = levelTile;
       }
 
-      FX::drawBitmap(x * 6,                      // although this function is called drawBitmap it can also draw masked sprites
-                    y * 6, 
-                    FX_DATA_TILES_SMALL,                  // the ball sprites masked bitmap offset in external flash memory
-                    tilemap,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                    //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                    dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
-  
+      FX::drawBitmap(x * 6, y * 6, FX_DATA_TILES_6, tilemap, dbmNormal);
     }
   }
 }
@@ -818,6 +778,27 @@ void inputLevelInfo()
   }
 }
 
+static inline __uint24 getTileSet(int pixelSize) {
+  if (pixelSize<7) { return FX_DATA_TILES_6; }
+  switch ((pixelSize-1)/8) {
+    case 0:
+      return FX_DATA_TILES_8;
+    case 1:
+      return FX_DATA_TILES_16;
+    case 2:
+      return FX_DATA_TILES_24;
+    case 3:
+      return FX_DATA_TILES_32;
+    case 4:
+      return FX_DATA_TILES_40;
+    case 5:
+      return FX_DATA_TILES_48;
+    case 6:
+      return FX_DATA_TILES_56;
+    default:
+      return FX_DATA_TILES_64;
+  }
+}
 
 bool displayLevelZoom()
 {
@@ -839,13 +820,15 @@ bool displayLevelZoom()
   if (headtoy > FIXP_TO_FLOAT(gameState->player1.Y) - 32)
     headtoy = FIXP_TO_FLOAT(gameState->player1.Y) - 32;
 
-
   headtox *= (pixelSize / 64.0f);
   headtoy *= (pixelSize / 64.0f);
 
   int endx = (int)(64 + 64 * (time * 7));
   if (endx > 128)
     endx = 128;
+
+  // Choose map
+  __uint24 tiles = getTileSet(pixelSize);
 
   for (int y = 0; y < 10; y++)
   {
@@ -873,17 +856,12 @@ bool displayLevelZoom()
             tilemap = levelTile;
         }
 
-        cross_drawBitmapTile((int)(x * pixelSize - headtox), (int)(y * pixelSize - headtoy), 64, 64, 1, 0, zoom, getMapTile(tilemap+1));
+        FX::drawBitmap((int)(x * pixelSize - headtox),  (int)(y * pixelSize - headtoy), tiles, tilemap, dbmNormal);
       }
     }
   }
 
-  for (int x = endx; x < 128; x++)
-  {
-    cross_drawVLine(x, 0, 64, 0);
-  }
-
-  return headtoy == (int)(FIXP_TO_FLOAT(gameState->player1.X)) && headtoy == (int)(FIXP_TO_FLOAT(gameState->player1.Y));
+  return false;
 }
 
 void drawContinueMenu()
@@ -958,12 +936,7 @@ void drawAllTimes()
 
 void drawTrophy()
 {
-      FX::drawBitmap(0,                      // although this function is called drawBitmap it can also draw masked sprites
-                    0, 
-                    FX_DATA_TROPHY,                  // the ball sprites masked bitmap offset in external flash memory
-                    0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                    //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                    dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+  FX::drawBitmap(0, 0, FX_DATA_TROPHY, 0, dbmNormal);
 
   if (gameState->curlap == 0)
   {
@@ -1014,18 +987,9 @@ void buildAbortString(char button) {
 }
 
 void displayIntro() {
-  FX::drawBitmap(0,                      // although this function is called drawBitmap it can also draw masked sprites
-                 0, 
-                 FX_DATA_LOGO,                  // the ball sprites masked bitmap offset in external flash memory
-                 0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                 //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                 dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
-  FX::drawBitmap(50-gameState->timeout/10,                      // although this function is called drawBitmap it can also draw masked sprites
-                 15, 
-                 FX_DATA_LOGO_FX,                  // the ball sprites masked bitmap offset in external flash memory
-                 0,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                 //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                 dbmMasked /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+  int x = 50-gameState->timeout/10;
+  FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
+  FX::drawBitmap(x, 15, FX_DATA_LOGO_FX, 0, dbmMasked);
 }
 
 void displayZoomer() {

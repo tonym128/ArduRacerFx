@@ -102,12 +102,7 @@ void cross_print(int x, int y, int size, char *string) {
         }
 
         int fontId = FXFONT(string[i]);
-        FX::drawBitmap(lineX,                      // although this function is called drawBitmap it can also draw masked sprites
-                    lineY, 
-                    FX_DATA_FONT46,                  // the ball sprites masked bitmap offset in external flash memory
-                    fontId,                              // the fxdata was build using the single ball sprite.png image so there's only frame 0
-                    //i % 16,                       // comment above and uncomment this one if the fxdata is rebuild using the ball_16x16.png image
-                    dbmNormal /* | dbmReverse */ ); // remove the '/*' and '/*' to reverse the balls into white balls
+        FX::drawBitmap(lineX, lineY, FX_DATA_FONT46, fontId, dbmNormal);
         lineX += (sizeX+spacingX);
    }
 }
