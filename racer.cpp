@@ -471,7 +471,7 @@ void displayGameMode()
     for (uint8_t j = 0; j < 10; j++) {
       for (uint8_t i = 0; i < 10; i++) {
         if (inlinex == i && inliney == j) {
-            cross_drawPixel(mapX+i,mapY+j,(gameState->laptimes[(gameState->curlap)]/100)%2==0);
+            cross_drawPixel(mapX+i,mapY+j,(gameState->laptimes[(gameState->curlap)]/200)%2==0);
             continue;
         }
 
