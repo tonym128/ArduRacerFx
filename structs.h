@@ -29,7 +29,7 @@ constexpr uint8_t LEVELS = 10; // 10 Levels
 struct SaveData
 {
 	unsigned int BestLapTimes[LEVELS]; 
-  uint8_t maxLevel = 0;
+  uint8_t maxLevel = 1;
   uint8_t sound = 1;
   uint8_t map = 1;
 };

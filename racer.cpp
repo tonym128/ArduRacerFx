@@ -1208,7 +1208,7 @@ void update() {
         {
           data.BestLapTimes[i] = 0;
         }
-        data.maxLevel = 0;
+        data.maxLevel = 1;
 
         cross_save(data);
         saveData = data;
