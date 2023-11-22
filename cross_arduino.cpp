@@ -4,7 +4,8 @@
 
 #ifndef ARDUBOYG
 Arduboy2 arduboy;
-ArduboyTones sound(arduboy.audio.enabled);
+uint16_t buffer[8]; 
+ArduboyTonesFX sound(arduboy.audio.enabled, buffer);
 #endif
 #define ARDBITMAP_SBUF arduboy.getBuffer()
 #include "ArdBitmap.h"
@@ -176,7 +177,8 @@ bool cross_loop_start()
 #else
     if (!(arduboy.nextFrame()))
         return false;
-    
+    sound.fillBufferFromFX();
+
     frameTime = currentTime;
     currentTime = millis();
     frameMs = currentTime - frameTime;
@@ -192,6 +194,9 @@ bool cross_loop_start()
 
 void cross_loop_end()
 {
+    if (!sound.playing()) {
+        sound.tonesFromFX(FX_SOUND_INTRO);
+    }
     FX::display(CLEAR_BUFFER); // Using CLEAR_BUFFER will clear the display buffer after it is displayed
 }
 

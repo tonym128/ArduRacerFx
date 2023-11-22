@@ -9,7 +9,7 @@
 extern ArduboyGBase_Config<ABG_Mode::L4_Triplane> arduboy;
 #else
 #include "Arduboy2.h"
-#include <ArduboyTones.h>
+#include "ArduboyTonesFX.h"
 #endif
 
 #include <ArduboyFX.h>                // Required library for accessing the FX flash chip
