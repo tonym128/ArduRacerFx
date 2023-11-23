@@ -1025,6 +1025,7 @@ void update() {
     if (gameState->lastmode != gameState->mode)
     {
       gameState->lastmode = gameState->mode;
+      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
       setTimeout(1000);
     }
     else
@@ -1038,6 +1039,7 @@ void update() {
   case 1: // Menu
     if (gameState->lastmode != gameState->mode)
     {
+      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
     else
@@ -1051,6 +1053,7 @@ void update() {
   case 2: // Options Menu
     if (gameState->lastmode != gameState->mode)
     {
+      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
     else
@@ -1064,6 +1067,7 @@ void update() {
   case 3: // About
     if (gameState->lastmode != gameState->mode)
     {
+      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
       setTimeout(100);
     }
@@ -1077,6 +1081,7 @@ void update() {
   case 4: // Level Start
     if (gameState->lastmode != gameState->mode)
     {
+      cross_stop_audio(saveData.sound);
       gameState->lastmode = gameState->mode;
       setTimeout(1000);
     }
@@ -1089,6 +1094,7 @@ void update() {
   case 5: // Zoom in - Performance is bad - skipping!
     if (gameState->lastmode != gameState->mode)
     {
+      cross_stop_audio(saveData.sound);
       gameState->lastmode = gameState->mode;
       setTimeout((int)ZOOM_TIME);
       setLevelDetails();
@@ -1104,6 +1110,7 @@ void update() {
   case 6: // 3,2,1,GO!
     if (gameState->lastmode != gameState->mode)
     {
+      cross_stop_audio(saveData.sound);
       setLevelDetails();
       gameState->lastmode = gameState->mode;
       setTimeout(3000);
@@ -1112,6 +1119,7 @@ void update() {
   case 8: // Win Screen / Next Level Select
     if (gameState->lastmode != gameState->mode)
     {
+      cross_stop_audio(saveData.sound);
       gameState->lastmode = gameState->mode;
       setTimeout(1000);
       gameState->curlap = 0;
@@ -1129,6 +1137,7 @@ void update() {
   case 10: // Play Game
     if (gameState->lastmode != gameState->mode)
     {
+      cross_stop_audio(saveData.sound);
       setLevelDetails();
       gameState->laptimer = true;
       gameState->lastmode = gameState->mode;
@@ -1144,6 +1153,7 @@ void update() {
   case 98: // Trophy Screen
     if (gameState->lastmode != gameState->mode)
     {
+      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
     if (!doTimeout())

@@ -139,6 +139,18 @@ void cross_playSound(bool makeSound, uint16_t hertz, uint8_t duration) {
 #endif
 };
 
+void cross_play_audio(bool makeSound, uint24_t fxsound) {
+    if (makeSound && !sound.playing()) {
+        sound.tonesFromFX(fxsound);
+    }
+}
+
+void cross_stop_audio(bool makeSound) {
+    if (makeSound && sound.playing) {
+        sound.noTone();
+    }
+}
+
 void cross_setup()
 {
     arduboy.begin();
@@ -194,9 +206,6 @@ bool cross_loop_start()
 
 void cross_loop_end()
 {
-    if (!sound.playing()) {
-        sound.tonesFromFX(FX_SOUND_INTRO);
-    }
     FX::display(CLEAR_BUFFER); // Using CLEAR_BUFFER will clear the display buffer after it is displayed
 }
 

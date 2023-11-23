@@ -48,5 +48,8 @@ void cross_save(SaveData saveData);
 SaveData cross_load();
 
 void cross_playSound(bool makeSound, uint16_t hertz, uint8_t duration);
+void cross_play_audio(bool makeSound, uint24_t fxsound);
+void cross_stop_audio(bool makeSound);
+
 
 #endif
