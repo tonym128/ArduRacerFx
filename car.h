@@ -2,10 +2,6 @@
 #define _CAR_H_
 #include "fixpoint.h"
 
-#ifndef ARDUINO
-#define PROGMEM 
-#endif
-
 static uint8_t getCarDirection(FIXPOINT radians) {
   if (radians < 5. / 8. * PI)
     return 0;

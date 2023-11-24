@@ -33,6 +33,7 @@ bool doTimeout() {
 void setLevelDetails()
 {
   gameState->levelMap = getLevelMap(gameState->level);
+  gameState->levelSize = getLevelMapSize(gameState->level);
 
   gameState->lasttile = 100;
   gameState->lastx = 100;
@@ -49,9 +50,9 @@ void setLevelDetails()
   CheckPoint *checkpoint = nullptr;
   CheckPoint *firstcheckpoint = nullptr;
 
-  for (int x = 0; x < 10 && !done; x++)
+  for (int x = 0; x < gameState->levelSize && !done; x++)
   {
-    for (int y = 0; y < 10 && !done; y++)
+    for (int y = 0; y < gameState->levelSize && !done; y++)
     {
       uint8_t levelTile = getLevelTile(gameState->levelMap, x, y);
       if (levelTile == 24)
@@ -151,12 +152,12 @@ void processGameMode()
 
   if (cross_input_a())
   {
-    gameState->player1.acceleration.force += FLOAT_TO_FIXP(0.01 * tFrameMs);
+    gameState->player1.acceleration.force += gameState->acceleration * tFrameMs;
   }
 
   if (cross_input_b())
   {
-    gameState->player1.acceleration.force -= FLOAT_TO_FIXP(0.004 * tFrameMs);
+    gameState->player1.acceleration.force -= gameState->max_dec * tFrameMs;
   }
 }
 
@@ -164,6 +165,7 @@ void updateGameMode()
 {
   if (gameState->paused)
     return;
+  int xyMax = 640 * gameState->levelSize/10;
 
   gameState->player1.XVec = xVec2(gameState->player1.acceleration.force, FLOAT_TO_FIXP(gameState->player1.rotation));
   gameState->player1.YVec = yVec2(gameState->player1.acceleration.force, FLOAT_TO_FIXP(gameState->player1.rotation));
@@ -174,9 +176,9 @@ void updateGameMode()
   int y = FIXP_TO_INT(gameState->player1.Y);
 
   bool collision = false;
-  if (x > 640)
+  if (x > xyMax)
   {
-    gameState->player1.X = FLOAT_TO_FIXP(640.0f);
+    gameState->player1.X = INT_TO_FIXP(xyMax);
     collision = true;
   }
   else if (x < 0)
@@ -185,9 +187,9 @@ void updateGameMode()
     collision = true;
   }
 
-  if (y > 640)
+  if (y > xyMax)
   {
-    gameState->player1.Y = FLOAT_TO_FIXP(640.0f);
+    gameState->player1.Y = INT_TO_FIXP(xyMax);
     collision = true;
   }
   else if (y < 0)
@@ -332,25 +334,25 @@ void displayGameMode()
 {
   int x = FIXP_TO_INT(gameState->player1.X) - 60;
   int y = FIXP_TO_INT(gameState->player1.Y) - 30;
+  int xyMax = 640 * gameState->levelSize/10;
 
   if (x < 0)
     x = 0;
-  else if (x > 640 - 128)
-    x = 640 - 128;
+  else if (x > xyMax - 128)
+    x = xyMax - 128;
 
   if (y < 0)
     y = 0;
-  else if (y > 640 - 64)
-    y = 640 - 64;
-
+  else if (y > xyMax - 64)
+    y = xyMax - 64;
   int inlinex = x % 64 * -1;
   int inliney = y % 64 * -1;
   // Draw Road
-  for (uint8_t j = y / 64; j < (y / 64) + 2 && j < 10; j++)
+  for (uint8_t j = y / 64; j < (y / 64) + 2 && j < gameState->levelSize; j++)
   {
-    for (uint8_t i = x / 64; i < (x / 64) + 3 && i < 10; i++)
+    for (uint8_t i = x / 64; i < (x / 64) + 3 && i < gameState->levelSize; i++)
     {
-      if (inlinex < -64 | inlinex > 640 | inliney < -64 | inlinex > 640){
+      if (inlinex < -64 | inlinex > xyMax | inliney < -64 | inlinex > xyMax){
         inlinex += 64;
         continue;
       }
@@ -414,9 +416,9 @@ void displayGameMode()
   {
     // use x as is in direct to screen;
   }
-  else if (carx > 650 - 68)
+  else if (carx > (xyMax+10) - 68)
   {
-    carx = 128 - (650 - carx);
+    carx = 128 - ((xyMax+10) - carx);
   }
   else
   {
@@ -427,9 +429,9 @@ void displayGameMode()
   {
     // use y as is in direct to screen;
   }
-  else if (cary > 650 - 36)
+  else if (cary > (xyMax+10) - 36)
   {
-    cary = 64 - (650 - cary);
+    cary = 64 - ((xyMax+10) - cary);
   }
   else
   {
@@ -450,10 +452,11 @@ void displayGameMode()
   sprintf(string, ("%c-%2u.%02u %d/%d\n%c-%2u.%02u"), gameState->curlap + 1 + 48, gameState->laptimes[(gameState->curlap)] / 1000, gameState->laptimes[(gameState->curlap)] / 10 % 100, gameState->checkpointpassed, gameState->checkpoints, gameState->newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState->level - 1]  / 1000, saveData.BestLapTimes[gameState->level - 1]  / 10 % 100);
   cross_print(0, 0, 1, string);
 
-  for (int i = 0; i < 16; i++)
+  for (int i = 0; i < gameState->levelSize+6; i++)
   {
-    cross_drawVLine(128 - 10 - 6 + i, 0, 6, 0);
+    cross_drawVLine(128 - gameState->levelSize - 6 + i, 0, 6, 0);
   }
+
   if (gameState->player1.offRoad && gameState->player1.acceleration.force != 0)
   {
     if (((gameState->laptimes[(gameState->curlap)] / 100) % 3) == 0)
@@ -463,13 +466,13 @@ void displayGameMode()
   // Draw Map
   if (saveData.map) {
     uint8_t levelTile = 0;
-    uint8_t mapX = 118;
+    uint8_t mapX = 108+gameState->levelSize;
     uint8_t mapY = 7;
     inlinex = FIXP_TO_INT(gameState->player1.X) / 64;
     inliney = FIXP_TO_INT(gameState->player1.Y) / 64;
 
-    for (uint8_t j = 0; j < 10; j++) {
-      for (uint8_t i = 0; i < 10; i++) {
+    for (uint8_t j = 0; j < gameState->levelSize; j++) {
+      for (uint8_t i = 0; i < gameState->levelSize; i++) {
         if (inlinex == i && inliney == j) {
             cross_drawPixel(mapX+i,mapY+j,(gameState->laptimes[(gameState->curlap)]/200)%2==0);
             continue;
@@ -493,12 +496,12 @@ void displayGameMode()
 
   if (gameState->paused)
   {
-    cross_print(0, 20, 3, (" Paused "));
+    cross_print(0, 20, 3, FX_STR_PAUSED);
     for (int i = 0; i < 16; i++)
       cross_drawHLine(0, i + 48, 64, 0);
 
-    cross_print(0, 48, 1, ("A / B - Continue"));
-    cross_print(0, 56, 1, ("Down - Level Select"));
+    cross_print(0, 48, 1, FX_STR_AB_CONT);
+    cross_print(0, 56, 1, FX_STR_LEVEL_SELECT);
   }
 }
 
@@ -514,6 +517,7 @@ void racerSetup()
   gameState = new GameState();
   gameState->level = 1;
   gameState->levelMap = getLevelMap(gameState->level);
+  gameState->levelSize = getLevelMapSize(gameState->level);
   gameState->laptimer = false;
   setTimeout(100);
   gameState->lastmode = -1;
@@ -563,10 +567,11 @@ void displayOptionsMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, ("About"));
-  cross_print(90, 30 + 8, 1, ("Sound"));
-  cross_print(90, 30 + 16, 1, ("Map"));
-  cross_print(90, 30 + 24, 1, ("Delete"));
+  cross_print(90, 30 + 0, 1, FX_STR_ABOUT);
+  cross_print(90, 30 + 8, 1, FX_STR_SOUND);
+  cross_print(90, 30 + 16, 1,FX_STR_MAP);
+  cross_print(90, 30 + 24, 1,FX_STR_DELETE);
+  
   if (saveData.sound > 0)
     cross_print(90 + 5 * 6, 30 + 8, 1, ("*"));
   if (saveData.map > 0)
@@ -578,11 +583,11 @@ void displayOptionsMenu(int menuItem)
 void displayAbout() {
   FX::drawBitmap(0, 0, FX_DATA_ABOUT, 0, dbmNormal);
 
-  cross_print(60, 0, 1, ("Made By"));
-  cross_print(60, 20, 1, ("github"));
-  cross_print(60, 40, 1, ("twitter"));
+  cross_print(60, 0, 1, FX_STR_MADE_BY);
+  cross_print(60, 20, 1, FX_STR_GITHUB);
+  cross_print(60, 40, 1, FX_STR_TWITTER);
   for (int i = 0; i < 3; i++) {
-    cross_print(70, 10 + i * 20, 1, ("tonym128"));
+    cross_print(70, 10 + i * 20, 1, FX_STR_TONYM128);
   }
 }
 
@@ -639,12 +644,15 @@ void updateMenu()
     case 0:
       // Go To Last Level Finished
       gameState->level = saveData.maxLevel;
+      gameState->levelMap = getLevelMap(gameState->level);
+      gameState->levelSize = getLevelMapSize(gameState->level);
       gameState->mode = 4; // Level Start
       break;
     case 1:
       // Go To First Level
       gameState->level = 1;
       gameState->levelMap = getLevelMap(gameState->level);
+      gameState->levelSize = getLevelMapSize(gameState->level);
       gameState->mode = 4; // Level Start
       break;
     case 2:
@@ -668,19 +676,19 @@ void displayMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, ("Continue"));
-  cross_print(90, 30 + 8, 1, ("Start"));
-  cross_print(90, 30 + 16, 1, ("Times"));
-  cross_print(90, 30 + 24, 1, ("Options"));
+  cross_print(90, 30 + 0, 1, FX_STR_CONTINUE);
+  cross_print(90, 30 + 8, 1, FX_STR_START);
+  cross_print(90, 30 + 16, 1,FX_STR_TIMES);
+  cross_print(90, 30 + 24, 1,FX_STR_OPTIONS);
 
   cross_print(84, 30 + menuItem * 8, 1, ("*"));
 }
 
 void displayMap()
 {
-  for (int y = 0; y < 10; y++)
+  for (int y = 0; y < gameState->levelSize; y++)
   {
-    for (int x = 0; x < 10; x++)
+    for (int x = 0; x < gameState->levelSize; x++)
     {
       uint8_t levelTile = getLevelTile(gameState->levelMap, x, y);
       int tilemap;
@@ -700,8 +708,16 @@ void displayMap()
         default:
           tilemap = levelTile;
       }
-
-      FX::drawBitmap(x * 6, y * 6, FX_DATA_TILES_6, tilemap, dbmNormal);
+      
+      switch (gameState->levelSize)
+      {
+      case 10:
+        FX::drawBitmap(x * 6, y * 6, FX_DATA_TILES_6, tilemap, dbmNormal);
+        break;
+      case 20:
+        FX::drawBitmap(x * 3, y * 3, FX_DATA_TILES_3, tilemap, dbmNormal);
+        break;
+      }
     }
   }
 }
@@ -736,8 +752,8 @@ void displayLevelInfo()
   if (doTimeout()) {}
   else if ((getCurrentMs() / 1000) % 2 == 0)
     {
-      cross_print(64, 64 - 16, 1, ("Press A"));
-      cross_print(64, 64 - 8, 1, ("To Start"));
+      cross_print(64, 64 - 16, 1, FX_STR_PRESSA);
+      cross_print(64, 64 - 8, 1, FX_STR_TOSTART);
     }
 };
 
@@ -765,6 +781,7 @@ void inputLevelInfo()
     if (gameState->level > 10)
       gameState->level = 10;
     gameState->levelMap = getLevelMap(gameState->level);
+    gameState->levelSize = getLevelMapSize(gameState->level);
   }
 
   if (cross_input_down())
@@ -775,6 +792,7 @@ void inputLevelInfo()
     if (gameState->level < 1)
       gameState->level = 1;
     gameState->levelMap = getLevelMap(gameState->level);
+    gameState->levelSize = getLevelMapSize(gameState->level);
   }
 }
 
@@ -830,9 +848,9 @@ bool displayLevelZoom()
   // Choose map
   __uint24 tiles = getTileSet(pixelSize);
 
-  for (int y = 0; y < 10; y++)
+  for (int y = 0; y < gameState->levelSize; y++)
   {
-    for (int x = 0; x < 10; x++)
+    for (int x = 0; x < gameState->levelSize; x++)
     {
       // Basic Screen Check
       if ((x * pixelSize + pixelSize - headtox) > 0 && (y * pixelSize + pixelSize - headtoy) > 0 && (x * pixelSize - headtox) < endx && (y * pixelSize - headtoy < 64))
@@ -869,7 +887,7 @@ void drawContinueMenu()
   if ((getCurrentMs() / 1000) % 2 == 0)
   {
     if (saveData.maxLevel > gameState->level)
-      cross_print(64, 64 - 16, 1, "A - Next\nB - Retry");
+      cross_print(64, 64 - 16, 1, FX_STR_NEXTRETRY);
   }
 }
 
@@ -914,7 +932,7 @@ void drawGoalTimes()
   cross_drawHLine(64, 46, 64, 1);
 
   drawContinueMenu();
-  cross_print(0, 64 - 7, 1, ("L - Times"));
+  cross_print(0, 64 - 7, 1, FX_STR_LTIMES);
 }
 
 void drawAllTimes()
@@ -930,7 +948,7 @@ void drawAllTimes()
   }
 
   drawContinueMenu();
-  cross_print(0, 64 - 7, 1, ("R - Goal"));
+  cross_print(0, 64 - 7, 1, FX_STR_RGOAL);
   cross_drawHLine(64, 64 - 17, 128 - 64, 1);
 }
 
@@ -969,6 +987,7 @@ void inputTrophy()
         gameState->level = 10;
       gameState->mode = 4;
       gameState->levelMap = getLevelMap(gameState->level);
+      gameState->levelSize = getLevelMapSize(gameState->level);
     }
   }
 

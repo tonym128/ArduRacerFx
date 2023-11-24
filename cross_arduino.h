@@ -33,6 +33,7 @@ bool cross_input_a_now();
 bool cross_input_b_now();
 
 void cross_print(int x, int y, int size, char *string);
+void cross_print(int x, int y, int size, __uint24 address);
 void cross_drawPixel(int x, int y, bool colour);
 void cross_drawVLine(int x, int y, int length, bool colour);
 void cross_drawHLine(int x, int y, int length, bool colour);

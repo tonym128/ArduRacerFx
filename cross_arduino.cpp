@@ -108,6 +108,33 @@ void cross_print(int x, int y, int size, char *string) {
    }
 }
 
+void cross_print(int x, int y, int size, __uint24 address) {
+    lineX = x;
+    lineY = y;
+    int i = 0;
+  for(;;)
+  {
+    FX::seekData(address++);
+    uint8_t c = FX::readEnd();
+    if (!c) break;
+    if (c =='\n') {
+        lineY += sizeY + spacingY;
+        lineX = x;
+        continue;
+    }
+
+    if (i > 0) {
+        cross_drawVLine(lineX-spacingX,lineY,sizeY, 0);
+    }
+
+    if (c == 95) c=32;
+    int fontId = FXFONT(c);
+    FX::drawBitmap(lineX, lineY, FX_DATA_FONT46, fontId, dbmNormal);
+    lineX += (sizeX+spacingX);
+    i++;
+  }
+}
+
 void cross_drawPixel(int x, int y, bool colour)
 {
     arduboy.drawPixel(x, y, colour);

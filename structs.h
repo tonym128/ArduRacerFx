@@ -30,14 +30,19 @@ struct SaveData
 {
 	unsigned int BestLapTimes[LEVELS]; 
   uint8_t maxLevel = 1;
+  uint8_t music = 1;
   uint8_t sound = 1;
   uint8_t map = 1;
+  uint8_t car_maxspeed = 5;
+  uint8_t car_acceleration = 5;
+  uint8_t car_turn = 5;
 };
 
 struct GameState {
 
   uint8_t level;
   __uint24 levelMap;
+  uint8_t levelSize;
   uint8_t lasttile;
   uint8_t lastx;
   uint8_t lasty;
@@ -65,23 +70,20 @@ struct GameState {
 
   // Car setup
   double max_turn_speed = 0.003;
-  // Max Speed 20fps
-  // FIXPOINT max_speed = FLOAT_TO_FIXP(5.0f);
-  // FIXPOINT max_dec = FLOAT_TO_FIXP(-2.0f);
-  // FIXPOINT offroad = FLOAT_TO_FIXP(1.5f);
-  // FIXPOINT offroad_neg = FLOAT_TO_FIXP(-1.5f);
-  // FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.015f * tFrameMs);
-  // FIXPOINT drag = FLOAT_TO_FIXP(0.06f / 30.0f * tFrameMs);
-
+  
   // Max Speed 60fps
-  FIXPOINT max_speed = FLOAT_TO_FIXP(2.0f);
-  FIXPOINT acceleration = FLOAT_TO_FIXP(0.1);
-  FIXPOINT max_dec = FLOAT_TO_FIXP(-0.8f);
-  FIXPOINT offroad = FLOAT_TO_FIXP(0.6f);
-  FIXPOINT offroad_neg = FLOAT_TO_FIXP(-0.6f);
+  FIXPOINT max_speed = FLOAT_TO_FIXP(2.5f);
+  FIXPOINT acceleration = FLOAT_TO_FIXP(0.003f);
+  FIXPOINT max_dec = 3*acceleration;
+  FIXPOINT offroad = max_speed/4;
+  FIXPOINT offroad_neg = max_speed/4;
 
-  FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.015);
-  FIXPOINT drag = FLOAT_TO_FIXP(0.06f / 30.0f);
+  FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.01f);
+  FIXPOINT drag = FLOAT_TO_FIXP(0.04f / 30.0f);
 };
+
+constexpr double mod_turn = 0.0003;
+constexpr FIXPOINT mod_max_speed = FLOAT_TO_FIXP(0.25f);
+constexpr FIXPOINT mod_accelerate = FLOAT_TO_FIXP(0.0003f);
 
 #endif

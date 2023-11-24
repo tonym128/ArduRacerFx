@@ -20,6 +20,13 @@ static __uint24 getLevelMap(uint8_t level) {
       return FX_LEVEL10;
   }
 }
+static uint8_t getLevelMapSize(uint8_t level) {
+  switch(level) {
+    case 16: return 20;
+    default:
+      return 10;
+  }
+}
 
 static uint8_t getLevelTile(__uint24 level, uint8_t x, uint8_t y) {
   int pos = x + y * 10;
