@@ -33,9 +33,10 @@ struct SaveData
   uint8_t music = 1;
   uint8_t sound = 1;
   uint8_t map = 1;
-  uint8_t car_maxspeed = 5;
-  uint8_t car_acceleration = 5;
-  uint8_t car_turn = 5;
+  uint8_t car_maxspeed = 4;
+  uint8_t car_acceleration = 4;
+  uint8_t car_turn = 4;
+  uint8_t car_tune_total = 12;
 };
 
 struct GameState {

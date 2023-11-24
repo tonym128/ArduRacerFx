@@ -103,6 +103,10 @@ void setLevelDetails()
   gameState->player1.offRoad = false;
 }
 
+void processCarTune() {
+
+}
+
 void processGameMode()
 {
 
@@ -762,6 +766,10 @@ void displayLevelInfo()
       cross_print(64, 64 - 16, 1, FX_STR_PRESSA);
       cross_print(64, 64 - 8, 1, FX_STR_TOSTART);
     }
+  else {
+      cross_print(64, 64 - 16, 1, FX_STR_LEFT);
+      cross_print(64, 64 - 8, 1, FX_STR_TOTUNE);
+  }
 };
 
 void inputLevelInfo()
@@ -800,6 +808,12 @@ void inputLevelInfo()
       gameState->level = 1;
     gameState->levelMap = getLevelMap(gameState->level);
     gameState->levelSize = getLevelMapSize(gameState->level);
+  }
+  
+  // Tune car
+  if (cross_input_left())
+  {
+    gameState->mode = 99;
   }
 }
 
@@ -898,8 +912,41 @@ void drawContinueMenu()
   }
 }
 
-void drawCarTune()
+void displayCarTune()
 {
+  cross_print(3, 0, 1, "Car Tuning");
+  cross_print(3, 6, 1, "----------");
+  cross_print(3, 2+15, 1, "Speed");
+  cross_print(3, 2+25, 1, "Accel");
+  cross_print(3, 2+35, 1, "Turning");
+  cross_print(3, 2+45, 1, "Points");
+  int i = 0;
+  for (i = 15; i < 60; i += 10) 
+    cross_drawHLine(45, i, 115, 1);
+    
+  for (i = 45; i < 116; i += 10) 
+    cross_drawVLine(i, 15, 40, 1);
+
+  int y = 18;
+  for (i = 0; i < saveData.car_maxspeed; i++) {
+    cross_print(3+45+i*10,y,1,"X");
+  }
+  y+=10;
+  for (i = 0; i < saveData.car_acceleration; i++) {
+    cross_print(3+45+i*10,y,1,"X");
+  }
+
+  y+=10;
+  for (i = 0; i < saveData.car_turn; i++) {
+    cross_print(3+45+i*10,y,1,"X");
+  }
+
+  int freePoints = saveData.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+  y+=10;
+  for (i = 0; i < freePoints; i++) {
+    cross_print(3+45+i*10,y,1,"X");
+  }
+
 }
 
 void drawTrophySheet()
@@ -1188,64 +1235,12 @@ void update() {
   case 99: // Tune Car
     if (gameState->lastmode != gameState->mode)
     {
-      gameState->curlap = 0;
       gameState->lastmode = gameState->mode;
       setTimeout(1000);
     }
     else
     {
-      switch (gameState->curlap)
-      {
-      case 0: // Yes A
-        if (!doTimeout())
-        {
-          if (cross_input_a())
-          {
-            setTimeout(1000);
-            gameState->curlap++;
-          }
-          else if (cross_input_b())
-          {
-            gameState->enter = false;
-            gameState->mode = 0;
-            gameState->curlap = 0;
-            setTimeout(1000);
-          }
-        }
-        break;
-      case 1: // Yes B
-        if (!doTimeout())
-        {
-          if (cross_input_b())
-          {
-            gameState->curlap++;
-            setTimeout(1000);
-          }
-          else if (cross_input_a())
-          {
-            gameState->enter = false;
-            gameState->mode = 0;
-            gameState->curlap = 0;
-            setTimeout(1000);
-          }
-        }
-        break;
-      case 2: // Pull the trigger
-        gameState->enter = false;
-        gameState->mode = 0;
-        gameState->curlap = 0;
-        SaveData data;
-
-        for (int i = 0; i < LEVELS; i++)
-        {
-          data.BestLapTimes[i] = 0;
-        }
-        data.maxLevel = 1;
-
-        cross_save(data);
-        saveData = data;
-        break;
-      }
+      if (!doTimeout()) processCarTune();
     }
     break;
   }
@@ -1310,7 +1305,7 @@ void render() {
     break;
   case 99: // Tune Car
     if (gameState->lastmode == gameState->mode) {
-      drawCarTune();
+      displayCarTune();
     }
     break;
   }

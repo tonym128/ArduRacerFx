@@ -1,5 +1,4 @@
 # TODO
-- Move screen back when car is going faster
 - Configure car performance
     - Max Speed
     - Accelerate
@@ -8,6 +7,9 @@
 - Increase level size
 - Add more levels
 
+- Music and SFX
+
+- Move screen back when car is going faster
 - Integrate into a FX image with multiple games
 
 # Bugs
