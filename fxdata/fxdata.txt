@@ -80,8 +80,8 @@ string FX_STR_TOSTART = "To_Start"
 string FX_STR_NEXTRETRY = "A_-_Next\nB_-_Retry"
 string FX_STR_LTIMES = "L_-_Times"
 string FX_STR_RGOAL = "R_-_Goal"
-string FX_STR_LEFT = "Left"
-string FX_STR_TOTUNE = "To_Tune"
+string FX_STR_LEFT = "Left_To"
+string FX_STR_TOTUNE = "Tune_Car"
 
 // FX Ardbitmaps
 uint8_t FX_DATA_1[] = {

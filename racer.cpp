@@ -104,12 +104,75 @@ void setLevelDetails()
 }
 
 void processCarTune() {
+  if (cross_input_up()) {gameState->menuItem--;setTimeout(100);}
+  if (cross_input_down()) {gameState->menuItem++;setTimeout(100);}
 
+  if (cross_input_left()) {
+    switch (gameState->menuItem)
+    {
+    case 1: // Top Speed
+      if (saveData.car_maxspeed > 0) {
+        saveData.car_maxspeed--;
+        setTimeout(100);
+      }
+      break;
+    case 2: // Acceleration
+      if (saveData.car_acceleration > 0) {
+        saveData.car_acceleration--;
+        setTimeout(100);
+      }
+      break;   
+    case 3: // Turning
+      if (saveData.car_turn > 0) {
+        saveData.car_turn--;
+        setTimeout(100);
+      }
+      break;   
+    }
+  }
+
+  if (cross_input_right()) {
+    int freePoints = gameState->car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+    if (freePoints <= 0) {
+      return;
+    }
+    switch (gameState->menuItem)
+    {
+    case 1: // Top Speed
+      if (saveData.car_maxspeed < 7) {
+        saveData.car_maxspeed++;
+        setTimeout(100);
+      }
+      break;
+    case 2: // Acceleration
+      if (saveData.car_acceleration < 7) {
+        saveData.car_acceleration++;
+        setTimeout(100);
+      }
+      break;
+    case 3: // Turning
+      if (saveData.car_turn < 7) {
+        saveData.car_turn++;
+        setTimeout(100);
+      }
+      break;
+    }
+  }
+
+  if (gameState->menuItem < 1) gameState->menuItem = 3;
+  if (gameState->menuItem > 3) gameState->menuItem = 1;
+
+  if (cross_input_a()) {
+    //Save
+    cross_save(saveData);
+    gameState->mode = 4;
+    setTimeout(100);
+  }
+
+  if (cross_input_b()) {gameState->mode = 4;setTimeout(100);}
 }
 
-void processGameMode()
-{
-
+void processGameMode() {
   if (gameState->paused)
   {
     if (cross_input_down())
@@ -163,6 +226,15 @@ void processGameMode()
   {
     gameState->player1.acceleration.force -= gameState->max_dec * tFrameMs;
   }
+}
+
+void setCarMax() {
+  gameState->max_turn_speed = gameState->default_max_turn_speed + (saveData.car_turn - 4) * gameState->mod_turn;
+  gameState->max_speed = gameState->default_max_speed + (saveData.car_maxspeed -4)* gameState->mod_max_speed;
+  gameState->acceleration = gameState->default_acceleration + (saveData.car_acceleration -4) * gameState->mod_acceleration;
+  gameState->max_dec = 3*gameState->acceleration;
+  gameState->offroad = gameState->max_speed/4;
+  gameState->offroad_neg = gameState->max_speed/4;
 }
 
 void updateGameMode()
@@ -916,13 +988,16 @@ void displayCarTune()
 {
   cross_print(3, 0, 1, "Car Tuning");
   cross_print(3, 6, 1, "----------");
-  cross_print(3, 2+15, 1, "Speed");
-  cross_print(3, 2+25, 1, "Accel");
-  cross_print(3, 2+35, 1, "Turning");
-  cross_print(3, 2+45, 1, "Points");
+  cross_print(6, 2+15, 1, "Speed");
+  cross_print(6, 2+25, 1, "Accel");
+  cross_print(6, 2+35, 1, "Turning");
+  cross_print(6, 2+45, 1, "Points");
+
+  cross_print(0,2+5+10*gameState->menuItem,1,"*");
+
   int i = 0;
   for (i = 15; i < 60; i += 10) 
-    cross_drawHLine(45, i, 115, 1);
+    cross_drawHLine(45, i, 60, 1);
     
   for (i = 45; i < 116; i += 10) 
     cross_drawVLine(i, 15, 40, 1);
@@ -941,7 +1016,7 @@ void displayCarTune()
     cross_print(3+45+i*10,y,1,"X");
   }
 
-  int freePoints = saveData.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+  int freePoints = gameState->car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
   y+=10;
   for (i = 0; i < freePoints; i++) {
     cross_print(3+45+i*10,y,1,"X");
@@ -1208,6 +1283,7 @@ void update() {
     {
       cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
+      setCarMax();
       gameState->laptimer = true;
       gameState->lastmode = gameState->mode;
     }
@@ -1236,6 +1312,7 @@ void update() {
     if (gameState->lastmode != gameState->mode)
     {
       gameState->lastmode = gameState->mode;
+      gameState->menuItem = 1;
       setTimeout(1000);
     }
     else

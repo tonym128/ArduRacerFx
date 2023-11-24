@@ -36,7 +36,6 @@ struct SaveData
   uint8_t car_maxspeed = 4;
   uint8_t car_acceleration = 4;
   uint8_t car_turn = 4;
-  uint8_t car_tune_total = 12;
 };
 
 struct GameState {
@@ -47,6 +46,7 @@ struct GameState {
   uint8_t lasttile;
   uint8_t lastx;
   uint8_t lasty;
+  uint8_t car_tune_total = 12;
 
   unsigned int laptimes[TIMED_LAPS];
   unsigned int bestLap;
@@ -70,9 +70,11 @@ struct GameState {
   int timeout;
 
   // Car setup
+  double default_max_turn_speed = 0.003;
+  FIXPOINT default_max_speed = FLOAT_TO_FIXP(2.5f);
+  FIXPOINT default_acceleration = FLOAT_TO_FIXP(0.003f);
+
   double max_turn_speed = 0.003;
-  
-  // Max Speed 60fps
   FIXPOINT max_speed = FLOAT_TO_FIXP(2.5f);
   FIXPOINT acceleration = FLOAT_TO_FIXP(0.003f);
   FIXPOINT max_dec = 3*acceleration;
@@ -81,10 +83,11 @@ struct GameState {
 
   FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.01f);
   FIXPOINT drag = FLOAT_TO_FIXP(0.04f / 30.0f);
+
+  double mod_turn = 0.0003;
+  FIXPOINT mod_max_speed = FLOAT_TO_FIXP(0.25f);
+  FIXPOINT mod_acceleration = FLOAT_TO_FIXP(0.0003f);
 };
 
-constexpr double mod_turn = 0.0003;
-constexpr FIXPOINT mod_max_speed = FLOAT_TO_FIXP(0.25f);
-constexpr FIXPOINT mod_accelerate = FLOAT_TO_FIXP(0.0003f);
 
 #endif
