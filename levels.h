@@ -16,20 +16,21 @@ static __uint24 getLevelMap(uint8_t level) {
     case 8: return FX_LEVEL8;
     case 9: return FX_LEVEL9;
     case 10: return FX_LEVEL10;
+    case 11: return FX_LEVEL11;
     default:
       return FX_LEVEL10;
   }
 }
 static uint8_t getLevelMapSize(uint8_t level) {
   switch(level) {
-    case 16: return 20;
+    case 11: return 16;
     default:
       return 10;
   }
 }
 
-static uint8_t getLevelTile(__uint24 level, uint8_t x, uint8_t y) {
-  int pos = x + y * 10;
+static uint8_t getLevelTile(__uint24 level, uint8_t x, uint8_t y, uint8_t levelmapsize) {
+  uint16_t pos = x + (y * levelmapsize);
   return FX::readIndexedUInt8(level,pos);
 }
 

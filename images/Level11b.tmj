@@ -1,0 +1,34 @@
+{ "compressionlevel":-1,
+ "height":20,
+ "infinite":false,
+ "layers":[
+        {
+         "compression":"zstd",
+         "data":"KLUv\/WBABW0HAGLGDg6Q2PBqAEFjNyc9+b9pCr+fUlcMMSnZwtA5jp0py6xjGYcHFOWDG84OAZED8MSNoy9B4YibW7qTn3QVXKAx6qiSaQ2wAhKh5AZwmjOFJAie6jstkxYGH6OnSN7KHyanSrzY2ujgvPUTH\/jEDn4ckycfGgMSOxv9lFiN00hcVbsWO6vaBCj8oMYDzyOjt4xTRb+ME5kTiZ8WAiOLT5ewdz44eTiB5Cn48zVnNvkhY4g2tPDBkImnEf+c71pOltzxneYPmQmdm9Htdwa81qc8ZE\/ljxlH++Lz3GH\/Omd8bcUOuTh+z+hkqTOaBg==",
+         "encoding":"base64",
+         "height":20,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"SpriteSheet64.tsx"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":"1.9",
+ "width":20
+}

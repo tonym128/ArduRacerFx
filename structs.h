@@ -24,12 +24,12 @@ struct CheckPoint {
   CheckPoint *nextcheckpoint;
 };
 
-constexpr uint8_t LEVELS = 10; // 10 Levels
+constexpr uint8_t LEVELS = 11; // 10 Levels
 
 struct SaveData
 {
 	unsigned int BestLapTimes[LEVELS]; 
-  uint8_t maxLevel = 1;
+  uint8_t maxLevel = 11;
   uint8_t music = 1;
   uint8_t sound = 1;
   uint8_t map = 1;

@@ -54,7 +54,7 @@ void setLevelDetails()
   {
     for (int y = 0; y < gameState->levelSize && !done; y++)
     {
-      uint8_t levelTile = getLevelTile(gameState->levelMap, x, y);
+      uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
       if (levelTile == 24)
       {
         gameState->player1.X = FLOAT_TO_FIXP(x * 64.0f);
@@ -245,7 +245,7 @@ void updateGameMode()
 {
   if (gameState->paused)
     return;
-  int xyMax = 640 * gameState->levelSize/10;
+  int xyMax = 64 * gameState->levelSize;
 
   gameState->player1.XVec = xVec2(gameState->player1.acceleration.force, FLOAT_TO_FIXP(gameState->player1.rotation));
   gameState->player1.YVec = yVec2(gameState->player1.acceleration.force, FLOAT_TO_FIXP(gameState->player1.rotation));
@@ -258,7 +258,7 @@ void updateGameMode()
   bool collision = false;
   if (x > xyMax)
   {
-    gameState->player1.X = INT_TO_FIXP(xyMax);
+    gameState->player1.X = FLOAT_TO_FIXP(xyMax);
     collision = true;
   }
   else if (x < 0)
@@ -269,7 +269,7 @@ void updateGameMode()
 
   if (y > xyMax)
   {
-    gameState->player1.Y = INT_TO_FIXP(xyMax);
+    gameState->player1.Y = FLOAT_TO_FIXP(xyMax);
     collision = true;
   }
   else if (y < 0)
@@ -322,7 +322,7 @@ void updateGameMode()
   // Tile Logic
   int tilex = (x + 5) / 64;
   int tiley = (y + 5) / 64;
-  uint8_t tile = getLevelTile(gameState->levelMap, tilex, tiley);
+  uint8_t tile = getLevelTile(gameState->levelMap, tilex, tiley, gameState->levelSize);
 
   if (gameState->lastx != tilex || gameState->lasty != tiley)
   {
@@ -414,7 +414,7 @@ void displayGameMode()
 {
   int x = FIXP_TO_INT(gameState->player1.X) - 60;
   int y = FIXP_TO_INT(gameState->player1.Y) - 30;
-  int xyMax = 640 * gameState->levelSize/10;
+  int xyMax = 64 * gameState->levelSize;
 
   if (x < 0)
     x = 0;
@@ -436,7 +436,7 @@ void displayGameMode()
         inlinex += 64;
         continue;
       }
-      uint8_t levelTile = getLevelTile(gameState->levelMap, i, j);
+      uint8_t levelTile = getLevelTile(gameState->levelMap, i, j, gameState->levelSize);
       int tilemap;
       switch (levelTile) {
         case 24:
@@ -546,7 +546,7 @@ void displayGameMode()
   // Draw Map
   if (saveData.map) {
     uint8_t levelTile = 0;
-    uint8_t mapX = 108+gameState->levelSize;
+    uint8_t mapX = 128-gameState->levelSize;
     uint8_t mapY = 7;
     inlinex = FIXP_TO_INT(gameState->player1.X) / 64;
     inliney = FIXP_TO_INT(gameState->player1.Y) / 64;
@@ -558,7 +558,7 @@ void displayGameMode()
             continue;
         }
 
-        levelTile = getLevelTile(gameState->levelMap, i, j);
+        levelTile = getLevelTile(gameState->levelMap, i, j, gameState->levelSize);
         if ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24)) {
             cross_drawPixel(mapX+i,mapY+j,1);
         } else {
@@ -777,7 +777,7 @@ void displayMap()
   {
     for (int x = 0; x < gameState->levelSize; x++)
     {
-      uint8_t levelTile = getLevelTile(gameState->levelMap, x, y);
+      uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
       int tilemap;
       switch (levelTile) {
         case 24:
@@ -801,8 +801,8 @@ void displayMap()
       case 10:
         FX::drawBitmap(x * 6, y * 6, FX_DATA_TILES_6, tilemap, dbmNormal);
         break;
-      case 20:
-        FX::drawBitmap(x * 3, y * 3, FX_DATA_TILES_3, tilemap, dbmNormal);
+      case 16:
+        FX::drawBitmap(x * 4, y * 4, FX_DATA_TILES_4, tilemap, dbmNormal);
         break;
       }
     }
@@ -869,8 +869,8 @@ void inputLevelInfo()
     if (gameState->level < saveData.maxLevel)
        gameState->level++;
     gameState->lastmode = -1;
-    if (gameState->level > 10)
-      gameState->level = 10;
+    if (gameState->level > LEVELS)
+      gameState->level = LEVELS;
     gameState->levelMap = getLevelMap(gameState->level);
     gameState->levelSize = getLevelMapSize(gameState->level);
   }
@@ -952,7 +952,7 @@ bool displayLevelZoom()
       // Basic Screen Check
       if ((x * pixelSize + pixelSize - headtox) > 0 && (y * pixelSize + pixelSize - headtoy) > 0 && (x * pixelSize - headtox) < endx && (y * pixelSize - headtoy < 64))
       {
-        uint8_t levelTile = getLevelTile(gameState->levelMap, x, y);
+        uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
         int tilemap;
         switch (levelTile) {
           case 24:
@@ -1034,15 +1034,15 @@ void drawTrophySheet()
   for (int i = 13; i < 53; i += 13) 
     cross_drawHLine(0, i, 128, 1);
 
-  cross_print(3, 17, 1, ("G"));
-  cross_print(3, 31, 1, ("S"));
-  cross_print(3, 43, 1, ("B"));
+  cross_print(5, 17, 1, "G");
+  cross_print(5, 31, 1, "S");
+  cross_print(5, 43, 1, "B");
 
   for (int level = 0; level < 10; level++)
   {
     sprintf(string, ("%d"), level + 1);
-    cross_print(16 + level * 11, 3, 1, string);
-    cross_drawVLine(15 + level * 11, 0, 53, 1);
+    cross_print(21 + level * 11, 3, 1, string);
+    cross_drawVLine(16 + level * 11, 0, 53, 1);
     if (saveData.BestLapTimes[level] > 0)
       for (int i = 0; i < 3; i++)
       {
@@ -1121,8 +1121,8 @@ void inputTrophy()
     if (gameState->level < saveData.maxLevel)
     {
       gameState->level += 1;
-      if (gameState->level > 10)
-        gameState->level = 10;
+      if (gameState->level > LEVELS)
+        gameState->level = LEVELS;
       gameState->mode = 4;
       gameState->levelMap = getLevelMap(gameState->level);
       gameState->levelSize = getLevelMapSize(gameState->level);

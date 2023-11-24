@@ -23,7 +23,7 @@
 //#define NO_SPEED_HACK
 
 //Uncomment RESIZE_HACK for fast drawResized with resize >= 1.0
-#define RESIZE_HACK
+//#define RESIZE_HACK
 
 #include <Arduino.h>
 #include <ArduboyFX.h>                // Required library for accessing the FX flash chip
@@ -100,212 +100,212 @@ static const uint8_t REVERSE_256[256] = {
 template<int16_t SB_WIDTH, int16_t SB_HEIGHT> class ArdBitmap
 {
   public:
-    void drawFXCompressed(int16_t sx, int16_t sy, __uint24 compBitmap, uint8_t color, uint8_t align, uint8_t mirror);
+    // void drawFXCompressed(int16_t sx, int16_t sy, __uint24 compBitmap, uint8_t color, uint8_t align, uint8_t mirror);
     void drawFXCompressedResized(int16_t sx, int16_t sy, __uint24 compBitmap, uint8_t color,uint8_t align, uint8_t mirror, float resize);
 
-    void drawFXBitmap(int16_t sx, int16_t sy, __uint24 fximage,uint8_t w, uint8_t h, uint8_t color, uint8_t align, uint8_t mirror);
-    void drawFXBitmapResized(int16_t sx, int16_t sy, __uint24 fximage, uint8_t w,uint8_t h, uint8_t color,uint8_t align, uint8_t mirror, float resize);
+    // void drawFXBitmap(int16_t sx, int16_t sy, __uint24 fximage,uint8_t w, uint8_t h, uint8_t color, uint8_t align, uint8_t mirror);
+    // void drawFXBitmapResized(int16_t sx, int16_t sy, __uint24 fximage, uint8_t w,uint8_t h, uint8_t color,uint8_t align, uint8_t mirror, float resize);
 };
 
 /////////////////////////////
 // COMPRESSED FX BITMAPS //
 /////////////////////////////
-template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
-void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXCompressed(int16_t sx, int16_t sy, __uint24 compBitmap, uint8_t color, uint8_t align, uint8_t mirror)
-{
-  //TODO: check why int16_t sizeCounter is a bit faster than uint16_t sizeCounter
-  int16_t sizeCounter;
-  uint16_t len;
-  int a, iCol;
-  uint8_t decByte;
-  uint8_t w, h;
-  uint8_t col;
-  boolean scanMode, scanZigZag;
-  uint16_t encoderPos;
-  uint8_t characterPos;
+// template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
+// void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXCompressed(int16_t sx, int16_t sy, __uint24 compBitmap, uint8_t color, uint8_t align, uint8_t mirror)
+// {
+//   //TODO: check why int16_t sizeCounter is a bit faster than uint16_t sizeCounter
+//   int16_t sizeCounter;
+//   uint16_t len;
+//   int a, iCol;
+//   uint8_t decByte;
+//   uint8_t w, h;
+//   uint8_t col;
+//   boolean scanMode, scanZigZag;
+//   uint16_t encoderPos;
+//   uint8_t characterPos;
 
 
-  // Read size from header (Max image size = 128 x 64)
+//   // Read size from header (Max image size = 128 x 64)
 
-  uint8_t byte0 = FX::readIndexedUInt8(compBitmap,0);
-  uint8_t byte1 = FX::readIndexedUInt8(compBitmap,1);
+//   uint8_t byte0 = FX::readIndexedUInt8(compBitmap,0);
+//   uint8_t byte1 = FX::readIndexedUInt8(compBitmap,1);
 
-  w = (byte0 & 0b01111111) + 1;
-  h = (byte1 & 0b00111111) + 1;
+//   w = (byte0 & 0b01111111) + 1;
+//   h = (byte1 & 0b00111111) + 1;
 
-  // Move positions to match alignment
+//   // Move positions to match alignment
 
-  if (align & ALIGN_H_CENTER) {
-    sx -= (w / 2);
-  } else if (align & ALIGN_H_RIGHT) {
-    sx -= w;
-  }
+//   if (align & ALIGN_H_CENTER) {
+//     sx -= (w / 2);
+//   } else if (align & ALIGN_H_RIGHT) {
+//     sx -= w;
+//   }
 
-  if (align & ALIGN_V_CENTER) {
-    sy -= (h / 2);
-  } else if (align & ALIGN_V_BOTTOM) {
-    sy -= h;
-  }
+//   if (align & ALIGN_V_CENTER) {
+//     sy -= (h / 2);
+//   } else if (align & ALIGN_V_BOTTOM) {
+//     sy -= h;
+//   }
 
-  // No need to draw at all if we're offscreen
-  if (sx + w < 0 || sx > SB_WIDTH - 1 || sy + h < 0 || sy > SB_HEIGHT - 1)
-    return;
+//   // No need to draw at all if we're offscreen
+//   if (sx + w < 0 || sx > SB_WIDTH - 1 || sy + h < 0 || sy > SB_HEIGHT - 1)
+//     return;
 
-  col = (byte0 >> 7) & 0x01;
-  scanMode = ((byte1 >> 6) & 0x01) > 0;
-  scanZigZag = ((byte1 >> 7) & 0x01) > 0;
+//   col = (byte0 >> 7) & 0x01;
+//   scanMode = ((byte1 >> 6) & 0x01) > 0;
+//   scanZigZag = ((byte1 >> 7) & 0x01) > 0;
 
-  int yOffset = ((int)abs(sy)) % 8;
-  int sRow = sy / 8;
-  if (sy < 0 && yOffset > 0) {
-    sRow--;
-    yOffset = 8 - yOffset;
-  }
+//   int yOffset = ((int)abs(sy)) % 8;
+//   int sRow = sy / 8;
+//   if (sy < 0 && yOffset > 0) {
+//     sRow--;
+//     yOffset = 8 - yOffset;
+//   }
 
-  uint8_t data;
-  uint16_t bitmap_data;
-  uint8_t mul_amt = 1 << yOffset;
+//   uint8_t data;
+//   uint16_t bitmap_data;
+//   uint8_t mul_amt = 1 << yOffset;
 
-  //uint16_t boffs;
+//   //uint16_t boffs;
 
-  int8_t rows = h / 8;
-  if (h % 8 != 0) rows++;
+//   int8_t rows = h / 8;
+//   if (h % 8 != 0) rows++;
 
-  // Init values
-  iCol = 0;
-  decByte = 0;
-  encoderPos = 16;
-  characterPos = 7;
-  a = 0;
+//   // Init values
+//   iCol = 0;
+//   decByte = 0;
+//   encoderPos = 16;
+//   characterPos = 7;
+//   a = 0;
 
-  if (mirror & MIRROR_VERTICAL) {
-    a = rows - 1;
-    scanMode = !scanMode;
-  }
+//   if (mirror & MIRROR_VERTICAL) {
+//     a = rows - 1;
+//     scanMode = !scanMode;
+//   }
 
-  int iColMod = (mirror & MIRROR_HORIZONTAL) ? w - 1  : 0;
-  while (a < rows && a > -1) {
+//   int iColMod = (mirror & MIRROR_HORIZONTAL) ? w - 1  : 0;
+//   while (a < rows && a > -1) {
 
-    sizeCounter = 1;
-    while (((FX::readIndexedUInt8(compBitmap,encoderPos / 8) >> (encoderPos % 8)) & 0x01)  == 1) {
-      sizeCounter ++;
-      encoderPos++;
-    }
-    encoderPos ++;
+//     sizeCounter = 1;
+//     while (((FX::readIndexedUInt8(compBitmap,encoderPos / 8) >> (encoderPos % 8)) & 0x01)  == 1) {
+//       sizeCounter ++;
+//       encoderPos++;
+//     }
+//     encoderPos ++;
 
-    if (sizeCounter == 1) {
-      len = 1 + ((FX::readIndexedUInt8(compBitmap,encoderPos / 8) >> (encoderPos % 8)) & 0x01);
-      encoderPos++;
-    } else {
-      len = (1 << (sizeCounter - 1)) + 1 ;
+//     if (sizeCounter == 1) {
+//       len = 1 + ((FX::readIndexedUInt8(compBitmap,encoderPos / 8) >> (encoderPos % 8)) & 0x01);
+//       encoderPos++;
+//     } else {
+//       len = (1 << (sizeCounter - 1)) + 1 ;
 
-      //TODO: check why int j is faster than uint16_t j
-      for (int j = 0; j < sizeCounter - 1; j++) {
-        if (((FX::readIndexedUInt8(compBitmap,encoderPos / 8) >> (encoderPos % 8)) & 0x01) == 1) {
-          len += (1 << j);
-        }
-        encoderPos++;
-      }
-    }
+//       //TODO: check why int j is faster than uint16_t j
+//       for (int j = 0; j < sizeCounter - 1; j++) {
+//         if (((FX::readIndexedUInt8(compBitmap,encoderPos / 8) >> (encoderPos % 8)) & 0x01) == 1) {
+//           len += (1 << j);
+//         }
+//         encoderPos++;
+//       }
+//     }
 
-    for (uint16_t i = 0; i < len; i++)
-    {
+//     for (uint16_t i = 0; i < len; i++)
+//     {
 
-      #ifndef NO_SPEED_HACK
-      if (col == 0) {
-        if (len - i > characterPos) {
-          i += characterPos;
-          characterPos = 0;
-        } else {
-          characterPos -= (len - i - 1);
-          i = len;
-        }
-      } else if (len - i > characterPos) {
-        if (characterPos == 7) {
-          decByte = 0xFF;
-        } else {
-          decByte |= scanMode ? 0xFF >> (7 - characterPos) : (0xFF80 >> characterPos);
-        }
-        i += characterPos;
-        characterPos = 0;
-      } else {
-        decByte |= scanMode ? BIT_SHIFT[characterPos] : BIT_SHIFT[7 - characterPos];
-      }
-      #else
-      if (col) {
-        decByte |= scanMode ? BIT_SHIFT[characterPos] : BIT_SHIFT[7 - characterPos];
-      }
-      #endif
+//       #ifndef NO_SPEED_HACK
+//       if (col == 0) {
+//         if (len - i > characterPos) {
+//           i += characterPos;
+//           characterPos = 0;
+//         } else {
+//           characterPos -= (len - i - 1);
+//           i = len;
+//         }
+//       } else if (len - i > characterPos) {
+//         if (characterPos == 7) {
+//           decByte = 0xFF;
+//         } else {
+//           decByte |= scanMode ? 0xFF >> (7 - characterPos) : (0xFF80 >> characterPos);
+//         }
+//         i += characterPos;
+//         characterPos = 0;
+//       } else {
+//         decByte |= scanMode ? BIT_SHIFT[characterPos] : BIT_SHIFT[7 - characterPos];
+//       }
+//       #else
+//       if (col) {
+//         decByte |= scanMode ? BIT_SHIFT[characterPos] : BIT_SHIFT[7 - characterPos];
+//       }
+//       #endif
 
-      characterPos--;
+//       characterPos--;
 
-      if (characterPos == 0xFF){
+//       if (characterPos == 0xFF){
 
-        //Paint decoded byte
-        int8_t bRow = sRow + a;
+//         //Paint decoded byte
+//         int8_t bRow = sRow + a;
 
-        if (decByte && bRow < (SB_HEIGHT / 8) && iColMod + sx < SB_WIDTH && iColMod + sx >= 0){
+//         if (decByte && bRow < (SB_HEIGHT / 8) && iColMod + sx < SB_WIDTH && iColMod + sx >= 0){
 
-          bitmap_data = decByte * mul_amt;
+//           bitmap_data = decByte * mul_amt;
 
-          if (bRow >= 0) {
+//           if (bRow >= 0) {
 
-            data = ARDBITMAP_SBUF[(bRow * SB_WIDTH) + sx + iColMod];
-            if (color) {
-              data |= bitmap_data & 0xFF;
-            }else {
-              data &= ~(bitmap_data & 0xFF);
-            }
-            ARDBITMAP_SBUF[(bRow * SB_WIDTH) + sx + iColMod] = data;
-          }
+//             data = ARDBITMAP_SBUF[(bRow * SB_WIDTH) + sx + iColMod];
+//             if (color) {
+//               data |= bitmap_data & 0xFF;
+//             }else {
+//               data &= ~(bitmap_data & 0xFF);
+//             }
+//             ARDBITMAP_SBUF[(bRow * SB_WIDTH) + sx + iColMod] = data;
+//           }
 
-          if (yOffset && bRow < (SB_HEIGHT / 8) - 1 && bRow > -2) {
+//           if (yOffset && bRow < (SB_HEIGHT / 8) - 1 && bRow > -2) {
 
-            data = ARDBITMAP_SBUF[((bRow + 1) * SB_WIDTH) + sx + iColMod];
-            if (color) {
-              data |= ((bitmap_data >> 8) & 0xFF);
-            } else {
-              data &= ~(((bitmap_data >> 8) & 0xFF));
-            }
-            ARDBITMAP_SBUF[((bRow + 1)*SB_WIDTH) + sx + iColMod] = data;
-          }
-        }
+//             data = ARDBITMAP_SBUF[((bRow + 1) * SB_WIDTH) + sx + iColMod];
+//             if (color) {
+//               data |= ((bitmap_data >> 8) & 0xFF);
+//             } else {
+//               data &= ~(((bitmap_data >> 8) & 0xFF));
+//             }
+//             ARDBITMAP_SBUF[((bRow + 1)*SB_WIDTH) + sx + iColMod] = data;
+//           }
+//         }
 
-        // Iterate next column-byte
+//         // Iterate next column-byte
 
-        if (scanZigZag) {
-          scanMode = !scanMode;
-        }
+//         if (scanZigZag) {
+//           scanMode = !scanMode;
+//         }
 
-        iCol++;
+//         iCol++;
 
-        if(mirror & MIRROR_HORIZONTAL){
-          iColMod--;
-        }else{
-          iColMod++;
-        }
-        if (iCol >= w){
+//         if(mirror & MIRROR_HORIZONTAL){
+//           iColMod--;
+//         }else{
+//           iColMod++;
+//         }
+//         if (iCol >= w){
 
-          iCol = 0;
-          if (mirror & MIRROR_VERTICAL) {
-            a--;
-          } else {
-            a++;
-          }
+//           iCol = 0;
+//           if (mirror & MIRROR_VERTICAL) {
+//             a--;
+//           } else {
+//             a++;
+//           }
 
-          iColMod = (mirror & MIRROR_HORIZONTAL) ? w - 1  : 0;
-        }
+//           iColMod = (mirror & MIRROR_HORIZONTAL) ? w - 1  : 0;
+//         }
 
-        // Reset decoded byte
-        decByte = 0;
-        characterPos = 7;
-      }
-    }
+//         // Reset decoded byte
+//         decByte = 0;
+//         characterPos = 7;
+//       }
+//     }
 
-    // Toggle color for next span
-    col = 1 - col;
-  }
-}
+//     // Toggle color for next span
+//     col = 1 - col;
+//   }
+// }
 
 template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
 void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXCompressedResized(int16_t sx, int16_t sy, __uint24 compBitmap, uint8_t color,uint8_t align, uint8_t mirror, float resize)
@@ -522,277 +522,277 @@ void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXCompressedResized(int16_t sx, int16_t
 /////////////////////////////
 
 
-template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
-void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXBitmap(int16_t x, int16_t y, __uint24 fximage, uint8_t w, uint8_t h, uint8_t color, uint8_t align, uint8_t mirror)
-{
+// template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
+// void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXBitmap(int16_t x, int16_t y, __uint24 fximage, uint8_t w, uint8_t h, uint8_t color, uint8_t align, uint8_t mirror)
+// {
 
-  // Move positions to match alignment
+//   // Move positions to match alignment
 
-  if (align & ALIGN_H_CENTER) {
-    x -= (w / 2);
-  } else if (align & ALIGN_H_RIGHT) {
-    x -= w;
-  }
+//   if (align & ALIGN_H_CENTER) {
+//     x -= (w / 2);
+//   } else if (align & ALIGN_H_RIGHT) {
+//     x -= w;
+//   }
 
-  if (align & ALIGN_V_CENTER) {
-    y -= (h / 2);
-  } else if (align & ALIGN_V_BOTTOM) {
-    y -= h;
-  }
+//   if (align & ALIGN_V_CENTER) {
+//     y -= (h / 2);
+//   } else if (align & ALIGN_V_BOTTOM) {
+//     y -= h;
+//   }
 
-  // no need to draw at all of we're offscreen
-  if (x + w <= 0 || x > SB_WIDTH - 1 || y + h <= 0 || y > SB_HEIGHT - 1)
-    return;
+//   // no need to draw at all of we're offscreen
+//   if (x + w <= 0 || x > SB_WIDTH - 1 || y + h <= 0 || y > SB_HEIGHT - 1)
+//     return;
 
-  // xOffset technically doesn't need to be 16 bit but the math operations
-  // are measurably faster if it is
-  uint16_t xOffset, ofs;
-  int8_t yOffset = ((int)abs(y)) % 8;
-  int8_t sRow = y / 8;
-  uint8_t loop_h, start_h, rendered_width;
+//   // xOffset technically doesn't need to be 16 bit but the math operations
+//   // are measurably faster if it is
+//   uint16_t xOffset, ofs;
+//   int8_t yOffset = ((int)abs(y)) % 8;
+//   int8_t sRow = y / 8;
+//   uint8_t loop_h, start_h, rendered_width;
 
-  if (y < 0 && yOffset > 0) {
-    sRow--;
-    yOffset = 8 - yOffset;
-  }
+//   if (y < 0 && yOffset > 0) {
+//     sRow--;
+//     yOffset = 8 - yOffset;
+//   }
 
-  // if the left side of the render is offscreen skip those loops
-  if (x < 0) {
-    xOffset = abs(x);
-  } else {
-    xOffset = 0;
-  }
+//   // if the left side of the render is offscreen skip those loops
+//   if (x < 0) {
+//     xOffset = abs(x);
+//   } else {
+//     xOffset = 0;
+//   }
 
-  // if the right side of the render is offscreen skip those loops
-  if (x + w > SB_WIDTH - 1) {
-    rendered_width = ((SB_WIDTH - x) - xOffset);
-  } else {
-    rendered_width = (w - xOffset);
-  }
+//   // if the right side of the render is offscreen skip those loops
+//   if (x + w > SB_WIDTH - 1) {
+//     rendered_width = ((SB_WIDTH - x) - xOffset);
+//   } else {
+//     rendered_width = (w - xOffset);
+//   }
 
-  // if the top side of the render is offscreen skip those loops
-  if (sRow < -1) {
-    start_h = abs(sRow) - 1;
-  } else {
-    start_h = 0;
-  }
+//   // if the top side of the render is offscreen skip those loops
+//   if (sRow < -1) {
+//     start_h = abs(sRow) - 1;
+//   } else {
+//     start_h = 0;
+//   }
 
-  loop_h = h / 8 + (h % 8 > 0 ? 1 : 0); // divide, then round up
+//   loop_h = h / 8 + (h % 8 > 0 ? 1 : 0); // divide, then round up
 
-  // if (sRow + loop_h - 1 > (SB_HEIGHT/8)-1)
-  if (sRow + loop_h > (SB_HEIGHT / 8)) {
-    loop_h = (SB_HEIGHT / 8) - sRow;
-  }
+//   // if (sRow + loop_h - 1 > (SB_HEIGHT/8)-1)
+//   if (sRow + loop_h > (SB_HEIGHT / 8)) {
+//     loop_h = (SB_HEIGHT / 8) - sRow;
+//   }
 
-  // prepare variables for loops later so we can compare with 0
-  // instead of comparing two variables
-  loop_h -= start_h;
+//   // prepare variables for loops later so we can compare with 0
+//   // instead of comparing two variables
+//   loop_h -= start_h;
 
-  sRow += start_h;
-  ofs = (sRow * SB_WIDTH) + x + xOffset;
+//   sRow += start_h;
+//   ofs = (sRow * SB_WIDTH) + x + xOffset;
 
-  uint8_t bofs = (start_h * w) + xOffset;
+//   uint8_t bofs = (start_h * w) + xOffset;
 
-  if (mirror & MIRROR_HORIZONTAL)  {
-    bofs += rendered_width - 1;
-    if (x < 0){
-      bofs -= w - rendered_width;
-    } else{
-      bofs += w - rendered_width;
-    }
-  }
+//   if (mirror & MIRROR_HORIZONTAL)  {
+//     bofs += rendered_width - 1;
+//     if (x < 0){
+//       bofs -= w - rendered_width;
+//     } else{
+//       bofs += w - rendered_width;
+//     }
+//   }
 
-  if (mirror & MIRROR_VERTICAL) {
-    bofs += (loop_h - 1) * w;
-    if (y < 0){
-      bofs -=  (start_h * w);
-    } else {
-      bofs +=  (sRow  * w);
-    }
-  }
+//   if (mirror & MIRROR_VERTICAL) {
+//     bofs += (loop_h - 1) * w;
+//     if (y < 0){
+//       bofs -=  (start_h * w);
+//     } else {
+//       bofs +=  (sRow  * w);
+//     }
+//   }
 
-  uint8_t data;
-  uint8_t mul_amt = 1 << yOffset;
-  uint16_t bitmap_data;
+//   uint8_t data;
+//   uint8_t mul_amt = 1 << yOffset;
+//   uint16_t bitmap_data;
 
-      // really if yOffset = 0 you have a faster case here that could be
-      // optimized
-      for (uint8_t a = 0; a < loop_h; a++) {
-        for (uint8_t iCol = 0; iCol < rendered_width; iCol++) {
-          data = FX::readIndexedUInt8(fximage,bofs);
-          if(data) {
-            if (mirror & MIRROR_VERTICAL){
-              //reverse bits
-              data = (data & 0xF0) >> 4 | (data & 0x0F) << 4;
-              data = (data & 0xCC) >> 2 | (data & 0x33) << 2;
-              data = (data & 0xAA) >> 1 | (data & 0x55) << 1;
+//       // really if yOffset = 0 you have a faster case here that could be
+//       // optimized
+//       for (uint8_t a = 0; a < loop_h; a++) {
+//         for (uint8_t iCol = 0; iCol < rendered_width; iCol++) {
+//           data = FX::readIndexedUInt8(fximage,bofs);
+//           if(data) {
+//             if (mirror & MIRROR_VERTICAL){
+//               //reverse bits
+//               data = (data & 0xF0) >> 4 | (data & 0x0F) << 4;
+//               data = (data & 0xCC) >> 2 | (data & 0x33) << 2;
+//               data = (data & 0xAA) >> 1 | (data & 0x55) << 1;
 
-              //LUT - No speed improvement and more mem
-              //data = (((REVERSE_16[(data & 0x0F)]) << 4) + REVERSE_16[((data & 0xF0) >> 4)]);
+//               //LUT - No speed improvement and more mem
+//               //data = (((REVERSE_16[(data & 0x0F)]) << 4) + REVERSE_16[((data & 0xF0) >> 4)]);
 
-              //Fast but too much mem
-              //data = REVERSE_256[data];
-            }
+//               //Fast but too much mem
+//               //data = REVERSE_256[data];
+//             }
 
-            bitmap_data = data * mul_amt;
-            if (sRow >= 0) {
-              data = ARDBITMAP_SBUF[ofs];
-              if (color){
-                data |= bitmap_data & 0xFF;
-              } else {
-                data &= ~(bitmap_data & 0xFF);
-              }
-              ARDBITMAP_SBUF[ofs] = data;
-            }
+//             bitmap_data = data * mul_amt;
+//             if (sRow >= 0) {
+//               data = ARDBITMAP_SBUF[ofs];
+//               if (color){
+//                 data |= bitmap_data & 0xFF;
+//               } else {
+//                 data &= ~(bitmap_data & 0xFF);
+//               }
+//               ARDBITMAP_SBUF[ofs] = data;
+//             }
 
-            if (yOffset != 0 && sRow < 7) {
-              data = ARDBITMAP_SBUF[ofs + SB_WIDTH];
-              if (color){
-                data |= (bitmap_data >> 8) & 0xFF;
-              } else{
-                data &= ~((bitmap_data >> 8) & 0xFF);
-              }
-              ARDBITMAP_SBUF[ofs + SB_WIDTH] = data;
-            }
-          }
-          ofs++;
+//             if (yOffset != 0 && sRow < 7) {
+//               data = ARDBITMAP_SBUF[ofs + SB_WIDTH];
+//               if (color){
+//                 data |= (bitmap_data >> 8) & 0xFF;
+//               } else{
+//                 data &= ~((bitmap_data >> 8) & 0xFF);
+//               }
+//               ARDBITMAP_SBUF[ofs + SB_WIDTH] = data;
+//             }
+//           }
+//           ofs++;
 
-          if (mirror & MIRROR_HORIZONTAL){
-            bofs--;
-          } else{
-            bofs++;
-          }
-        }
-        sRow++;
+//           if (mirror & MIRROR_HORIZONTAL){
+//             bofs--;
+//           } else{
+//             bofs++;
+//           }
+//         }
+//         sRow++;
 
-        if (mirror & MIRROR_HORIZONTAL){
-          bofs += w + rendered_width;
-        } else{
-          bofs += w - rendered_width;
-        }
+//         if (mirror & MIRROR_HORIZONTAL){
+//           bofs += w + rendered_width;
+//         } else{
+//           bofs += w - rendered_width;
+//         }
 
-        if (mirror & MIRROR_VERTICAL){
-          bofs -= 2 * w;
-        }
-        ofs += SB_WIDTH - rendered_width;
-      }
-}
-
-
-template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
-void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXBitmapResized(int16_t sx, int16_t sy, __uint24 fximage, uint8_t w,uint8_t h, uint8_t color,uint8_t align, uint8_t mirror, float resize)
-{
-
-  //TODO: check if this can be done in a better way
-  #ifdef RESIZE_HACK
-  if (resize >= 1.0){
-    return drawFXBitmap(sx, sy, fximage,w, h, color, align, mirror);
-  }
-  #else
-  if (resize > 1.0){
-    resize = 1.0;
-  }
-  #endif
-
-  //TODO: check why int16_t sizeCounter is a bit faster than uint16_t sizeCounter
-  int16_t sizeCounter;
-  uint16_t len;
-  uint8_t a, iCol;
-  uint8_t data;
-  uint8_t  wRes,  hRes;
-  uint8_t col;
-
-  wRes = (uint8_t)(w * resize);
-  hRes = (uint8_t)(h * resize);
+//         if (mirror & MIRROR_VERTICAL){
+//           bofs -= 2 * w;
+//         }
+//         ofs += SB_WIDTH - rendered_width;
+//       }
+// }
 
 
-  // Move positions to match alignment
-  if (align & ALIGN_H_CENTER) {
-    sx -= (wRes / 2);
-  } else if (align & ALIGN_H_RIGHT) {
-    sx -= wRes;
-  }
+// template<int16_t SB_WIDTH, int16_t SB_HEIGHT>
+// void ArdBitmap<SB_WIDTH, SB_HEIGHT>::drawFXBitmapResized(int16_t sx, int16_t sy, __uint24 fximage, uint8_t w,uint8_t h, uint8_t color,uint8_t align, uint8_t mirror, float resize)
+// {
 
-  if (align & ALIGN_V_CENTER) {
-    sy -= (hRes / 2);
-  } else if (align & ALIGN_V_BOTTOM) {
-    sy -= hRes;
-  }
+//   //TODO: check if this can be done in a better way
+//   #ifdef RESIZE_HACK
+//   if (resize >= 1.0){
+//     return drawFXBitmap(sx, sy, fximage,w, h, color, align, mirror);
+//   }
+//   #else
+//   if (resize > 1.0){
+//     resize = 1.0;
+//   }
+//   #endif
 
-  // No need to draw at all if we're offscreen
-  if (sx + wRes < 0 || sx > SB_WIDTH - 1 || sy + hRes < 0 || sy > SB_HEIGHT - 1)
-    return;
+//   //TODO: check why int16_t sizeCounter is a bit faster than uint16_t sizeCounter
+//   int16_t sizeCounter;
+//   uint16_t len;
+//   uint8_t a, iCol;
+//   uint8_t data;
+//   uint8_t  wRes,  hRes;
+//   uint8_t col;
 
-  int yOffset = ((int)abs(sy)) % 8;
-  int sRow = sy / 8;
-  if (sy < 0) {
-    sRow--;
-    yOffset = 8 - yOffset;
-  }
+//   wRes = (uint8_t)(w * resize);
+//   hRes = (uint8_t)(h * resize);
 
-  int rows = h / 8;
-  if (h % 8 != 0) rows++;
 
-  uint8_t rowsRes = hRes / 8;
-  if (hRes % 8 != 0) rowsRes++;
+//   // Move positions to match alignment
+//   if (align & ALIGN_H_CENTER) {
+//     sx -= (wRes / 2);
+//   } else if (align & ALIGN_H_RIGHT) {
+//     sx -= wRes;
+//   }
 
-  // Init values
-  iCol = 0;
-  a = 0;
+//   if (align & ALIGN_V_CENTER) {
+//     sy -= (hRes / 2);
+//   } else if (align & ALIGN_V_BOTTOM) {
+//     sy -= hRes;
+//   }
 
-  // Create Lookup tables to speed up drawing
+//   // No need to draw at all if we're offscreen
+//   if (sx + wRes < 0 || sx > SB_WIDTH - 1 || sy + hRes < 0 || sy > SB_HEIGHT - 1)
+//     return;
 
-  uint8_t x_LUT[w];
+//   int yOffset = ((int)abs(sy)) % 8;
+//   int sRow = sy / 8;
+//   if (sy < 0) {
+//     sRow--;
+//     yOffset = 8 - yOffset;
+//   }
 
-  for (uint8_t i=0 ; i < w; i++){
-    x_LUT[i] = 0xFF;
-  }
-  // Precalculate column translation (0xFF if skipped)
-  for (uint8_t i=0 ; i < wRes; i++){
-    x_LUT[((uint16_t)i  *  w) / wRes] = (mirror & MIRROR_HORIZONTAL) ? wRes - 1 - i : i;
-  }
+//   int rows = h / 8;
+//   if (h % 8 != 0) rows++;
 
-  uint8_t y_LUT[h];
+//   uint8_t rowsRes = hRes / 8;
+//   if (hRes % 8 != 0) rowsRes++;
 
-  for (uint8_t i=0 ; i < h; i++){
-    y_LUT[i] = 0xFF;
-  }
+//   // Init values
+//   iCol = 0;
+//   a = 0;
 
-  for (uint8_t i=0 ; i < hRes; i++){
-    y_LUT[((uint16_t)i * h) / hRes] = (mirror & MIRROR_VERTICAL) ?  hRes - 1 - i : i;
-  }
+//   // Create Lookup tables to speed up drawing
 
-  len = w * rows;
+//   uint8_t x_LUT[w];
 
-  for (uint16_t i = 0; i < len ; i++){
-    data = FX::readIndexedUInt8(fximage,i);
-    int aRow8 = a * 8;
-    int16_t iColMod =  x_LUT[iCol] + sx;
+//   for (uint8_t i=0 ; i < w; i++){
+//     x_LUT[i] = 0xFF;
+//   }
+//   // Precalculate column translation (0xFF if skipped)
+//   for (uint8_t i=0 ; i < wRes; i++){
+//     x_LUT[((uint16_t)i  *  w) / wRes] = (mirror & MIRROR_HORIZONTAL) ? wRes - 1 - i : i;
+//   }
 
-    // Skip if column not needed
-    if (x_LUT[iCol] != 0xFF && iColMod < SB_WIDTH && iColMod >= 0){
-      for (uint8_t s = 0; s < 8 ;s++){
-        if (y_LUT[aRow8+s] != 0xFF && data &  BIT_SHIFT[s]){
-          //TODO: CHECK LIMITS ON LUT?
-          uint8_t row = (uint8_t)(y_LUT[aRow8+s]+sy) / 8;
+//   uint8_t y_LUT[h];
 
-          if (row < (SB_HEIGHT / 8)) {
-            if (color) {
-              ARDBITMAP_SBUF[(row*SB_WIDTH) + (uint8_t)iColMod] |=   BIT_SHIFT[((uint8_t)(y_LUT[aRow8+s]+sy) % 8)];
-            } else {
-              ARDBITMAP_SBUF[(row*SB_WIDTH) + (uint8_t)iColMod] &= ~ BIT_SHIFT[((uint8_t)(y_LUT[aRow8+s]+sy) % 8)];
-            }
-          }
-         }
-      }
-    }
+//   for (uint8_t i=0 ; i < h; i++){
+//     y_LUT[i] = 0xFF;
+//   }
 
-    iCol++;
-    if (iCol >= w){
-        iCol = 0;
-        a++;
-    }
-  }
-}
+//   for (uint8_t i=0 ; i < hRes; i++){
+//     y_LUT[((uint16_t)i * h) / hRes] = (mirror & MIRROR_VERTICAL) ?  hRes - 1 - i : i;
+//   }
+
+//   len = w * rows;
+
+//   for (uint16_t i = 0; i < len ; i++){
+//     data = FX::readIndexedUInt8(fximage,i);
+//     int aRow8 = a * 8;
+//     int16_t iColMod =  x_LUT[iCol] + sx;
+
+//     // Skip if column not needed
+//     if (x_LUT[iCol] != 0xFF && iColMod < SB_WIDTH && iColMod >= 0){
+//       for (uint8_t s = 0; s < 8 ;s++){
+//         if (y_LUT[aRow8+s] != 0xFF && data &  BIT_SHIFT[s]){
+//           //TODO: CHECK LIMITS ON LUT?
+//           uint8_t row = (uint8_t)(y_LUT[aRow8+s]+sy) / 8;
+
+//           if (row < (SB_HEIGHT / 8)) {
+//             if (color) {
+//               ARDBITMAP_SBUF[(row*SB_WIDTH) + (uint8_t)iColMod] |=   BIT_SHIFT[((uint8_t)(y_LUT[aRow8+s]+sy) % 8)];
+//             } else {
+//               ARDBITMAP_SBUF[(row*SB_WIDTH) + (uint8_t)iColMod] &= ~ BIT_SHIFT[((uint8_t)(y_LUT[aRow8+s]+sy) % 8)];
+//             }
+//           }
+//          }
+//       }
+//     }
+
+//     iCol++;
+//     if (iCol >= w){
+//         iCol = 0;
+//         a++;
+//     }
+//   }
+// }
 
 #endif
