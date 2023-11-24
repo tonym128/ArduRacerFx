@@ -997,7 +997,7 @@ void displayCarTune()
 
   int i = 0;
   for (i = 15; i < 60; i += 10) 
-    cross_drawHLine(45, i, 60, 1);
+    cross_drawHLine(45, i, 70, 1);
     
   for (i = 45; i < 116; i += 10) 
     cross_drawVLine(i, 15, 40, 1);
