@@ -7,6 +7,7 @@
 #include "fixpoint.h"
 #include "levels.h"
 #include "car.h"
+
 #include <ArduboyFX.h>                // Required library for accessing the FX flash chip
 #include "fxdata/fxdata.h"            // this file contains all the references to FX data
                                       // Check out fxdata.txt to see how this is done.

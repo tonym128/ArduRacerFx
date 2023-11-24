@@ -169,7 +169,11 @@ void processCarTune() {
     setTimeout(100);
   }
 
-  if (cross_input_b()) {gameState->mode = 4;setTimeout(100);}
+  if (cross_input_b()) {
+    saveData.car_maxspeed = 4;
+    saveData.car_acceleration = 4;
+    saveData.car_turn = 4;
+    }
 }
 
 void processGameMode() {
@@ -987,11 +991,12 @@ void drawContinueMenu()
 void displayCarTune()
 {
   cross_print(3, 0, 1, "Car Tuning");
-  cross_print(3, 6, 1, "----------");
+  cross_drawHLine(3, 6, 70, 1);
   cross_print(6, 2+15, 1, "Speed");
   cross_print(6, 2+25, 1, "Accel");
   cross_print(6, 2+35, 1, "Turning");
   cross_print(6, 2+45, 1, "Points");
+  cross_print(6, 59, 1, "A - Save, B - Reset");
 
   cross_print(0,2+5+10*gameState->menuItem,1,"*");
 
