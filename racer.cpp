@@ -568,14 +568,16 @@ void displayOptionsMenu(int menuItem)
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
   cross_print(90, 30 + 0, 1, FX_STR_ABOUT);
-  cross_print(90, 30 + 8, 1, FX_STR_SOUND);
-  cross_print(90, 30 + 16, 1,FX_STR_MAP);
-  cross_print(90, 30 + 24, 1,FX_STR_DELETE);
+  cross_print(90, 30 + 8, 1, FX_STR_MUSIC);
+  cross_print(90, 30 + 16, 1, FX_STR_SOUND);
+  cross_print(90, 30 + 24, 1,FX_STR_MAP);
   
-  if (saveData.sound > 0)
+  if (saveData.music > 0)
     cross_print(90 + 5 * 6, 30 + 8, 1, ("*"));
-  if (saveData.map > 0)
+  if (saveData.sound > 0)
     cross_print(90 + 5 * 6, 30 + 16, 1, ("*"));
+  if (saveData.map > 0)
+    cross_print(90 + 5 * 6, 30 + 24, 1, ("*"));
 
   cross_print(84, 30 + menuItem * 8, 1, ("*"));
 }
@@ -600,6 +602,16 @@ void updateOptionsMenu() {
         gameState->enter = false;
         setTimeout(100);
       case 1:
+        // Toggle Music
+        if (doTimeout()) return;
+        if (saveData.music == 0) { saveData.music = 1;}
+        else saveData.music = 0;
+
+        gameState->enter = false;
+        setTimeout(100);
+        cross_save(saveData);
+        break;
+      case 2:
         // Toggle Sound
         if (doTimeout()) return;
         if (saveData.sound == 0) { saveData.sound = 1;}
@@ -609,7 +621,7 @@ void updateOptionsMenu() {
         setTimeout(100);
         cross_save(saveData);
         break;
-      case 2:
+      case 3:
         // Toggle Map
         if (doTimeout()) return;
         if (saveData.map == 0) { saveData.map = 1;}
@@ -618,11 +630,6 @@ void updateOptionsMenu() {
         gameState->enter = false;
         setTimeout(100);
         cross_save(saveData);
-        break;
-      case 3:
-        // Clear Data
-        if (doTimeout()) return;
-        gameState->mode = 99;
         break;
       case 99:
         //Back
@@ -891,6 +898,10 @@ void drawContinueMenu()
   }
 }
 
+void drawCarTune()
+{
+}
+
 void drawTrophySheet()
 {
   for (int i = 13; i < 53; i += 13) 
@@ -997,14 +1008,6 @@ void inputTrophy()
   }
 };
 
-void buildDeleteString(char button) {
-  sprintf(string,("%c - Delete"),button);
-}
-
-void buildAbortString(char button) {
-  sprintf(string,("%c - Abort"),button);
-}
-
 void displayIntro() {
   int x = 50-gameState->timeout/10;
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
@@ -1044,7 +1047,7 @@ void update() {
     if (gameState->lastmode != gameState->mode)
     {
       gameState->lastmode = gameState->mode;
-      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
+      cross_play_audio(saveData.music, FX_SOUND_INTRO);
       setTimeout(1000);
     }
     else
@@ -1058,7 +1061,7 @@ void update() {
   case 1: // Menu
     if (gameState->lastmode != gameState->mode)
     {
-      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
+      cross_play_audio(saveData.music, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
     else
@@ -1072,7 +1075,7 @@ void update() {
   case 2: // Options Menu
     if (gameState->lastmode != gameState->mode)
     {
-      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
+      cross_play_audio(saveData.music, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
     else
@@ -1086,7 +1089,7 @@ void update() {
   case 3: // About
     if (gameState->lastmode != gameState->mode)
     {
-      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
+      cross_play_audio(saveData.music, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
       setTimeout(100);
     }
@@ -1100,7 +1103,7 @@ void update() {
   case 4: // Level Start
     if (gameState->lastmode != gameState->mode)
     {
-      cross_stop_audio(saveData.sound);
+      cross_stop_audio(saveData.sound || saveData.music);
       gameState->lastmode = gameState->mode;
       setTimeout(1000);
     }
@@ -1113,7 +1116,7 @@ void update() {
   case 5: // Zoom in - Performance is bad - skipping!
     if (gameState->lastmode != gameState->mode)
     {
-      cross_stop_audio(saveData.sound);
+      cross_stop_audio(saveData.sound || saveData.music);
       gameState->lastmode = gameState->mode;
       setTimeout((int)ZOOM_TIME);
       setLevelDetails();
@@ -1129,7 +1132,7 @@ void update() {
   case 6: // 3,2,1,GO!
     if (gameState->lastmode != gameState->mode)
     {
-      cross_stop_audio(saveData.sound);
+      cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
       gameState->lastmode = gameState->mode;
       setTimeout(3000);
@@ -1138,7 +1141,7 @@ void update() {
   case 8: // Win Screen / Next Level Select
     if (gameState->lastmode != gameState->mode)
     {
-      cross_stop_audio(saveData.sound);
+      cross_stop_audio(saveData.sound || saveData.music);
       gameState->lastmode = gameState->mode;
       setTimeout(1000);
       gameState->curlap = 0;
@@ -1156,7 +1159,7 @@ void update() {
   case 10: // Play Game
     if (gameState->lastmode != gameState->mode)
     {
-      cross_stop_audio(saveData.sound);
+      cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
       gameState->laptimer = true;
       gameState->lastmode = gameState->mode;
@@ -1172,7 +1175,7 @@ void update() {
   case 98: // Trophy Screen
     if (gameState->lastmode != gameState->mode)
     {
-      cross_play_audio(saveData.sound, FX_SOUND_INTRO);
+      cross_play_audio(saveData.music, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
     if (!doTimeout())
@@ -1182,7 +1185,7 @@ void update() {
         setTimeout(1000);
       }
     break;
-  case 99: // Clear Data
+  case 99: // Tune Car
     if (gameState->lastmode != gameState->mode)
     {
       gameState->curlap = 0;
@@ -1305,23 +1308,9 @@ void render() {
       drawTrophySheet();
     }
     break;
-  case 99: // Clear Data
+  case 99: // Tune Car
     if (gameState->lastmode == gameState->mode) {
-      switch (gameState->curlap)
-      {
-      case 0: // Yes A
-        buildDeleteString('A');
-        cross_print(0, 0, 2, string);
-        buildAbortString('B');
-        cross_print(0, 30, 2, string);
-        break;
-      case 1: // Yes B
-        buildDeleteString('B');
-        cross_print(0, 0, 2, string);
-        buildAbortString('A');
-        cross_print(0, 30, 2, string);
-      break;
-      }
+      drawCarTune();
     }
     break;
   }
