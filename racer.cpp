@@ -544,9 +544,9 @@ void displayGameMode()
   }
  
   // Draw Map
+  uint8_t mapX = 128-gameState->levelSize;
   if (saveData.map) {
     uint8_t levelTile = 0;
-    uint8_t mapX = 128-gameState->levelSize;
     uint8_t mapY = 7;
     inlinex = FIXP_TO_INT(gameState->player1.X) / 64;
     inliney = FIXP_TO_INT(gameState->player1.Y) / 64;
@@ -567,12 +567,14 @@ void displayGameMode()
       }
     }
   }
+  
   // Display Speed
-  for (int i = 0; i <= FIXP_TO_FLOAT(gameState->player1.acceleration.force * 8); i++)
+  int speed = FIXP_TO_FLOAT(gameState->player1.acceleration.force)/gameState->max_speed*gameState->levelSize;
+  for (int i = 1; i <= speed; i++)
   {
-    cross_drawVLine(113 + i, 0, 7, 1);
+    cross_drawVLine(mapX + i, 0, 7, 1);
   }
-  cross_drawHLine(113, 6, 15, 0);
+  cross_drawHLine(mapX, 6, 15, 0);
 
   if (gameState->paused)
   {
