@@ -70,23 +70,25 @@ struct GameState {
   int timeout;
 
   // Car setup
+  // Fixed car variables
+  FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.01f);
+  FIXPOINT drag = FLOAT_TO_FIXP(0.04f / 30.0f);
+
   double default_max_turn_speed = 0.003;
   FIXPOINT default_max_speed = FLOAT_TO_FIXP(2.5f);
   FIXPOINT default_acceleration = FLOAT_TO_FIXP(0.003f);
 
-  double max_turn_speed = 0.003;
-  FIXPOINT max_speed = FLOAT_TO_FIXP(2.5f);
-  FIXPOINT acceleration = FLOAT_TO_FIXP(0.003f);
-  FIXPOINT max_dec = 3*acceleration;
-  FIXPOINT offroad = max_speed/4;
-  FIXPOINT offroad_neg = max_speed/4;
-
-  FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.01f);
-  FIXPOINT drag = FLOAT_TO_FIXP(0.04f / 30.0f);
-
   double mod_turn = 0.0003;
   FIXPOINT mod_max_speed = FLOAT_TO_FIXP(0.25f);
   FIXPOINT mod_acceleration = FLOAT_TO_FIXP(0.0003f);
+
+  // Modified by car tuning
+  double max_turn_speed = 0.003;
+  FIXPOINT max_speed = FLOAT_TO_FIXP(2.2f);
+  FIXPOINT acceleration = FLOAT_TO_FIXP(0.003f);
+  FIXPOINT max_dec = 3*acceleration;
+  FIXPOINT offroad = max_speed/3;
+  FIXPOINT offroad_neg = max_speed/3;
 };
 
 

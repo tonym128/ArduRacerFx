@@ -6,7 +6,7 @@
  <tileset firstgid="1" source="SpriteSheet64.tsx"/>
  <layer id="1" name="Tile Layer 1" width="10" height="10">
   <data encoding="base64" compression="zstd">
-   KLUv/WCQAOUCAGQCFQAAACAOAAAACwAAABsRAAAADRIAAAAPEAAAAAwcHBUaHAoUEwkWgLBevBzXtljY2MYmWxPOmAUaAOLWdAFOgAA1SxX7OjGxV+0OgTMxC06eyqBd7yiCG9cC
+   KLUv/WCQAN0DAMKECgtw7lkDqeP6TqNSpAm1dI9q6pIP69CLI8sxGHDmytUbcXx5+rH14AJ7EyaocdGR0parAZCCCYywBxGwhLYULUvNAVeKf1CYR/vvX57s8FfFezcwXL9NE4fT+uvyZ6aAb/XZJuAN+PtUafpI68mcifQ27Zi+hXafFA==
   </data>
  </layer>
 </map>
