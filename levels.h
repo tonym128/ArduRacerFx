@@ -30,7 +30,7 @@ static __uint24 getLevelMap(uint8_t level) {
 }
 
 static uint8_t getLevelMapSize(uint8_t level) {
-  if (level < 10) return 10;
+  if (level <= 10) return 10;
   return 16;
 }
 
