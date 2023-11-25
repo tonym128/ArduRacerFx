@@ -9,6 +9,7 @@ unsigned long tFrameMs = 0;
 constexpr int ZOOM_TIME = 6000;
 
 // #define DEBUG_MODE
+// #define PERF_RENDER
 
 void setTimeout(int timeout) {
   gameState->timeout = timeout;
@@ -30,10 +31,42 @@ bool doTimeout() {
   return false;
 }
 
+void buildMap(int x, int y, int levelSize) {
+    // Map XY logic 
+    uint8_t levelTile;
+    uint8_t xMod;
+    uint8_t jMod;
+
+    if (levelSize > 16) {
+      // Logic for changing xy map store for larger stages / based on player position (load 4 quadrants based on position)
+      if (x < 16) {
+        xMod = 0;
+      } else {
+        xMod = 16;
+      }
+      if (y < 16) {
+        yMod = 0;
+      } else {
+        yMod = 16;
+      }
+    }
+
+    for (uint8_t j = 0; j < gameState->levelSize; j++) {
+      for (uint8_t i = 0; i < gameState->levelSize; i++) {
+        if (i + j*gameState->levelSize < 256) {
+          levelTile = getLevelTile(gameState->levelMap, i+xMod, j+yMod, gameState->levelSize);
+          gameState->mapDisplay[i + j*gameState->levelSize] = ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24));
+        }
+      }
+    }
+}
+
 void setLevelDetails()
 {
   gameState->levelMap = getLevelMap(gameState->level);
   gameState->levelSize = getLevelMapSize(gameState->level);
+  
+  buildMap();
 
   gameState->lasttile = 100;
   gameState->lastx = 100;
@@ -410,8 +443,16 @@ inline void setLevelString()
   sprintf(string, ("Level %d"), gameState->level);
 }
 
+#ifdef PERF_RENDER
+double split;
+#endif
+
 void displayGameMode()
 {
+#ifdef PERF_RENDER
+  split = getMs() ;
+#endif
+
   int x = FIXP_TO_INT(gameState->player1.X) - 60;
   int y = FIXP_TO_INT(gameState->player1.Y) - 30;
   int xyMax = 64 * gameState->levelSize;
@@ -427,6 +468,13 @@ void displayGameMode()
     y = xyMax - 64;
   int inlinex = x % 64 * -1;
   int inliney = y % 64 * -1;
+
+#ifdef PERF_RENDER
+  split = getMs() - split;
+  sprintf(string, "Before Draw - %d\n",(int)split);
+  Serial.write(string);
+  split = getMs();
+#endif
   // Draw Road
   for (uint8_t j = y / 64; j < (y / 64) + 2 && j < gameState->levelSize; j++)
   {
@@ -488,6 +536,13 @@ void displayGameMode()
     inliney += 64;
   }
 
+#ifdef PERF_RENDER
+  split = getMs() - split;
+  sprintf(string, "Draw Road - %d\n",(int)split);
+  Serial.write(string);
+  split = getMs();
+#endif
+
   // Off Road Check (Do it here because we rely on the populated screen
   int carx = FIXP_TO_INT(gameState->player1.X);
   int cary = FIXP_TO_INT(gameState->player1.Y);
@@ -532,6 +587,13 @@ void displayGameMode()
   sprintf(string, ("%c-%2u.%02u %d/%d\n%c-%2u.%02u"), gameState->curlap + 1 + 48, gameState->laptimes[(gameState->curlap)] / 1000, gameState->laptimes[(gameState->curlap)] / 10 % 100, gameState->checkpointpassed, gameState->checkpoints, gameState->newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState->level - 1]  / 1000, saveData.BestLapTimes[gameState->level - 1]  / 10 % 100);
   cross_print(0, 0, 1, string);
 
+#ifdef PERF_RENDER
+  split = getMs() - split;
+  sprintf(string, "Car and Strings- %d\n",(int)split);
+  Serial.write(string);
+  split = getMs();
+#endif
+
   for (int i = 0; i < gameState->levelSize+6; i++)
   {
     cross_drawVLine(128 - gameState->levelSize + i, 0, 6, 0);
@@ -558,16 +620,26 @@ void displayGameMode()
             continue;
         }
 
-        levelTile = getLevelTile(gameState->levelMap, i, j, gameState->levelSize);
-        if ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24)) {
-            cross_drawPixel(mapX+i,mapY+j,1);
-        } else {
-            cross_drawPixel(mapX+i,mapY+j,0);
+        if (i + j*gameState->levelSize < 256) {
+            cross_drawPixel(mapX+i,mapY+j,gameState->mapDisplay[i+j*gameState->levelSize]);
         }
+        // levelTile = getLevelTile(gameState->levelMap, i, j, gameState->levelSize);
+        // if ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24)) {
+        //     cross_drawPixel(mapX+i,mapY+j,1);
+        // } else {
+        //     cross_drawPixel(mapX+i,mapY+j,0);
+        // }
       }
     }
   }
-  
+
+#ifdef PERF_RENDER
+  split = getMs() - split;
+  sprintf(string, "Map - %d\n",(int)split);
+  Serial.write(string);
+  split = getMs();
+#endif
+
   // Display Speed
   int speed = FIXP_TO_FLOAT(gameState->player1.acceleration.force)/FIXP_TO_FLOAT(gameState->max_speed)*gameState->levelSize;
   for (int i = 1; i <= speed; i++)
@@ -585,6 +657,13 @@ void displayGameMode()
     cross_print(0, 48, 1, FX_STR_AB_CONT);
     cross_print(0, 56, 1, FX_STR_LEVEL_SELECT);
   }
+
+#ifdef PERF_RENDER
+  split = getMs() - split;
+  sprintf(string, "Speedo - %d\n",(int)split);
+  Serial.write(string);
+  split = getMs();
+#endif
 }
 
 void racerSetup()
@@ -1403,22 +1482,26 @@ void render() {
   #endif
 }
 
-double long updateTime;
-double long renderTime;
+#ifdef PERF_RENDER
+double renderTime;
+#endif
 
 void racerLoop()
 {
   if (!cross_loop_start())
     return;
-  updateTime = getMs();
-  update();
-  renderTime = getMs();
-  updateTime = renderTime - updateTime;
-  
-  render();
-  renderTime = getMs() - renderTime;
-  sprintf(string, "Render - %d , Update - %d\n",renderTime, updateTime);
-  Serial.write(string);
 
+#ifdef PERF_RENDER
+  renderTime = getMs();
+#endif
+
+  update();
+  render();
+
+#ifdef PERF_RENDER
+  renderTime = getMs()- renderTime;
+  sprintf(string,"RenderTime - %i\n",(int)renderTime);
+  Serial.write(string);
+#endif
   cross_loop_end();
 }

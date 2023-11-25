@@ -43,6 +43,7 @@ struct GameState {
   uint8_t level;
   __uint24 levelMap;
   uint8_t levelSize;
+  bool mapDisplay[256];
   uint8_t lasttile;
   uint8_t lastx;
   uint8_t lasty;
