@@ -31,12 +31,14 @@ static __uint24 getLevelMap(uint8_t level) {
 
 static uint8_t getLevelMapSize(uint8_t level) {
   if (level <= 10) return 10;
-  return 16;
+  if (level <= 18) return 16;
+  return 30;
 }
 
 static uint8_t getLevelTile(__uint24 level, uint8_t x, uint8_t y, uint8_t levelmapsize) {
   uint16_t pos = x + (y * levelmapsize);
-  return FX::readIndexedUInt8(level,pos);
+  // return FX::readIndexedUInt8(level,pos);
+  return FX::readIndexedUInt8(level+pos,0);
 }
 
 #endif

@@ -534,7 +534,7 @@ void displayGameMode()
 
   for (int i = 0; i < gameState->levelSize+6; i++)
   {
-    cross_drawVLine(128 - gameState->levelSize - 6 + i, 0, 6, 0);
+    cross_drawVLine(128 - gameState->levelSize + i, 0, 6, 0);
   }
 
   if (gameState->player1.offRoad && gameState->player1.acceleration.force != 0)
@@ -569,12 +569,12 @@ void displayGameMode()
   }
   
   // Display Speed
-  int speed = FIXP_TO_FLOAT(gameState->player1.acceleration.force)/gameState->max_speed*gameState->levelSize;
+  int speed = FIXP_TO_FLOAT(gameState->player1.acceleration.force)/FIXP_TO_FLOAT(gameState->max_speed)*gameState->levelSize;
   for (int i = 1; i <= speed; i++)
   {
     cross_drawVLine(mapX + i, 0, 7, 1);
   }
-  cross_drawHLine(mapX, 6, 15, 0);
+  cross_drawHLine(mapX, 6, gameState->levelSize, 0);
 
   if (gameState->paused)
   {
@@ -805,6 +805,9 @@ void displayMap()
         break;
       case 16:
         FX::drawBitmap(x * 4, y * 4, FX_DATA_TILES_4, tilemap, dbmNormal);
+        break;
+      case 30:
+        FX::drawBitmap(x * 2, y * 2, FX_DATA_TILES_2, tilemap, dbmNormal);
         break;
       }
     }
@@ -1400,18 +1403,22 @@ void render() {
   #endif
 }
 
+double long updateTime;
+double long renderTime;
+
 void racerLoop()
 {
-#ifdef ARDUBOYG
-  if (!cross_loop_start())
-    update();
-  render();
-#else
   if (!cross_loop_start())
     return;
+  updateTime = getMs();
   update();
+  renderTime = getMs();
+  updateTime = renderTime - updateTime;
+  
   render();
+  renderTime = getMs() - renderTime;
+  sprintf(string, "Render - %d , Update - %d\n",renderTime, updateTime);
+  Serial.write(string);
 
-#endif
   cross_loop_end();
 }

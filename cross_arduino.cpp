@@ -198,22 +198,6 @@ void cross_setup()
 
 bool cross_loop_start()
 {
-#ifdef ARDUBOYG
-    arduboy.waitForNextPlane();
-    if(arduboy.needsUpdate()) {
-        frameTime = currentTime;
-        currentTime = millis();
-        frameMs = currentTime - frameTime;
-
-        if (frameMs == 0)
-            frameMs = 1;
-        
-        arduboy.pollButtons();
-        return true;
-    }
-
-    return false;
-#else
     if (!(arduboy.nextFrame()))
         return false;
     sound.fillBufferFromFX();
@@ -227,8 +211,6 @@ bool cross_loop_start()
     arduboy.pollButtons();
 
     return true;
-
-#endif
 }
 
 void cross_loop_end()
@@ -244,4 +226,9 @@ unsigned long getFrameMs()
 unsigned long getCurrentMs()
 {
     return currentTime;
+}
+
+unsigned long getMs()
+{
+    return millis();
 }

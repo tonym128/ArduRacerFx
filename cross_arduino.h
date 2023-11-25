@@ -44,6 +44,7 @@ bool cross_loop_start();
 void cross_loop_end();
 unsigned long getFrameMs();
 unsigned long getCurrentMs();
+unsigned long getMs();
 
 void cross_save(SaveData saveData);
 SaveData cross_load();
