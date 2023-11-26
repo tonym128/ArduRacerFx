@@ -31,31 +31,33 @@ bool doTimeout() {
   return false;
 }
 
-void buildMap(int x, int y, int levelSize) {
+void buildMapCache() {
     // Map XY logic 
     uint8_t levelTile;
-    uint8_t xMod;
-    uint8_t jMod;
+    int playerMapTileX = FIXP_TO_INT(gameState->player1.X)/64;
+    int playerMapTileY = FIXP_TO_INT(gameState->player1.Y)/64;
 
-    if (levelSize > 16) {
-      // Logic for changing xy map store for larger stages / based on player position (load 4 quadrants based on position)
-      if (x < 16) {
-        xMod = 0;
-      } else {
-        xMod = 16;
-      }
-      if (y < 16) {
-        yMod = 0;
-      } else {
-        yMod = 16;
-      }
+    if (gameState->levelSize > LEVEL_CACHE) {
+      //Fog of war type calc
+      playerMapTileX -= LEVEL_CACHE/2;
+      playerMapTileY -= LEVEL_CACHE/2;
+      if (playerMapTileX<0) playerMapTileX=0;
+      if (playerMapTileX>gameState->levelSize-LEVEL_CACHE) playerMapTileX=gameState->levelSize-LEVEL_CACHE;
+      if (playerMapTileY<0) playerMapTileY=0;
+      if (playerMapTileY>gameState->levelSize-LEVEL_CACHE) playerMapTileY=gameState->levelSize-LEVEL_CACHE;
+    } else {
+      playerMapTileX = 0;
+      playerMapTileY = 0;
     }
 
-    for (uint8_t j = 0; j < gameState->levelSize; j++) {
-      for (uint8_t i = 0; i < gameState->levelSize; i++) {
-        if (i + j*gameState->levelSize < 256) {
-          levelTile = getLevelTile(gameState->levelMap, i+xMod, j+yMod, gameState->levelSize);
-          gameState->mapDisplay[i + j*gameState->levelSize] = ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24));
+    if (gameState->levelMapXMod != playerMapTileX || gameState->levelMapYMod != playerMapTileY) {
+      // Map cache invalidated, repopulate
+      gameState->levelMapXMod = playerMapTileX;
+      gameState->levelMapYMod = playerMapTileY;
+      for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState->levelSize; j++) {
+        for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState->levelSize; i++) {
+            levelTile = getLevelTile(gameState->levelMap, i + playerMapTileX, j + playerMapTileY, gameState->levelSize);
+            gameState->mapDisplay[i + j*LEVEL_CACHE] = ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24));
         }
       }
     }
@@ -65,8 +67,10 @@ void setLevelDetails()
 {
   gameState->levelMap = getLevelMap(gameState->level);
   gameState->levelSize = getLevelMapSize(gameState->level);
-  
-  buildMap();
+
+  // Invalidate cached map
+  gameState->levelMapXMod = -1;
+  gameState->levelMapYMod = -1;
 
   gameState->lasttile = 100;
   gameState->lastx = 100;
@@ -75,7 +79,6 @@ void setLevelDetails()
   gameState->player1.acceleration.force = FIXP_TO_INT(0);
   gameState->player1.acceleration.direction = FIXP_TO_INT(0);
 
-  bool done = false;
   gameState->checkpoints = 0;
   gameState->checkpointpassed = 0;
 
@@ -83,9 +86,9 @@ void setLevelDetails()
   CheckPoint *checkpoint = nullptr;
   CheckPoint *firstcheckpoint = nullptr;
 
-  for (int x = 0; x < gameState->levelSize && !done; x++)
+  for (int x = 0; x < gameState->levelSize; x++)
   {
-    for (int y = 0; y < gameState->levelSize && !done; y++)
+    for (int y = 0; y < gameState->levelSize; y++)
     {
       uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
       if (levelTile == 24)
@@ -93,14 +96,12 @@ void setLevelDetails()
         gameState->player1.X = FLOAT_TO_FIXP(x * 64.0f);
         gameState->player1.Y = FLOAT_TO_FIXP(y * 64.0f + 32 - 4);
         gameState->player1.rotation = PI / 2;
-        //        done = true;
       }
       else if (levelTile == 25)
       {
         gameState->player1.X = FLOAT_TO_FIXP(x * 64.0f + 32 - 4);
         gameState->player1.Y = FLOAT_TO_FIXP(y * 64.0f);
         gameState->player1.rotation = PI;
-        //        done = true;
       }
       else if (levelTile == 26 || levelTile == 27)
       {
@@ -593,10 +594,12 @@ void displayGameMode()
   Serial.write(string);
   split = getMs();
 #endif
+  uint8_t mapSize = gameState->levelSize;
+  if (mapSize > LEVEL_CACHE) mapSize = LEVEL_CACHE;
 
-  for (int i = 0; i < gameState->levelSize+6; i++)
+  for (int i = 0; i < mapSize+6; i++)
   {
-    cross_drawVLine(128 - gameState->levelSize + i, 0, 6, 0);
+    cross_drawVLine(128 - mapSize + i, 0, 6, 0);
   }
 
   if (gameState->player1.offRoad && gameState->player1.acceleration.force != 0)
@@ -606,31 +609,23 @@ void displayGameMode()
   }
  
   // Draw Map
-  uint8_t mapX = 128-gameState->levelSize;
+  uint8_t mapX = 128-mapSize;
   if (saveData.map) {
+    buildMapCache();
     uint8_t levelTile = 0;
     uint8_t mapY = 7;
-    inlinex = FIXP_TO_INT(gameState->player1.X) / 64;
-    inliney = FIXP_TO_INT(gameState->player1.Y) / 64;
 
-    for (uint8_t j = 0; j < gameState->levelSize; j++) {
-      for (uint8_t i = 0; i < gameState->levelSize; i++) {
-        if (inlinex == i && inliney == j) {
-            cross_drawPixel(mapX+i,mapY+j,(gameState->laptimes[(gameState->curlap)]/200)%2==0);
-            continue;
-        }
-
-        if (i + j*gameState->levelSize < 256) {
-            cross_drawPixel(mapX+i,mapY+j,gameState->mapDisplay[i+j*gameState->levelSize]);
-        }
-        // levelTile = getLevelTile(gameState->levelMap, i, j, gameState->levelSize);
-        // if ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24)) {
-        //     cross_drawPixel(mapX+i,mapY+j,1);
-        // } else {
-        //     cross_drawPixel(mapX+i,mapY+j,0);
-        // }
+    for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState->levelSize; j++) {
+      for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState->levelSize; i++) {
+        cross_drawPixel(mapX+i,mapY+j,gameState->mapDisplay[i+j*LEVEL_CACHE]);
       }
     }
+
+    // Overdraw player pixel ticking
+    int carMapX = FIXP_TO_INT(gameState->player1.X)/64;
+    int carMapY = FIXP_TO_INT(gameState->player1.Y)/64;
+
+    cross_drawPixel(mapX+carMapX-gameState->levelMapXMod,mapY+carMapY-gameState->levelMapYMod,(gameState->laptimes[(gameState->curlap)]/200)%2==0);
   }
 
 #ifdef PERF_RENDER

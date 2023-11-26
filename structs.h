@@ -2,6 +2,7 @@
 #define _STRUCTS_H_
 #include "fixpoint.h"
 constexpr uint8_t TIMED_LAPS = 5;
+#define LEVEL_CACHE 16 // Tiles in cache
 
 struct Vec3 {
   FIXPOINT x,y;
@@ -43,7 +44,11 @@ struct GameState {
   uint8_t level;
   __uint24 levelMap;
   uint8_t levelSize;
-  bool mapDisplay[256];
+
+  bool mapDisplay[LEVEL_CACHE*LEVEL_CACHE];
+  int levelMapXMod = -1;
+  int levelMapYMod = -1;
+
   uint8_t lasttile;
   uint8_t lastx;
   uint8_t lasty;
