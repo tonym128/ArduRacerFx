@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="1">
  <editorsettings>
-  <export format="csv"/>
+  <export target="Level19.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="SpriteSheet64.tsx"/>
  <layer id="1" name="Tile Layer 1" width="30" height="30">
   <data encoding="base64" compression="zstd">
-   KLUv/WAQDSUSAKLKGQog7uwhGKwEqKwpf6CYLIF0Cszp0SuyMGgc2FU4iElaUQVPVwoJ0pWmzrBOgmFygnIqGIC2iDbAlIcLUM9JiauZJKF4ApV3d0a7iGaXFlIIsfxO8zcB+KX/+JXhZ/5oHf7J3/zCjwGBAagBeqk0rQGhBEgZpaVlNxKgEbSYgrAqtE7IVGSVirU0Bm+O3k/mzUTMEXFn8TFeH3p/SJtd/m+GHr6jOU8T7mP8sJ3gWY/3kjuTr+kIeOWZ/6X5ejHp5U4cV2v9SORVb8FgXI0WAEuxEa7t7fTiDpzBXAUX6B++tnOo/48a2f3iNmrnD+4dWJsdPNDP4LyKu1r5S8fK/uYTwYcBXLPQV/2dzlC2p13hsBb1srNhOPVP4L3L0SZfF1Bu4xzAL1ye7v1nDJZQOmXNZae7z8rGfPpnNTs0yTK8dzDf9rcV7H1t2APvgxc/9+br7PKfgozcW09OONhq8i7cJe+jvOJp5e1t/cfo23Pz9jNKY66D2dE7t7O/coxCX0uzfdXxv4Hf1/v7KN5skJm+E3ACc43TW98g/xDCL8KFm8gqlh0Y94FvAw+zhLb9ZtsFjD23HV5fc+xdlP7Ea8GW92v0IcdJWoT999zoZD/x3Niv1w/VbjMAfpjahOtAtktek17crXBNDrAfff+4k5b5xDTn0G7tRPy3n6uf6q/2I5YDd4/tv/r/rf1at+Oc7nnpnr6l/9Won3du+5liBT1M9vG5/AFhnOwHn3b5Ds4xzjeGd4n603/RxKPZJYTdcqs=
+   KLUv/WAQDXUIAHQDFwAAAA4AAAALAAAAGwAAAAERAAAADQgAAAAPEAAAAAcBDAMcAhIUEhIGGQkUAhQFCQocExMTE2GgcLm0Z2CCITJKqB7tUGcU4Hlzdt26Z3pxbpwoSQMrCbF013x6ZEcn/Unvg+fE83d+iYyz4D/BLL3Srbkjt5uZavTba44nRDOzSXYQ7wIbD/Ms5GRh14G4Rc9ZRndA5Do6F+eX5Vy0RExChA0n74XrnpxUJJB7M55pQLJPmrlT1A/TmRZcckPQsKWzk8bt5+ZXd59y4t5j+baL+CMvLXArubgL9XdI4B5lfvcLEOsu8BfXkGfNWucbpD9Oa1nLK65Ad2cW+AuV3uTeWifMRaWHKWFV7Q==
   </data>
  </layer>
 </map>
