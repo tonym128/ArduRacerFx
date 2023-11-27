@@ -249,9 +249,9 @@ void processGameMode() {
   if (gameState->laptimer && !gameState->paused)
   {
     gameState->laptimes[(gameState->curlap)] += tFrameMs;
-    if (gameState->laptimes[(gameState->curlap)] > 60000)
+    if (gameState->laptimes[(gameState->curlap)] > 99990)
     {
-      gameState->laptimes[(gameState->curlap)] = 60000;
+      gameState->laptimes[(gameState->curlap)] = 99990;
     }
   }
 
@@ -264,15 +264,6 @@ void processGameMode() {
   {
     gameState->player1.acceleration.force -= gameState->max_dec * tFrameMs;
   }
-}
-
-void setCarMax() {
-  gameState->max_turn_speed = gameState->default_max_turn_speed + (saveData.car_turn - 4) * gameState->mod_turn;
-  gameState->max_speed = gameState->default_max_speed + (saveData.car_maxspeed -4)* gameState->mod_max_speed;
-  gameState->acceleration = gameState->default_acceleration + (saveData.car_acceleration -4) * gameState->mod_acceleration;
-  gameState->max_dec = 3*gameState->acceleration;
-  gameState->offroad = gameState->max_speed/4;
-  gameState->offroad_neg = gameState->max_speed/4;
 }
 
 void updateGameMode()
@@ -1367,7 +1358,14 @@ void update() {
     {
       cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
-      setCarMax();
+      //setCarMax();
+      gameState->max_turn_speed = gameState->default_max_turn_speed + (saveData.car_turn - 4) * gameState->mod_turn;
+      gameState->max_speed = gameState->default_max_speed + (saveData.car_maxspeed -4)* gameState->mod_max_speed;
+      gameState->acceleration = gameState->default_acceleration + (saveData.car_acceleration -4) * gameState->mod_acceleration;
+      gameState->max_dec = 3*gameState->acceleration;
+      gameState->offroad = gameState->max_speed/4;
+      gameState->offroad_neg = gameState->max_speed/4;
+
       gameState->laptimer = true;
       gameState->lastmode = gameState->mode;
     }

@@ -525,7 +525,7 @@ uint16_t FX_SOUND_INTRO[] = {
 };
 
 savesection
-uint16_t {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // Saved Best LapTimes
+uint32_t {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // Saved Best LapTimes
 uint8_t 1 // Max Level
 uint8_t 1 // music 
 uint8_t 1 // sound 
