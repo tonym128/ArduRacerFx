@@ -1,6 +1,14 @@
 # TODO
 - Music and SFX
-
+- Increase max time to 99.99 seconds (overflow, change to 32-bit)
+- Update trophy screen for 20 levels
+- Simplify any levels too hard to get 99.99 sec
+- Play game through on Arduboy making times for every level
+    - Once with mods as desired
+    - Once without car mods
+    - With shortcuts, without shortcuts
+- Settings option for shortcuts and no shortcuts
+- Reset maxlevel to 1
 - Move screen back when car is going faster
 - Integrate into a FX image with multiple games
 
