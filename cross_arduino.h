@@ -37,7 +37,9 @@ bool cross_loop_start();
 void cross_loop_end();
 unsigned long getFrameMs();
 unsigned long getCurrentMs();
+#ifdef PERF_RENDER
 unsigned long getMs();
+#endif
 
 void cross_save(SaveData saveData);
 SaveData cross_load();

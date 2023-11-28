@@ -218,7 +218,9 @@ unsigned long getCurrentMs()
     return currentTime;
 }
 
+#ifdef PERF_RENDER
 unsigned long getMs()
 {
     return millis();
 }
+#endif
