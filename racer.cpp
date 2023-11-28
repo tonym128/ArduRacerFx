@@ -266,6 +266,7 @@ void processGameMode() {
   }
 }
 
+
 void updateGameMode()
 {
   if (gameState->paused)
@@ -425,12 +426,12 @@ void updateGameMode()
   gameState->lasty = tiley;
 }
 
-inline void setLevelTimeString(char number, unsigned int time)
+void setLevelTimeString(char number, unsigned int time)
 {
   sprintf(string, ("%c-%2u.%02u"), number, time / 1000, time / 10 % 100);
 }
 
-inline void setLevelString()
+void setLevelString()
 {
   sprintf(string, ("Level %d"), gameState->level);
 }
@@ -1358,14 +1359,14 @@ void update() {
     {
       cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
-      //setCarMax();
-      gameState->max_turn_speed = gameState->default_max_turn_speed + (saveData.car_turn - 4) * gameState->mod_turn;
-      gameState->max_speed = gameState->default_max_speed + (saveData.car_maxspeed -4)* gameState->mod_max_speed;
-      gameState->acceleration = gameState->default_acceleration + (saveData.car_acceleration -4) * gameState->mod_acceleration;
-      gameState->max_dec = 3*gameState->acceleration;
-      gameState->offroad = gameState->max_speed/4;
-      gameState->offroad_neg = gameState->max_speed/4;
-
+//      void setCarMax() {
+        gameState->max_turn_speed = gameState->default_max_turn_speed + (saveData.car_turn - 4) * gameState->mod_turn;
+        gameState->max_speed = gameState->default_max_speed + (saveData.car_maxspeed -4)* gameState->mod_max_speed;
+        gameState->acceleration = gameState->default_acceleration + (saveData.car_acceleration -4) * gameState->mod_acceleration;
+        gameState->max_dec = 3*gameState->acceleration;
+        gameState->offroad = gameState->max_speed/4;
+        gameState->offroad_neg = gameState->max_speed/4;
+//      }
       gameState->laptimer = true;
       gameState->lastmode = gameState->mode;
     }

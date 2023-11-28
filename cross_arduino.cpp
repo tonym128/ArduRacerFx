@@ -2,17 +2,14 @@
 
 // #define DEBUG_MODE
 
-#ifndef ARDUBOYG
 Arduboy2 arduboy;
 uint16_t buffer[8]; 
 ArduboyTonesFX sound(arduboy.audio.enabled, buffer);
-#endif
 #define ARDBITMAP_SBUF arduboy.getBuffer()
 #include "ArdBitmap.h"
 ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 unsigned long currentTime, frameTime, fps, frameMs = 0;
 const unsigned int FRAME_RATE = 60; // Frame rate in frames per second
-const unsigned int FRAME_RATE_MENU = 30; // Frame rate in frames per second
 
 void cross_save(SaveData saveData) {
     FX::saveGameState(saveData);
@@ -161,9 +158,7 @@ bool cross_getPixel(int x, int y) {
 }
 
 void cross_playSound(bool makeSound, uint16_t hertz, uint8_t duration) {
-#ifndef ARDUBOYG
     if (makeSound) sound.tone(hertz, duration); // play a 1000Hz tone for 500ms
-#endif
 };
 
 void cross_play_audio(bool makeSound, uint24_t fxsound) {
@@ -183,13 +178,8 @@ void cross_setup()
     arduboy.begin();
     FX::begin(FX_DATA_PAGE, FX_SAVE_PAGE); // // initialise FX chip
     arduboy.initRandomSeed();
-
-#ifdef ARDUBOYG
-    arduboy.startGray();
-#else
     arduboy.setFrameRate(FRAME_RATE);
     arduboy.audio.on();
-#endif
 
 #ifdef DEBUG_MODE
     Serial.begin(9600);

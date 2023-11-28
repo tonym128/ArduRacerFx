@@ -54,8 +54,8 @@ struct GameState {
   uint8_t lasty;
   uint8_t car_tune_total = 12;
 
-  unsigned int laptimes[TIMED_LAPS];
-  unsigned int bestLap;
+  uint32_t laptimes[TIMED_LAPS];
+  uint32_t bestLap;
   bool newbestLap;
   CheckPoint *levelCheckPoints;
   bool laptimer;
@@ -77,16 +77,16 @@ struct GameState {
 
   // Car setup
   // Fixed car variables
-  FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.01f);
-  FIXPOINT drag = FLOAT_TO_FIXP(0.04f / 30.0f);
+  static const FIXPOINT offroad_pen = FLOAT_TO_FIXP(0.01f);
+  static const FIXPOINT drag = FLOAT_TO_FIXP(0.04f / 30.0f);
 
-  double default_max_turn_speed = 0.003;
-  FIXPOINT default_max_speed = FLOAT_TO_FIXP(2.5f);
-  FIXPOINT default_acceleration = FLOAT_TO_FIXP(0.003f);
+  static const double default_max_turn_speed = 0.003;
+  static const FIXPOINT default_max_speed = FLOAT_TO_FIXP(2.5f);
+  static const FIXPOINT default_acceleration = FLOAT_TO_FIXP(0.003f);
 
-  double mod_turn = 0.0003;
-  FIXPOINT mod_max_speed = FLOAT_TO_FIXP(0.25f);
-  FIXPOINT mod_acceleration = FLOAT_TO_FIXP(0.0003f);
+  static const double mod_turn = 0.0003;
+  static const FIXPOINT mod_max_speed = FLOAT_TO_FIXP(0.25f);
+  static const FIXPOINT mod_acceleration = FLOAT_TO_FIXP(0.0003f);
 
   // Modified by car tuning
   double max_turn_speed = 0.003;

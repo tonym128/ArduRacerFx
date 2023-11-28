@@ -2,15 +2,8 @@
 #define _CROSS_ARDUINO_H_
 #include "structs.h"
 
-// #define ARDUBOYG
-
-#ifdef ARDUBOYG
-#include "ArduboyG.h"
-extern ArduboyGBase_Config<ABG_Mode::L4_Triplane> arduboy;
-#else
 #include "Arduboy2.h"
 #include "ArduboyTonesFX.h"
-#endif
 
 #include <ArduboyFX.h>                // Required library for accessing the FX flash chip
 #include "fxdata/fxdata.h"            // this file contains all the references to FX data
