@@ -10,7 +10,7 @@ constexpr uint16_t FX_DATA_PAGE  = 0xff30;
 constexpr uint24_t FX_DATA_BYTES = 48945;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
-constexpr uint24_t FX_SAVE_BYTES = 90;
+constexpr uint24_t FX_SAVE_BYTES = 49;
 
 constexpr uint24_t FX_STR_PAUSED = 0x000000;
 constexpr uint24_t FX_STR_CONTINUE = 0x000007;

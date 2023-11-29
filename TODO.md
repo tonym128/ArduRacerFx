@@ -1,6 +1,5 @@
 # TODO
 - Music and SFX
-- Increase max time to 99.99 seconds (overflow, change to 32-bit)
 - Update trophy screen for 20 levels
 - Simplify any levels too hard to get 99.99 sec
 - Play game through on Arduboy making times for every level
@@ -20,6 +19,9 @@
 - Work out why flashing text causes slow downs
 
 # DONE
+- Increase max time to 99.99 seconds (overflow, change to 32-bit)
+- Issues with saving 32 bit indexed int, change to uint16t
+
 - Configure car performance
     - Max Speed
     - Accelerate

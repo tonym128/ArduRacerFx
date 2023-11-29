@@ -132,7 +132,7 @@ void setLevelDetails()
     gameState->laptimes[i] = 0;
   }
 
-  gameState->bestLap = saveData.BestLapTimes[gameState->level - 1];
+  gameState->bestLap = saveData.BestLapTimes[gameState->level - 1]*10;
 
   gameState->player1.offRoad = false;
 }
@@ -386,10 +386,10 @@ void updateGameMode()
             gameState->newbestLap = true;
 
             // Update Best Lap Time to Rom
-            if (saveData.BestLapTimes[gameState->level - 1] == 0 || saveData.BestLapTimes[gameState->level - 1] > gameState->laptimes[(gameState->curlap)])
+            if (saveData.BestLapTimes[gameState->level - 1] == 0 || saveData.BestLapTimes[gameState->level - 1] > gameState->laptimes[(gameState->curlap)]/10)
             {
-              saveData.BestLapTimes[gameState->level - 1] = gameState->laptimes[(gameState->curlap)];
-              unsigned int levelTime = FX::readIndexedUInt16(FX_LEVEL_TIMES, (gameState->level - 1) * 3 + 2);
+              saveData.BestLapTimes[gameState->level - 1] = gameState->laptimes[(gameState->curlap)]/10;
+              uint16_t levelTime = FX::readIndexedUInt16(FX_LEVEL_TIMES, (gameState->level - 1) * 3 + 2);
               if (saveData.BestLapTimes[gameState->level - 1] < levelTime)
               { // If the time is better than 3rd place, we can go forwards
                 if (saveData.maxLevel < gameState->level + 1 && gameState->level < 10)
@@ -426,9 +426,9 @@ void updateGameMode()
   gameState->lasty = tiley;
 }
 
-void setLevelTimeString(char number, unsigned int time)
+void setLevelTimeString(char number, uint16_t time)
 {
-  sprintf(string, ("%c-%2u.%02u"), number, time / 1000, time / 10 % 100);
+  sprintf(string, ("%c-%2u.%02u"), number, time / 100, time % 100);
 }
 
 void setLevelString()
@@ -577,7 +577,7 @@ void displayGameMode()
 
   FX::drawBitmap(carx, cary, FX_DATA_CAR2, carDirection, dbmMasked);
 
-  sprintf(string, ("%c-%2u.%02u %d/%d\n%c-%2u.%02u"), gameState->curlap + 1 + 48, gameState->laptimes[(gameState->curlap)] / 1000, gameState->laptimes[(gameState->curlap)] / 10 % 100, gameState->checkpointpassed, gameState->checkpoints, gameState->newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState->level - 1]  / 1000, saveData.BestLapTimes[gameState->level - 1]  / 10 % 100);
+  sprintf(string, ("%c-%2lu.%02lu %d/%d\n%c-%2u.%02u"), gameState->curlap + 1 + 48, gameState->laptimes[(gameState->curlap)] / 1000, gameState->laptimes[(gameState->curlap)] / 10 % 100, gameState->checkpointpassed, gameState->checkpoints, gameState->newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState->level - 1]  / 100, saveData.BestLapTimes[gameState->level - 1]  % 100);
   cross_print(0, 0, 1, string);
 
 #ifdef PERF_RENDER
@@ -884,7 +884,7 @@ void drawBestTimes()
 {
   for (int i = 0; i < 3; i++)
   {
-    setLevelTimeString(i + 1 + 48, (unsigned int)FX::readIndexedUInt16(FX_LEVEL_TIMES,(gameState->level - 1)*3 + i));
+    setLevelTimeString(i + 1 + 48, FX::readIndexedUInt16(FX_LEVEL_TIMES,(gameState->level - 1)*3 + i));
 
     cross_print(74, 21 + 8 * i, 1, string);
   }
@@ -900,7 +900,7 @@ void displayLevelInfo()
   setLevelString();
   cross_print(74, 0, 1, string);
   cross_drawHLine(64, 8, 64, 1);
-  setLevelTimeString('B', (unsigned int)saveData.BestLapTimes[gameState->level - 1]);
+  setLevelTimeString('B', saveData.BestLapTimes[gameState->level - 1]);
 
   cross_print(74, 10, 1, string);
   cross_drawHLine(64, 19, 64, 1);
@@ -1117,7 +1117,7 @@ void drawTrophySheet()
     if (saveData.BestLapTimes[level] > 0)
       for (int i = 0; i < 3; i++)
       {
-        if (saveData.BestLapTimes[level] < (unsigned int)FX::readIndexedUInt16(FX_LEVEL_TIMES,level*3 + i))
+        if (saveData.BestLapTimes[level] < FX::readIndexedUInt16(FX_LEVEL_TIMES,level*3 + i))
         {
           cross_print(17 + level * 11, 4 + (1 + i) * 13, 1, ("X"));
           break;
@@ -1132,7 +1132,7 @@ void drawGoalTimes()
   cross_print(74, 0, 1, string);
   cross_drawHLine(64, 8, 64, 1);
 
-  setLevelTimeString('B', (unsigned int)saveData.BestLapTimes[gameState->level - 1]);
+  setLevelTimeString('B', saveData.BestLapTimes[gameState->level - 1]);
   cross_print(74, 10, 1, string);
   cross_drawHLine(64, 19, 64, 1);
 
@@ -1152,7 +1152,7 @@ void drawAllTimes()
 
   for (int i = 0; i < TIMED_LAPS; i++)
   {
-    setLevelTimeString(i + 1 + 48, gameState->laptimes[i]);
+    setLevelTimeString(i + 1 + 48, gameState->laptimes[i]/10);
     cross_print(74, 9 + 8 * i, 1, string);
   }
 

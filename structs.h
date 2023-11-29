@@ -29,7 +29,7 @@ constexpr uint8_t LEVELS = 20; // 10 original Levels, 10 fx levels
 
 struct SaveData
 {
-	unsigned int BestLapTimes[LEVELS]; 
+	uint16_t BestLapTimes[LEVELS]; 
   uint8_t maxLevel = 20;
   uint8_t music = 1;
   uint8_t sound = 1;
