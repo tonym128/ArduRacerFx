@@ -6,7 +6,7 @@
  <tileset firstgid="1" source="SpriteSheet64.tsx"/>
  <layer id="1" name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zstd">
-   KLUv/WAAA80GAOKFDAkg+KwBAYHorFJn7bqBTcGx6O4YrtaOqJILl9gSDcUFZ/w558iLM4cA6sCtK29+b2cBUqhR6qjS+hswAmKUOfUS4BHE8ARJVUheZExbPwN/EsMTh1X2xGFfr/hMAwf8znO79cTzFHGH431pxaXd8MRMxlDzsTlly9iTzZ/KJGvITKWr1n9uosv0ona90gAlANg9f5Z9PTvs2YuVUZN7Yz0Rb7tie2GTe6/P4z//0iHD5F9cLuK7LBBrMir4PuQtM1nwr8bNusmj1am3WHavTK7Jhfb2LFU=
+   KLUv/WAAA70GAJIFDAowdK0BEUBDqGEpZ626xaTgGHRnrKq1GybkwiOmQIu44Io71/w48eUPcOrJmd/bWVKoYeqo0voZMAJilDn1EgASlHyCpCo0LzKmrZ8BfxLDE4e1+cRpX6/wTAdB+tpzsvHE+pS5Y+Nn6X7p3OyEJsdQ4Zie0mXMyaZPdZI1ZKfEq8q/bdJlfKF2XNkAHxJszzfLvMye97zF7vjkt7GcqNuvGFyMyb//5/wff+XQYFIvThblrRfsGhkVPx3q1hkvwFfz7lrKo9OZuFh2rjqu7YKLPrkq
   </data>
  </layer>
 </map>

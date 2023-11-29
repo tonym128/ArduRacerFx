@@ -1,5 +1,4 @@
 # TODO
-- Last lap isn't clear for changing lanes
 - Music and SFX
 - Simplify any levels too hard to get 99.99 sec
 - Play game through on Arduboy making times for every level
@@ -12,6 +11,7 @@
 - Integrate into a FX image with multiple games
 
 # Bugs
+- Last lap isn't clear for changing lanes (just gonna do it)
 - Update trophy screen for 20 levels
 - Save data fails to save first time in Ardens
     - FX Busy error
@@ -65,7 +65,7 @@
 - Bigger levels, 60% bigger and 3x for some.
 - Modify car stats for each race
 - Save data on FX, no more overrites
-- Double the keyframes for car
+- Double the frames for car direction
 - Map display
 - Better sounds
 - Music
