@@ -637,12 +637,12 @@ void displayGameMode()
 
   if (gameState->paused)
   {
-    cross_print(0, 20, 3, FX_STR_PAUSED);
+    cross_print(0, 20, 3, "Paused");
     for (int i = 0; i < 16; i++)
       cross_drawHLine(0, i + 48, 64, 0);
 
-    cross_print(0, 48, 1, FX_STR_AB_CONT);
-    cross_print(0, 56, 1, FX_STR_LEVEL_SELECT);
+    cross_print(0, 48, 1, "A / B - Continue");
+    cross_print(0, 56, 1, "Down - Level Select");
   }
 
 #ifdef PERF_RENDER
@@ -715,10 +715,10 @@ void displayOptionsMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, FX_STR_ABOUT);
-  cross_print(90, 30 + 8, 1, FX_STR_MUSIC);
-  cross_print(90, 30 + 16, 1, FX_STR_SOUND);
-  cross_print(90, 30 + 24, 1,FX_STR_MAP);
+  cross_print(90, 30 + 0, 1, "About");
+  cross_print(90, 30 + 8, 1, "Music");
+  cross_print(90, 30 + 16, 1,"SFX");
+  cross_print(90, 30 + 24, 1,"Map");
   
   if (saveData.music > 0)
     cross_print(90 + 5 * 6, 30 + 8, 1, ("*"));
@@ -733,11 +733,11 @@ void displayOptionsMenu(int menuItem)
 void displayAbout() {
   FX::drawBitmap(0, 0, FX_DATA_ABOUT, 0, dbmNormal);
 
-  cross_print(60, 0, 1, FX_STR_MADE_BY);
-  cross_print(60, 20, 1, FX_STR_GITHUB);
-  cross_print(60, 40, 1, FX_STR_TWITTER);
+  cross_print(60, 0, 1,  "Made_By");
+  cross_print(60, 20, 1, "github");
+  cross_print(60, 40, 1, "X");
   for (int i = 0; i < 3; i++) {
-    cross_print(70, 10 + i * 20, 1, FX_STR_TONYM128);
+    cross_print(70, 10 + i * 20, 1, "tonym128");
   }
 }
 
@@ -831,10 +831,10 @@ void displayMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, FX_STR_CONTINUE);
-  cross_print(90, 30 + 8, 1, FX_STR_START);
-  cross_print(90, 30 + 16, 1,FX_STR_TIMES);
-  cross_print(90, 30 + 24, 1,FX_STR_OPTIONS);
+  cross_print(90, 30 + 0, 1, "Continue");
+  cross_print(90, 30 + 8, 1, "Start");
+  cross_print(90, 30 + 16, 1,"Times");
+  cross_print(90, 30 + 24, 1,"Options");
 
   cross_print(84, 30 + menuItem * 8, 1, ("*"));
 }
@@ -910,12 +910,12 @@ void displayLevelInfo()
   if (doTimeout()) {}
   else if ((getCurrentMs() / 1000) % 2 == 0)
     {
-      cross_print(64, 64 - 16, 1, FX_STR_PRESSA);
-      cross_print(64, 64 - 8, 1, FX_STR_TOSTART);
+      cross_print(64, 64 - 16, 1, "Press_A");
+      cross_print(64, 64 - 8, 1,  "To Start");
     }
   else {
-      cross_print(64, 64 - 16, 1, FX_STR_LEFT);
-      cross_print(64, 64 - 8, 1, FX_STR_TOTUNE);
+      cross_print(64, 64 - 16, 1, "Left To");
+      cross_print(64, 64 - 8, 1, "Tune Car");
   }
 };
 
@@ -1055,7 +1055,7 @@ void drawContinueMenu()
   if ((getCurrentMs() / 1000) % 2 == 0)
   {
     if (saveData.maxLevel > gameState->level)
-      cross_print(64, 64 - 16, 1, FX_STR_NEXTRETRY);
+      cross_print(64, 64 - 16, 1, "A - Next B - Retry");
   }
 }
 
@@ -1142,7 +1142,7 @@ void drawGoalTimes()
   cross_drawHLine(64, 46, 64, 1);
 
   drawContinueMenu();
-  cross_print(0, 64 - 7, 1, FX_STR_LTIMES);
+  cross_print(0, 64 - 7, 1, "L - Times");
 }
 
 void drawAllTimes()
@@ -1158,7 +1158,7 @@ void drawAllTimes()
   }
 
   drawContinueMenu();
-  cross_print(0, 64 - 7, 1, FX_STR_RGOAL);
+  cross_print(0, 64 - 7, 1, "R - Goal");
   cross_drawHLine(64, 64 - 17, 128 - 64, 1);
 }
 
