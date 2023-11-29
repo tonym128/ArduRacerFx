@@ -4,7 +4,7 @@
 
 char string[30];
 SaveData saveData;
-GameState *gameState;
+GameState gameState;
 unsigned long tFrameMs = 0;
 constexpr int ZOOM_TIME = 6000;
 
@@ -12,7 +12,7 @@ constexpr int ZOOM_TIME = 6000;
 // #define PERF_RENDER
 
 void setTimeout(int timeout) {
-  gameState->timeout = timeout;
+  gameState.timeout = timeout;
 }
 
 void freeUp(CheckPoint *p)
@@ -24,8 +24,8 @@ void freeUp(CheckPoint *p)
 }
 
 bool doTimeout() {
-  if (gameState->timeout > 0) {
-    gameState->timeout -= getFrameMs();
+  if (gameState.timeout > 0) {
+    gameState.timeout -= getFrameMs();
     return true;
   }
   return false;
@@ -34,30 +34,30 @@ bool doTimeout() {
 void buildMapCache() {
     // Map XY logic 
     uint8_t levelTile;
-    int playerMapTileX = FIXP_TO_INT(gameState->player1.X)/64;
-    int playerMapTileY = FIXP_TO_INT(gameState->player1.Y)/64;
+    int playerMapTileX = FIXP_TO_INT(gameState.player1.X)/64;
+    int playerMapTileY = FIXP_TO_INT(gameState.player1.Y)/64;
 
-    if (gameState->levelSize > LEVEL_CACHE) {
+    if (gameState.levelSize > LEVEL_CACHE) {
       //Fog of war type calc
       playerMapTileX -= LEVEL_CACHE/2;
       playerMapTileY -= LEVEL_CACHE/2;
       if (playerMapTileX<0) playerMapTileX=0;
-      if (playerMapTileX>gameState->levelSize-LEVEL_CACHE) playerMapTileX=gameState->levelSize-LEVEL_CACHE;
+      if (playerMapTileX>gameState.levelSize-LEVEL_CACHE) playerMapTileX=gameState.levelSize-LEVEL_CACHE;
       if (playerMapTileY<0) playerMapTileY=0;
-      if (playerMapTileY>gameState->levelSize-LEVEL_CACHE) playerMapTileY=gameState->levelSize-LEVEL_CACHE;
+      if (playerMapTileY>gameState.levelSize-LEVEL_CACHE) playerMapTileY=gameState.levelSize-LEVEL_CACHE;
     } else {
       playerMapTileX = 0;
       playerMapTileY = 0;
     }
 
-    if (gameState->levelMapXMod != playerMapTileX || gameState->levelMapYMod != playerMapTileY) {
+    if (gameState.levelMapXMod != playerMapTileX || gameState.levelMapYMod != playerMapTileY) {
       // Map cache invalidated, repopulate
-      gameState->levelMapXMod = playerMapTileX;
-      gameState->levelMapYMod = playerMapTileY;
-      for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState->levelSize; j++) {
-        for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState->levelSize; i++) {
-            levelTile = getLevelTile(gameState->levelMap, i + playerMapTileX, j + playerMapTileY, gameState->levelSize);
-            gameState->mapDisplay[i + j*LEVEL_CACHE] = ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24));
+      gameState.levelMapXMod = playerMapTileX;
+      gameState.levelMapYMod = playerMapTileY;
+      for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState.levelSize; j++) {
+        for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState.levelSize; i++) {
+            levelTile = getLevelTile(gameState.levelMap, i + playerMapTileX, j + playerMapTileY, gameState.levelSize);
+            gameState.mapDisplay[i + j*LEVEL_CACHE] = ((levelTile <= 11) | (levelTile >= 16 && levelTile <= 19) || (levelTile >= 24));
         }
       }
     }
@@ -65,50 +65,50 @@ void buildMapCache() {
 
 void setLevelDetails()
 {
-  gameState->levelMap = getLevelMap(gameState->level);
-  gameState->levelSize = getLevelMapSize(gameState->level);
+  gameState.levelMap = getLevelMap(gameState.level);
+  gameState.levelSize = getLevelMapSize(gameState.level);
 
   // Invalidate cached map
-  gameState->levelMapXMod = -1;
-  gameState->levelMapYMod = -1;
+  gameState.levelMapXMod = -1;
+  gameState.levelMapYMod = -1;
 
-  gameState->lasttile = 100;
-  gameState->lastx = 100;
-  gameState->lasty = 100;
-  gameState->paused = 0;
-  gameState->player1.acceleration.force = FIXP_TO_INT(0);
-  gameState->player1.acceleration.direction = FIXP_TO_INT(0);
+  gameState.lasttile = 100;
+  gameState.lastx = 100;
+  gameState.lasty = 100;
+  gameState.paused = 0;
+  gameState.player1.acceleration.force = FIXP_TO_INT(0);
+  gameState.player1.acceleration.direction = FIXP_TO_INT(0);
 
-  gameState->checkpoints = 0;
-  gameState->checkpointpassed = 0;
+  gameState.checkpoints = 0;
+  gameState.checkpointpassed = 0;
 
-  freeUp(gameState->levelCheckPoints);
+  freeUp(gameState.levelCheckPoints);
   CheckPoint *checkpoint = nullptr;
   CheckPoint *firstcheckpoint = nullptr;
 
-  for (int x = 0; x < gameState->levelSize; x++)
+  for (int x = 0; x < gameState.levelSize; x++)
   {
-    for (int y = 0; y < gameState->levelSize; y++)
+    for (int y = 0; y < gameState.levelSize; y++)
     {
-      uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
+      uint8_t levelTile = getLevelTile(gameState.levelMap, x, y, gameState.levelSize);
       if (levelTile == 24)
       {
-        gameState->player1.X = FLOAT_TO_FIXP(x * 64.0f);
-        gameState->player1.Y = FLOAT_TO_FIXP(y * 64.0f + 32 - 4);
-        gameState->player1.rotation = PI / 2;
+        gameState.player1.X = FLOAT_TO_FIXP(x * 64.0f);
+        gameState.player1.Y = FLOAT_TO_FIXP(y * 64.0f + 32 - 4);
+        gameState.player1.rotation = PI / 2;
       }
       else if (levelTile == 25)
       {
-        gameState->player1.X = FLOAT_TO_FIXP(x * 64.0f + 32 - 4);
-        gameState->player1.Y = FLOAT_TO_FIXP(y * 64.0f);
-        gameState->player1.rotation = PI;
+        gameState.player1.X = FLOAT_TO_FIXP(x * 64.0f + 32 - 4);
+        gameState.player1.Y = FLOAT_TO_FIXP(y * 64.0f);
+        gameState.player1.rotation = PI;
       }
       else if (levelTile == 26 || levelTile == 27)
       {
         if (checkpoint == nullptr)
         {
           checkpoint = new CheckPoint();
-          gameState->levelCheckPoints = checkpoint;
+          gameState.levelCheckPoints = checkpoint;
         }
         else
         {
@@ -119,30 +119,30 @@ void setLevelDetails()
         checkpoint->x = x;
         checkpoint->y = y;
         checkpoint->passed = false;
-        gameState->checkpoints++;
+        gameState.checkpoints++;
       }
     }
   }
 
-  gameState->laptimer = false;
-  gameState->curlap = 0;
-  gameState->newbestLap = false;
+  gameState.laptimer = false;
+  gameState.curlap = 0;
+  gameState.newbestLap = false;
   for (int i = 0; i < TIMED_LAPS; i++)
   {
-    gameState->laptimes[i] = 0;
+    gameState.laptimes[i] = 0;
   }
 
-  gameState->bestLap = saveData.BestLapTimes[gameState->level - 1]*10;
+  gameState.bestLap = saveData.BestLapTimes[gameState.level - 1]*10;
 
-  gameState->player1.offRoad = false;
+  gameState.player1.offRoad = false;
 }
 
 void processCarTune() {
-  if (cross_input_up()) {gameState->menuItem--;setTimeout(100);}
-  if (cross_input_down()) {gameState->menuItem++;setTimeout(100);}
+  if (cross_input_up()) {gameState.menuItem--;setTimeout(100);}
+  if (cross_input_down()) {gameState.menuItem++;setTimeout(100);}
 
   if (cross_input_left()) {
-    switch (gameState->menuItem)
+    switch (gameState.menuItem)
     {
     case 1: // Top Speed
       if (saveData.car_maxspeed > 0) {
@@ -166,11 +166,11 @@ void processCarTune() {
   }
 
   if (cross_input_right()) {
-    int freePoints = gameState->car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+    int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
     if (freePoints <= 0) {
       return;
     }
-    switch (gameState->menuItem)
+    switch (gameState.menuItem)
     {
     case 1: // Top Speed
       if (saveData.car_maxspeed < 7) {
@@ -193,13 +193,13 @@ void processCarTune() {
     }
   }
 
-  if (gameState->menuItem < 1) gameState->menuItem = 3;
-  if (gameState->menuItem > 3) gameState->menuItem = 1;
+  if (gameState.menuItem < 1) gameState.menuItem = 3;
+  if (gameState.menuItem > 3) gameState.menuItem = 1;
 
   if (cross_input_a()) {
     //Save
     cross_save(saveData);
-    gameState->mode = 4;
+    gameState.mode = 4;
     setTimeout(100);
   }
 
@@ -211,160 +211,160 @@ void processCarTune() {
 }
 
 void processGameMode() {
-  if (gameState->paused)
+  if (gameState.paused)
   {
     if (cross_input_down())
     {
-      gameState->mode = 4;
+      gameState.mode = 4;
     }
   }
 
   if (cross_input_a())
   {
-    if (gameState->paused)
-      gameState->paused = false;
+    if (gameState.paused)
+      gameState.paused = false;
   }
 
   if (cross_input_up())
   {
-    gameState->paused = true;
+    gameState.paused = true;
     return;
   }
 
   if (cross_input_left())
   {
-    gameState->player1.rotation -= gameState->max_turn_speed * tFrameMs;
+    gameState.player1.rotation -= gameState.max_turn_speed * tFrameMs;
   }
 
   if (cross_input_right())
   {
-    gameState->player1.rotation += gameState->max_turn_speed * tFrameMs;
+    gameState.player1.rotation += gameState.max_turn_speed * tFrameMs;
   }
 
-  if (gameState->player1.rotation < 0)
-    gameState->player1.rotation = PI * 2;
-  if (gameState->player1.rotation > PI * 2)
-    gameState->player1.rotation = 0;
+  if (gameState.player1.rotation < 0)
+    gameState.player1.rotation = PI * 2;
+  if (gameState.player1.rotation > PI * 2)
+    gameState.player1.rotation = 0;
 
-  if (gameState->laptimer && !gameState->paused)
+  if (gameState.laptimer && !gameState.paused)
   {
-    gameState->laptimes[(gameState->curlap)] += tFrameMs;
-    if (gameState->laptimes[(gameState->curlap)] > 99990)
+    gameState.laptimes[(gameState.curlap)] += tFrameMs;
+    if (gameState.laptimes[(gameState.curlap)] > 99990)
     {
-      gameState->laptimes[(gameState->curlap)] = 99990;
+      gameState.laptimes[(gameState.curlap)] = 99990;
     }
   }
 
   if (cross_input_a())
   {
-    gameState->player1.acceleration.force += gameState->acceleration * tFrameMs;
+    gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
   }
 
   if (cross_input_b())
   {
-    gameState->player1.acceleration.force -= gameState->max_dec * tFrameMs;
+    gameState.player1.acceleration.force -= gameState.max_dec * tFrameMs;
   }
 }
 
 
 void updateGameMode()
 {
-  if (gameState->paused)
+  if (gameState.paused)
     return;
-  int xyMax = 64 * gameState->levelSize;
+  int xyMax = 64 * gameState.levelSize;
 
-  gameState->player1.XVec = xVec2(gameState->player1.acceleration.force, FLOAT_TO_FIXP(gameState->player1.rotation));
-  gameState->player1.YVec = yVec2(gameState->player1.acceleration.force, FLOAT_TO_FIXP(gameState->player1.rotation));
-  gameState->player1.X += gameState->player1.XVec;
-  gameState->player1.Y += gameState->player1.YVec;
+  gameState.player1.XVec = xVec2(gameState.player1.acceleration.force, FLOAT_TO_FIXP(gameState.player1.rotation));
+  gameState.player1.YVec = yVec2(gameState.player1.acceleration.force, FLOAT_TO_FIXP(gameState.player1.rotation));
+  gameState.player1.X += gameState.player1.XVec;
+  gameState.player1.Y += gameState.player1.YVec;
 
-  int x = FIXP_TO_INT(gameState->player1.X);
-  int y = FIXP_TO_INT(gameState->player1.Y);
+  int x = FIXP_TO_INT(gameState.player1.X);
+  int y = FIXP_TO_INT(gameState.player1.Y);
 
   bool collision = false;
   if (x > xyMax)
   {
-    gameState->player1.X = FLOAT_TO_FIXP(xyMax);
+    gameState.player1.X = FLOAT_TO_FIXP(xyMax);
     collision = true;
   }
   else if (x < 0)
   {
-    gameState->player1.X = INT_TO_FIXP(0);
+    gameState.player1.X = INT_TO_FIXP(0);
     collision = true;
   }
 
   if (y > xyMax)
   {
-    gameState->player1.Y = FLOAT_TO_FIXP(xyMax);
+    gameState.player1.Y = FLOAT_TO_FIXP(xyMax);
     collision = true;
   }
   else if (y < 0)
   {
-    gameState->player1.Y = INT_TO_FIXP(0);
+    gameState.player1.Y = INT_TO_FIXP(0);
     collision = true;
   }
 
   // Side Hard wall collisions
   if (collision)
   {
-    if (gameState->player1.acceleration.force > 0)
-      gameState->player1.acceleration.force -= gameState->acceleration * tFrameMs;
-    if (gameState->player1.acceleration.force < 0)
-      gameState->player1.acceleration.force += gameState->acceleration * tFrameMs;
+    if (gameState.player1.acceleration.force > 0)
+      gameState.player1.acceleration.force -= gameState.acceleration * tFrameMs;
+    if (gameState.player1.acceleration.force < 0)
+      gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
   }
  
-  if (gameState->player1.acceleration.force > gameState->max_speed)
-    gameState->player1.acceleration.force = gameState->max_speed;
-  else if (gameState->player1.acceleration.force < gameState->max_dec)
-    gameState->player1.acceleration.force = gameState->max_dec;
+  if (gameState.player1.acceleration.force > gameState.max_speed)
+    gameState.player1.acceleration.force = gameState.max_speed;
+  else if (gameState.player1.acceleration.force < gameState.max_dec)
+    gameState.player1.acceleration.force = gameState.max_dec;
 
   // Drag
-  if (gameState->player1.acceleration.force > 0)
+  if (gameState.player1.acceleration.force > 0)
   {
-    gameState->player1.acceleration.force -= gameState->drag * tFrameMs;
-    if (gameState->player1.acceleration.force < 0)
-      gameState->player1.acceleration.force = 0;
+    gameState.player1.acceleration.force -= gameState.drag * tFrameMs;
+    if (gameState.player1.acceleration.force < 0)
+      gameState.player1.acceleration.force = 0;
   }
-  else if (gameState->player1.acceleration.force < 0)
+  else if (gameState.player1.acceleration.force < 0)
   {
-    gameState->player1.acceleration.force += gameState->drag * tFrameMs;
-    if (gameState->player1.acceleration.force > 0)
-      gameState->player1.acceleration.force = 0;
+    gameState.player1.acceleration.force += gameState.drag * tFrameMs;
+    if (gameState.player1.acceleration.force > 0)
+      gameState.player1.acceleration.force = 0;
   }
 
   // Off Road
-  if (gameState->player1.offRoad)
+  if (gameState.player1.offRoad)
   {
-    if (gameState->player1.acceleration.force > gameState->offroad)
+    if (gameState.player1.acceleration.force > gameState.offroad)
     {
-      gameState->player1.acceleration.force -= gameState->offroad_pen * tFrameMs;
+      gameState.player1.acceleration.force -= gameState.offroad_pen * tFrameMs;
     }
-    else if (gameState->player1.acceleration.force < gameState->offroad_neg)
+    else if (gameState.player1.acceleration.force < gameState.offroad_neg)
     {
-      gameState->player1.acceleration.force += gameState->offroad_pen * tFrameMs;
+      gameState.player1.acceleration.force += gameState.offroad_pen * tFrameMs;
     }
   }
 
   // Tile Logic
   int tilex = (x + 5) / 64;
   int tiley = (y + 5) / 64;
-  uint8_t tile = getLevelTile(gameState->levelMap, tilex, tiley, gameState->levelSize);
+  uint8_t tile = getLevelTile(gameState.levelMap, tilex, tiley, gameState.levelSize);
 
-  if (gameState->lastx != tilex || gameState->lasty != tiley)
+  if (gameState.lastx != tilex || gameState.lasty != tiley)
   {
     // Went through a check point
-    if (gameState->lasttile == 26 || gameState->lasttile == 27)
+    if (gameState.lasttile == 26 || gameState.lasttile == 27)
     {
       bool done = false;
-      CheckPoint *a = gameState->levelCheckPoints;
+      CheckPoint *a = gameState.levelCheckPoints;
       while (a != nullptr && !done)
       {
-        if (a->x == gameState->lastx && a->y == gameState->lasty)
+        if (a->x == gameState.lastx && a->y == gameState.lasty)
         {
           if (!a->passed)
           {
             a->passed = true;
-            gameState->checkpointpassed++;
+            gameState.checkpointpassed++;
           }
           done = true;
         }
@@ -373,40 +373,40 @@ void updateGameMode()
     }
 
     // Was in start block and no longer in start block
-    if (gameState->lasttile == 24 || gameState->lasttile == 25)
+    if (gameState.lasttile == 24 || gameState.lasttile == 25)
     {
-      if (gameState->laptimer)
+      if (gameState.laptimer)
       {
-        if (gameState->checkpoints == gameState->checkpointpassed)
+        if (gameState.checkpoints == gameState.checkpointpassed)
         {
           // Finished a lap
-          if (gameState->laptimes[(gameState->curlap)] < gameState->bestLap || gameState->bestLap == 0)
+          if (gameState.laptimes[(gameState.curlap)] < gameState.bestLap || gameState.bestLap == 0)
           {
-            gameState->bestLap = gameState->laptimes[(gameState->curlap)];
-            gameState->newbestLap = true;
+            gameState.bestLap = gameState.laptimes[(gameState.curlap)];
+            gameState.newbestLap = true;
 
             // Update Best Lap Time to Rom
-            if (saveData.BestLapTimes[gameState->level - 1] == 0 || saveData.BestLapTimes[gameState->level - 1] > gameState->laptimes[(gameState->curlap)]/10)
+            if (saveData.BestLapTimes[gameState.level - 1] == 0 || saveData.BestLapTimes[gameState.level - 1] > gameState.laptimes[(gameState.curlap)]/10)
             {
-              saveData.BestLapTimes[gameState->level - 1] = gameState->laptimes[(gameState->curlap)]/10;
-              uint16_t levelTime = FX::readIndexedUInt16(FX_LEVEL_TIMES, (gameState->level - 1) * 3 + 2);
-              if (saveData.BestLapTimes[gameState->level - 1] < levelTime)
+              saveData.BestLapTimes[gameState.level - 1] = gameState.laptimes[(gameState.curlap)]/10;
+              uint16_t levelTime = FX::readIndexedUInt16(FX_LEVEL_TIMES, (gameState.level - 1) * 3 + 2);
+              if (saveData.BestLapTimes[gameState.level - 1] < levelTime)
               { // If the time is better than 3rd place, we can go forwards
-                if (saveData.maxLevel < gameState->level + 1 && gameState->level < 10)
-                  saveData.maxLevel = gameState->level + 1;
+                if (saveData.maxLevel < gameState.level + 1 && gameState.level < 10)
+                  saveData.maxLevel = gameState.level + 1;
               }
 
-              if (gameState->level > saveData.maxLevel)
-                saveData.maxLevel = gameState->level;
+              if (gameState.level > saveData.maxLevel)
+                saveData.maxLevel = gameState.level;
 
               cross_save(saveData);
             }
           }
 
-          gameState->curlap++;
-          gameState->checkpointpassed = 0;
+          gameState.curlap++;
+          gameState.checkpointpassed = 0;
 
-          CheckPoint *point = gameState->levelCheckPoints;
+          CheckPoint *point = gameState.levelCheckPoints;
           while (point != nullptr)
           {
             point->passed = false;
@@ -416,14 +416,14 @@ void updateGameMode()
       }
       else
       {
-        gameState->laptimer = true;
+        gameState.laptimer = true;
       }
     }
   }
 
-  gameState->lasttile = tile;
-  gameState->lastx = tilex;
-  gameState->lasty = tiley;
+  gameState.lasttile = tile;
+  gameState.lastx = tilex;
+  gameState.lasty = tiley;
 }
 
 void setLevelTimeString(char number, uint16_t time)
@@ -433,7 +433,7 @@ void setLevelTimeString(char number, uint16_t time)
 
 void setLevelString()
 {
-  sprintf(string, ("Level %d"), gameState->level);
+  sprintf(string, ("Level %d"), gameState.level);
 }
 
 #ifdef PERF_RENDER
@@ -446,9 +446,9 @@ void displayGameMode()
   split = getMs() ;
 #endif
 
-  int x = FIXP_TO_INT(gameState->player1.X) - 60;
-  int y = FIXP_TO_INT(gameState->player1.Y) - 30;
-  int xyMax = 64 * gameState->levelSize;
+  int x = FIXP_TO_INT(gameState.player1.X) - 60;
+  int y = FIXP_TO_INT(gameState.player1.Y) - 30;
+  int xyMax = 64 * gameState.levelSize;
 
   if (x < 0)
     x = 0;
@@ -469,15 +469,15 @@ void displayGameMode()
   split = getMs();
 #endif
   // Draw Road
-  for (uint8_t j = y / 64; j < (y / 64) + 2 && j < gameState->levelSize; j++)
+  for (uint8_t j = y / 64; j < (y / 64) + 2 && j < gameState.levelSize; j++)
   {
-    for (uint8_t i = x / 64; i < (x / 64) + 3 && i < gameState->levelSize; i++)
+    for (uint8_t i = x / 64; i < (x / 64) + 3 && i < gameState.levelSize; i++)
     {
       if (inlinex < -64 | inlinex > xyMax | inliney < -64 | inlinex > xyMax){
         inlinex += 64;
         continue;
       }
-      uint8_t levelTile = getLevelTile(gameState->levelMap, i, j, gameState->levelSize);
+      uint8_t levelTile = getLevelTile(gameState.levelMap, i, j, gameState.levelSize);
       int tilemap;
       switch (levelTile) {
         case 24:
@@ -537,8 +537,8 @@ void displayGameMode()
 #endif
 
   // Off Road Check (Do it here because we rely on the populated screen
-  int carx = FIXP_TO_INT(gameState->player1.X);
-  int cary = FIXP_TO_INT(gameState->player1.Y);
+  int carx = FIXP_TO_INT(gameState.player1.X);
+  int cary = FIXP_TO_INT(gameState.player1.Y);
 
   if (carx < 60)
   {
@@ -566,18 +566,18 @@ void displayGameMode()
     cary = 30;
   }
 
-  gameState->player1.offRoad = false;
+  gameState.player1.offRoad = false;
   if (cross_getPixel(carx + 8, cary + 8) == 1)
   {
-    gameState->player1.offRoad = true;
+    gameState.player1.offRoad = true;
   }
 
   // Draw Car
-  uint8_t carDirection = getCarDirection(((FIXPOINT)(gameState->player1.rotation * 10)));
+  uint8_t carDirection = getCarDirection(((FIXPOINT)(gameState.player1.rotation * 10)));
 
   FX::drawBitmap(carx, cary, FX_DATA_CAR2, carDirection, dbmMasked);
 
-  sprintf(string, ("%c-%2lu.%02lu %d/%d\n%c-%2u.%02u"), gameState->curlap + 1 + 48, gameState->laptimes[(gameState->curlap)] / 1000, gameState->laptimes[(gameState->curlap)] / 10 % 100, gameState->checkpointpassed, gameState->checkpoints, gameState->newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState->level - 1]  / 100, saveData.BestLapTimes[gameState->level - 1]  % 100);
+  sprintf(string, ("%c-%2lu.%02lu %d/%d\n%c-%2u.%02u"), gameState.curlap + 1 + 48, gameState.laptimes[(gameState.curlap)] / 1000, gameState.laptimes[(gameState.curlap)] / 10 % 100, gameState.checkpointpassed, gameState.checkpoints, gameState.newbestLap ? '*' : 'B', saveData.BestLapTimes[gameState.level - 1]  / 100, saveData.BestLapTimes[gameState.level - 1]  % 100);
   cross_print(0, 0, 1, string);
 
 #ifdef PERF_RENDER
@@ -586,7 +586,7 @@ void displayGameMode()
   Serial.write(string);
   split = getMs();
 #endif
-  uint8_t mapSize = gameState->levelSize;
+  uint8_t mapSize = gameState.levelSize;
   if (mapSize > LEVEL_CACHE) mapSize = LEVEL_CACHE;
 
   for (int i = 0; i < mapSize+6; i++)
@@ -594,9 +594,9 @@ void displayGameMode()
     cross_drawVLine(128 - mapSize + i, 0, 6, 0);
   }
 
-  if (gameState->player1.offRoad && gameState->player1.acceleration.force != 0)
+  if (gameState.player1.offRoad && gameState.player1.acceleration.force != 0)
   {
-    if (((gameState->laptimes[(gameState->curlap)] / 100) % 3) == 0)
+    if (((gameState.laptimes[(gameState.curlap)] / 100) % 3) == 0)
       cross_playSound(saveData.sound > 0, 100, 30);
   }
  
@@ -607,17 +607,17 @@ void displayGameMode()
     uint8_t levelTile = 0;
     uint8_t mapY = 7;
 
-    for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState->levelSize; j++) {
-      for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState->levelSize; i++) {
-        cross_drawPixel(mapX+i,mapY+j,gameState->mapDisplay[i+j*LEVEL_CACHE]);
+    for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState.levelSize; j++) {
+      for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState.levelSize; i++) {
+        cross_drawPixel(mapX+i,mapY+j,gameState.mapDisplay[i+j*LEVEL_CACHE]);
       }
     }
 
     // Overdraw player pixel ticking
-    int carMapX = FIXP_TO_INT(gameState->player1.X)/64;
-    int carMapY = FIXP_TO_INT(gameState->player1.Y)/64;
+    int carMapX = FIXP_TO_INT(gameState.player1.X)/64;
+    int carMapY = FIXP_TO_INT(gameState.player1.Y)/64;
 
-    cross_drawPixel(mapX+carMapX-gameState->levelMapXMod,mapY+carMapY-gameState->levelMapYMod,(gameState->laptimes[(gameState->curlap)]/200)%2==0);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod,mapY+carMapY-gameState.levelMapYMod,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
   }
 
 #ifdef PERF_RENDER
@@ -628,14 +628,14 @@ void displayGameMode()
 #endif
 
   // Display Speed
-  int speed = FIXP_TO_FLOAT(gameState->player1.acceleration.force)/FIXP_TO_FLOAT(gameState->max_speed)*gameState->levelSize;
+  int speed = FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*gameState.levelSize;
   for (int i = 1; i <= speed; i++)
   {
     cross_drawVLine(mapX + i, 0, 7, 1);
   }
-  cross_drawHLine(mapX, 6, gameState->levelSize, 0);
+  cross_drawHLine(mapX, 6, gameState.levelSize, 0);
 
-  if (gameState->paused)
+  if (gameState.paused)
   {
     cross_print(0, 20, 3, "Paused");
     for (int i = 0; i < 16; i++)
@@ -662,14 +662,13 @@ void racerSetup()
     saveData.maxLevel = 1;
     cross_save(saveData);
   }
-  gameState = new GameState();
-  gameState->level = 1;
-  gameState->levelMap = getLevelMap(gameState->level);
-  gameState->levelSize = getLevelMapSize(gameState->level);
-  gameState->laptimer = false;
+  gameState.level = 1;
+  gameState.levelMap = getLevelMap(gameState.level);
+  gameState.levelSize = getLevelMapSize(gameState.level);
+  gameState.laptimer = false;
   setTimeout(100);
-  gameState->lastmode = -1;
-  gameState->mode = 0;
+  gameState.lastmode = -1;
+  gameState.mode = 0;
 
   cross_loop_end();
 }
@@ -682,31 +681,31 @@ void processMenu()
   // Check for up button
   if (cross_input_up())
   {
-    if (gameState->menuItem == 0)
-      gameState->menuItem = 3;
+    if (gameState.menuItem == 0)
+      gameState.menuItem = 3;
     else
-      gameState->menuItem -= 1;
+      gameState.menuItem -= 1;
     setTimeout(100);
   }
   // Check for down button
   else if (cross_input_down())
   {
-    if (gameState->menuItem == 3)
-      gameState->menuItem = 0;
+    if (gameState.menuItem == 3)
+      gameState.menuItem = 0;
     else
-      gameState->menuItem += 1;
+      gameState.menuItem += 1;
     setTimeout(100);
   }
   // Check for button press
   else if (cross_input_a())
   {
-    gameState->enter = true;
+    gameState.enter = true;
     setTimeout(100);
   }
   else if (cross_input_b()) {
-    gameState->mode = 0;
-    gameState->menuItem = 0;
-    gameState->enter = false;
+    gameState.mode = 0;
+    gameState.menuItem = 0;
+    gameState.enter = false;
   }
 }
 
@@ -742,12 +741,12 @@ void displayAbout() {
 }
 
 void updateOptionsMenu() {
-  if (gameState->enter)
-    switch (gameState->menuItem) {
+  if (gameState.enter)
+    switch (gameState.menuItem) {
       case 0:
         if (doTimeout()) return;
-        gameState->mode = 3;
-        gameState->enter = false;
+        gameState.mode = 3;
+        gameState.enter = false;
         setTimeout(100);
       case 1:
         // Toggle Music
@@ -755,7 +754,7 @@ void updateOptionsMenu() {
         if (saveData.music == 0) { saveData.music = 1;}
         else saveData.music = 0;
 
-        gameState->enter = false;
+        gameState.enter = false;
         setTimeout(100);
         cross_save(saveData);
         break;
@@ -765,7 +764,7 @@ void updateOptionsMenu() {
         if (saveData.sound == 0) { saveData.sound = 1;}
         else saveData.sound = 0;
 
-        gameState->enter = false;
+        gameState.enter = false;
         setTimeout(100);
         cross_save(saveData);
         break;
@@ -775,16 +774,16 @@ void updateOptionsMenu() {
         if (saveData.map == 0) { saveData.map = 1;}
         else saveData.map = 0;
 
-        gameState->enter = false;
+        gameState.enter = false;
         setTimeout(100);
         cross_save(saveData);
         break;
       case 99:
         //Back
         if (doTimeout()) return;
-        gameState->mode = 1;
-        gameState->enter = false;
-        gameState->menuItem = 3;
+        gameState.mode = 1;
+        gameState.enter = false;
+        gameState.menuItem = 3;
         setTimeout(100);
         break;
     }
@@ -792,35 +791,35 @@ void updateOptionsMenu() {
 
 void updateMenu()
 {
-  if (gameState->enter)
+  if (gameState.enter)
   {
-    switch (gameState->menuItem)
+    switch (gameState.menuItem)
     {
     case 0:
       // Go To Last Level Finished
-      gameState->level = saveData.maxLevel;
-      gameState->levelMap = getLevelMap(gameState->level);
-      gameState->levelSize = getLevelMapSize(gameState->level);
-      gameState->mode = 4; // Level Start
+      gameState.level = saveData.maxLevel;
+      gameState.levelMap = getLevelMap(gameState.level);
+      gameState.levelSize = getLevelMapSize(gameState.level);
+      gameState.mode = 4; // Level Start
       break;
     case 1:
       // Go To First Level
-      gameState->level = 1;
-      gameState->levelMap = getLevelMap(gameState->level);
-      gameState->levelSize = getLevelMapSize(gameState->level);
-      gameState->mode = 4; // Level Start
+      gameState.level = 1;
+      gameState.levelMap = getLevelMap(gameState.level);
+      gameState.levelSize = getLevelMapSize(gameState.level);
+      gameState.mode = 4; // Level Start
       break;
     case 2:
       // Times
-      gameState->mode = 98;
+      gameState.mode = 98;
       setTimeout(1000);
       break;
     case 3:
       // Options Menu
-      gameState->mode = 2;
+      gameState.mode = 2;
       setTimeout(100);
-      gameState->menuItem = 0;
-      gameState->enter = false;
+      gameState.menuItem = 0;
+      gameState.enter = false;
       break;
     }
   }
@@ -841,11 +840,11 @@ void displayMenu(int menuItem)
 
 void displayMap()
 {
-  for (int y = 0; y < gameState->levelSize; y++)
+  for (int y = 0; y < gameState.levelSize; y++)
   {
-    for (int x = 0; x < gameState->levelSize; x++)
+    for (int x = 0; x < gameState.levelSize; x++)
     {
-      uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
+      uint8_t levelTile = getLevelTile(gameState.levelMap, x, y, gameState.levelSize);
       int tilemap;
       switch (levelTile) {
         case 24:
@@ -864,7 +863,7 @@ void displayMap()
           tilemap = levelTile;
       }
       
-      switch (gameState->levelSize)
+      switch (gameState.levelSize)
       {
       case 10:
         FX::drawBitmap(x * 6, y * 6, FX_DATA_TILES_6, tilemap, dbmNormal);
@@ -884,7 +883,7 @@ void drawBestTimes()
 {
   for (int i = 0; i < 3; i++)
   {
-    setLevelTimeString(i + 1 + 48, FX::readIndexedUInt16(FX_LEVEL_TIMES,(gameState->level - 1)*3 + i));
+    setLevelTimeString(i + 1 + 48, FX::readIndexedUInt16(FX_LEVEL_TIMES,(gameState.level - 1)*3 + i));
 
     cross_print(74, 21 + 8 * i, 1, string);
   }
@@ -900,7 +899,7 @@ void displayLevelInfo()
   setLevelString();
   cross_print(74, 0, 1, string);
   cross_drawHLine(64, 8, 64, 1);
-  setLevelTimeString('B', saveData.BestLapTimes[gameState->level - 1]);
+  setLevelTimeString('B', saveData.BestLapTimes[gameState.level - 1]);
 
   cross_print(74, 10, 1, string);
   cross_drawHLine(64, 19, 64, 1);
@@ -910,7 +909,7 @@ void displayLevelInfo()
   if (doTimeout()) {}
   else if ((getCurrentMs() / 1000) % 2 == 0)
     {
-      cross_print(64, 64 - 16, 1, "Press_A");
+      cross_print(64, 64 - 16, 1, "Press A");
       cross_print(64, 64 - 8, 1,  "To Start");
     }
   else {
@@ -923,48 +922,48 @@ void inputLevelInfo()
 {
   if (cross_input_a())
   {
-    gameState->mode++;
+    gameState.mode++;
     setTimeout(100);
   }
 
   if (cross_input_b())
   {
-    gameState->mode = 1;
-    gameState->enter = false;
+    gameState.mode = 1;
+    gameState.enter = false;
     setTimeout(100);
   }
 
   if (cross_input_up())
   {
     setTimeout(100);
-    if (gameState->level < saveData.maxLevel)
-       gameState->level++;
-    gameState->lastmode = -1;
-    if (gameState->level > LEVELS)
-      gameState->level = LEVELS;
-    gameState->levelMap = getLevelMap(gameState->level);
-    gameState->levelSize = getLevelMapSize(gameState->level);
+    if (gameState.level < saveData.maxLevel)
+       gameState.level++;
+    gameState.lastmode = -1;
+    if (gameState.level > LEVELS)
+      gameState.level = LEVELS;
+    gameState.levelMap = getLevelMap(gameState.level);
+    gameState.levelSize = getLevelMapSize(gameState.level);
   }
 
   if (cross_input_down())
   {
       setTimeout(100);
-    gameState->level--;
-    gameState->lastmode = -1;
-    if (gameState->level < 1)
-      gameState->level = 1;
-    gameState->levelMap = getLevelMap(gameState->level);
-    gameState->levelSize = getLevelMapSize(gameState->level);
+    gameState.level--;
+    gameState.lastmode = -1;
+    if (gameState.level < 1)
+      gameState.level = 1;
+    gameState.levelMap = getLevelMap(gameState.level);
+    gameState.levelSize = getLevelMapSize(gameState.level);
   }
   
   // Tune car
   if (cross_input_left())
   {
-    gameState->mode = 99;
+    gameState.mode = 99;
   }
 }
 
-static inline __uint24 getTileSet(int pixelSize) {
+static __uint24 getTileSet(int pixelSize) {
   if (pixelSize<7) { return FX_DATA_TILES_6; }
   switch ((pixelSize-1)/8) {
     case 0:
@@ -988,23 +987,23 @@ static inline __uint24 getTileSet(int pixelSize) {
 
 bool displayLevelZoom()
 {
-  float time = ((ZOOM_TIME - gameState->timeout) / (float)ZOOM_TIME);
+  float time = ((ZOOM_TIME - gameState.timeout) / (float)ZOOM_TIME);
   float zoom = 0.1f + 0.9f * time;
   int pixelSize = (int)floor(6.0f + 58.0f * time);
 
-  float headtox = ((FIXP_TO_FLOAT(gameState->player1.X) - 64) * time * 2);
-  float headtoy = ((FIXP_TO_FLOAT(gameState->player1.Y) - 32) * time * 2);
+  float headtox = ((FIXP_TO_FLOAT(gameState.player1.X) - 64) * time * 2);
+  float headtoy = ((FIXP_TO_FLOAT(gameState.player1.Y) - 32) * time * 2);
 
   if (headtox < 0)
     headtox = 0;
   if (headtoy < 0)
     headtoy = 0;
 
-  if (headtox > FIXP_TO_FLOAT(gameState->player1.X) - 64)
-    headtox = FIXP_TO_FLOAT(gameState->player1.X) - 64;
+  if (headtox > FIXP_TO_FLOAT(gameState.player1.X) - 64)
+    headtox = FIXP_TO_FLOAT(gameState.player1.X) - 64;
 
-  if (headtoy > FIXP_TO_FLOAT(gameState->player1.Y) - 32)
-    headtoy = FIXP_TO_FLOAT(gameState->player1.Y) - 32;
+  if (headtoy > FIXP_TO_FLOAT(gameState.player1.Y) - 32)
+    headtoy = FIXP_TO_FLOAT(gameState.player1.Y) - 32;
 
   headtox *= (pixelSize / 64.0f);
   headtoy *= (pixelSize / 64.0f);
@@ -1016,14 +1015,14 @@ bool displayLevelZoom()
   // Choose map
   __uint24 tiles = getTileSet(pixelSize);
 
-  for (int y = 0; y < gameState->levelSize; y++)
+  for (int y = 0; y < gameState.levelSize; y++)
   {
-    for (int x = 0; x < gameState->levelSize; x++)
+    for (int x = 0; x < gameState.levelSize; x++)
     {
       // Basic Screen Check
       if ((x * pixelSize + pixelSize - headtox) > 0 && (y * pixelSize + pixelSize - headtoy) > 0 && (x * pixelSize - headtox) < endx && (y * pixelSize - headtoy < 64))
       {
-        uint8_t levelTile = getLevelTile(gameState->levelMap, x, y, gameState->levelSize);
+        uint8_t levelTile = getLevelTile(gameState.levelMap, x, y, gameState.levelSize);
         int tilemap;
         switch (levelTile) {
           case 24:
@@ -1054,8 +1053,8 @@ void drawContinueMenu()
 {
   if ((getCurrentMs() / 1000) % 2 == 0)
   {
-    if (saveData.maxLevel > gameState->level)
-      cross_print(64, 64 - 16, 1, "A - Next B - Retry");
+    if (saveData.maxLevel > gameState.level)
+      cross_print(64, 64 - 16, 1, "A - Next\nB - Retry");
   }
 }
 
@@ -1069,7 +1068,7 @@ void displayCarTune()
   cross_print(6, 2+45, 1, "Points");
   cross_print(6, 59, 1, "A - Save, B - Reset");
 
-  cross_print(0,2+5+10*gameState->menuItem,1,"*");
+  cross_print(0,2+5+10*gameState.menuItem,1,"*");
 
   int i = 0;
   for (i = 15; i < 60; i += 10) 
@@ -1092,7 +1091,7 @@ void displayCarTune()
     cross_print(3+45+i*10,y,1,"X");
   }
 
-  int freePoints = gameState->car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+  int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
   y+=10;
   for (i = 0; i < freePoints; i++) {
     cross_print(3+45+i*10,y,1,"X");
@@ -1111,9 +1110,9 @@ void drawTrophySheet()
 
   for (int level = 0; level < 10; level++)
   {
-    int modLevel = level + 10*gameState->paused;
+    int modLevel = level + 10*gameState.paused;
     sprintf(string, ("%d"), modLevel + 1);
-    cross_print(18 + 3*!gameState->paused + level * 11, 3, 1, string);
+    cross_print(18 + 3*!gameState.paused + level * 11, 3, 1, string);
     cross_drawVLine(16 + level * 11, 0, 53, 1);
     if (saveData.BestLapTimes[modLevel] > 0)
       for (int i = 0; i < 3; i++)
@@ -1133,7 +1132,7 @@ void drawGoalTimes()
   cross_print(74, 0, 1, string);
   cross_drawHLine(64, 8, 64, 1);
 
-  setLevelTimeString('B', saveData.BestLapTimes[gameState->level - 1]);
+  setLevelTimeString('B', saveData.BestLapTimes[gameState.level - 1]);
   cross_print(74, 10, 1, string);
   cross_drawHLine(64, 19, 64, 1);
 
@@ -1153,7 +1152,7 @@ void drawAllTimes()
 
   for (int i = 0; i < TIMED_LAPS; i++)
   {
-    setLevelTimeString(i + 1 + 48, gameState->laptimes[i]/10);
+    setLevelTimeString(i + 1 + 48, gameState.laptimes[i]/10);
     cross_print(74, 9 + 8 * i, 1, string);
   }
 
@@ -1166,11 +1165,11 @@ void drawTrophy()
 {
   FX::drawBitmap(0, 0, FX_DATA_TROPHY, 0, dbmNormal);
 
-  if (gameState->curlap == 0)
+  if (gameState.curlap == 0)
   {
     drawGoalTimes();
   }
-  else if (gameState->curlap == 1)
+  else if (gameState.curlap == 1)
   {
     drawAllTimes();
   };
@@ -1180,45 +1179,45 @@ void inputTrophy()
 {
   if (cross_input_left())
   {
-    gameState->curlap = 1;
+    gameState.curlap = 1;
   }
 
   if (cross_input_right())
   {
-    gameState->curlap = 0;
+    gameState.curlap = 0;
   }
 
   if (cross_input_a())
   {
-    if (gameState->level < saveData.maxLevel)
+    if (gameState.level < saveData.maxLevel)
     {
-      gameState->level += 1;
-      if (gameState->level > LEVELS)
-        gameState->level = LEVELS;
-      gameState->mode = 4;
-      gameState->levelMap = getLevelMap(gameState->level);
-      gameState->levelSize = getLevelMapSize(gameState->level);
+      gameState.level += 1;
+      if (gameState.level > LEVELS)
+        gameState.level = LEVELS;
+      gameState.mode = 4;
+      gameState.levelMap = getLevelMap(gameState.level);
+      gameState.levelSize = getLevelMapSize(gameState.level);
     }
   }
 
   if (cross_input_b())
   {
-    gameState->mode = 4;
+    gameState.mode = 4;
   }
 };
 
 void displayIntro() {
-  int x = 50-gameState->timeout/10;
+  int x = 50-gameState.timeout/10;
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(x, 15, FX_DATA_LOGO_FX, 0, dbmMasked);
 }
 
 void displayZoomer() {
       displayGameMode();
-      int lastnumber = gameState->timeout == 3000 ? 4 : gameState->timeout / 1000 + 1;
+      int lastnumber = gameState.timeout == 3000 ? 4 : gameState.timeout / 1000 + 1;
 
-      int distance = gameState->timeout % 1000;
-      int number = gameState->timeout / 1000 + 1;
+      int distance = gameState.timeout % 1000;
+      int number = gameState.timeout / 1000 + 1;
       float mod = (1000.0f - distance) / 1000.0f;
       int numMod = (int)(32 * mod);
       cross_drawBitmapTile(32 + numMod, 0 + numMod, 64, 64, 1, 0, 1.0f - mod, getNumber(number));
@@ -1226,7 +1225,7 @@ void displayZoomer() {
         cross_playSound(saveData.sound > 0, 440, 100);
       if (!doTimeout())
       {
-        gameState->mode = 10;
+        gameState.mode = 10;
         cross_playSound(saveData.sound > 0, 440, 255);
       }
 }
@@ -1240,12 +1239,12 @@ void update() {
 
   tFrameMs = getFrameMs();
 
-  switch (gameState->mode)
+  switch (gameState.mode)
   {
   case 0: // Intro screen
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
       setTimeout(1000);
     }
@@ -1253,15 +1252,15 @@ void update() {
     {
       if (!doTimeout())
       {
-        gameState->mode += 1;
+        gameState.mode += 1;
       }
     }
     break;
   case 1: // Menu
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
     }
     else
     {
@@ -1272,10 +1271,10 @@ void update() {
     }
     break;
   case 2: // Options Menu
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
     }
     else
     {
@@ -1286,24 +1285,24 @@ void update() {
     }
     break;
   case 3: // About
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
       setTimeout(100);
     }
     if (!doTimeout()) {
       if (cross_input_a() || cross_input_b()) {
         setTimeout(100);
-        gameState->mode = 2;
+        gameState.mode = 2;
       }
     }
     break;
   case 4: // Level Start
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.sound || saveData.music);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
       setTimeout(1000);
     }
     else
@@ -1313,10 +1312,10 @@ void update() {
     }
     break;
   case 5: // Zoom in - Performance is bad - skipping!
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.sound || saveData.music);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
       setTimeout((int)ZOOM_TIME);
       setLevelDetails();
     }
@@ -1324,27 +1323,27 @@ void update() {
     {
       if (!doTimeout())
       {
-        gameState->mode = 6;
+        gameState.mode = 6;
       }
     }
     break;
   case 6: // 3,2,1,GO!
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
       setTimeout(3000);
     }
    break;
   case 8: // Win Screen / Next Level Select
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.sound || saveData.music);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
       setTimeout(1000);
-      gameState->curlap = 0;
-      gameState->newbestLap = false;
+      gameState.curlap = 0;
+      gameState.newbestLap = false;
     }
     else
     {
@@ -1356,52 +1355,52 @@ void update() {
 
     break;
   case 10: // Play Game
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
 //      void setCarMax() {
-        gameState->max_turn_speed = gameState->default_max_turn_speed + (saveData.car_turn - 4) * gameState->mod_turn;
-        gameState->max_speed = gameState->default_max_speed + (saveData.car_maxspeed -4)* gameState->mod_max_speed;
-        gameState->acceleration = gameState->default_acceleration + (saveData.car_acceleration -4) * gameState->mod_acceleration;
-        gameState->max_dec = 3*gameState->acceleration;
-        gameState->offroad = gameState->max_speed/4;
-        gameState->offroad_neg = gameState->max_speed/4;
+        gameState.max_turn_speed = gameState.default_max_turn_speed + (saveData.car_turn - 4) * gameState.mod_turn;
+        gameState.max_speed = gameState.default_max_speed + (saveData.car_maxspeed -4)* gameState.mod_max_speed;
+        gameState.acceleration = gameState.default_acceleration + (saveData.car_acceleration -4) * gameState.mod_acceleration;
+        gameState.max_dec = 3*gameState.acceleration;
+        gameState.offroad = gameState.max_speed/4;
+        gameState.offroad_neg = gameState.max_speed/4;
 //      }
-      gameState->laptimer = true;
-      gameState->lastmode = gameState->mode;
+      gameState.laptimer = true;
+      gameState.lastmode = gameState.mode;
     }
 
     processGameMode();
     updateGameMode();
-    if (gameState->curlap == TIMED_LAPS)
+    if (gameState.curlap == TIMED_LAPS)
     {
-      gameState->mode = 8;
+      gameState.mode = 8;
     }
     break;
   case 98: // Trophy Screen
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
-      gameState->lastmode = gameState->mode;
+      gameState.lastmode = gameState.mode;
     }
     if (!doTimeout()) {
         if (cross_input_b() || cross_input_a()) {
-          gameState->mode = 1;
-          gameState->enter = false;
+          gameState.mode = 1;
+          gameState.enter = false;
           setTimeout(1000);
         }
         if (cross_input_left() || cross_input_right()) {
           setTimeout(200);
-          gameState->paused = !gameState->paused;
+          gameState.paused = !gameState.paused;
         }
       }
     break;
   case 99: // Tune Car
-    if (gameState->lastmode != gameState->mode)
+    if (gameState.lastmode != gameState.mode)
     {
-      gameState->lastmode = gameState->mode;
-      gameState->menuItem = 1;
+      gameState.lastmode = gameState.mode;
+      gameState.menuItem = 1;
       setTimeout(1000);
     }
     else
@@ -1414,70 +1413,70 @@ void update() {
 
 void render() {
 
-  switch (gameState->mode)
+  switch (gameState.mode)
   {
   case 0: // Intro screen
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayIntro();
     }
     break;
   case 1: // Menu
-    if (gameState->lastmode == gameState->mode) {
-      displayMenu(gameState->menuItem);
+    if (gameState.lastmode == gameState.mode) {
+      displayMenu(gameState.menuItem);
     }
     break;
   case 2: // Options Menu
-    if (gameState->lastmode == gameState->mode) {
-      displayOptionsMenu(gameState->menuItem);
+    if (gameState.lastmode == gameState.mode) {
+      displayOptionsMenu(gameState.menuItem);
     }
     break;
   case 3: // About
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayAbout();
     }
     break;
   case 4: // Level Start
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayMap();
       displayLevelInfo();
     }
     break;
   case 5: // Zoom in - Performance is bad - skipping!
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayLevelZoom();
     }
     break;
   case 6: // 3,2,1,GO!
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayZoomer();
     }
 
    break;
   case 8: // Win Screen / Next Level Select
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       drawTrophy();
     }
 
     break;
   case 10: // Play Game
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayGameMode();
     }
     break;
   case 98: // Trophy Screen
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       drawTrophySheet();
     }
     break;
   case 99: // Tune Car
-    if (gameState->lastmode == gameState->mode) {
+    if (gameState.lastmode == gameState.mode) {
       displayCarTune();
     }
     break;
   }
 
   #ifdef DEBUG_MODE
-  sprintf(string,"%0d %3d %3d %3d - %2u", gameState->mode, FIXP_TO_INT(gameState->player1.acceleration.force), FIXP_TO_INT(gameState->player1.X), FIXP_TO_INT(gameState->player1.Y), getFrameMs());
+  sprintf(string,"%0d %3d %3d %3d - %2u", gameState.mode, FIXP_TO_INT(gameState.player1.acceleration.force), FIXP_TO_INT(gameState.player1.X), FIXP_TO_INT(gameState.player1.Y), getFrameMs());
   cross_print(0,58,6,string);
   #endif
 }

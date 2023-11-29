@@ -1,7 +1,6 @@
 # TODO
 - Last lap isn't clear for changing lanes
 - Music and SFX
-- Update trophy screen for 20 levels
 - Simplify any levels too hard to get 99.99 sec
 - Play game through on Arduboy making times for every level
     - Once with mods as desired
@@ -13,6 +12,7 @@
 - Integrate into a FX image with multiple games
 
 # Bugs
+- Update trophy screen for 20 levels
 - Save data fails to save first time in Ardens
     - FX Busy error
     - Save file at startup if it's not found

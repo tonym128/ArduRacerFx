@@ -2,7 +2,7 @@
 #define _STRUCTS_H_
 #include "fixpoint.h"
 constexpr uint8_t TIMED_LAPS = 5;
-#define LEVEL_CACHE 16 // Tiles in cache
+#define LEVEL_CACHE 10 // Tiles in cache
 
 struct Vec3 {
   FIXPOINT x,y;
