@@ -1111,15 +1111,16 @@ void drawTrophySheet()
 
   for (int level = 0; level < 10; level++)
   {
-    sprintf(string, ("%d"), level + 1);
-    cross_print(21 + level * 11, 3, 1, string);
+    int modLevel = level + 10*gameState->paused;
+    sprintf(string, ("%d"), modLevel + 1);
+    cross_print(18 + 3*!gameState->paused + level * 11, 3, 1, string);
     cross_drawVLine(16 + level * 11, 0, 53, 1);
-    if (saveData.BestLapTimes[level] > 0)
+    if (saveData.BestLapTimes[modLevel] > 0)
       for (int i = 0; i < 3; i++)
       {
-        if (saveData.BestLapTimes[level] < FX::readIndexedUInt16(FX_LEVEL_TIMES,level*3 + i))
+        if (saveData.BestLapTimes[modLevel] < FX::readIndexedUInt16(FX_LEVEL_TIMES,modLevel*3 + i))
         {
-          cross_print(17 + level * 11, 4 + (1 + i) * 13, 1, ("X"));
+          cross_print(20 + level * 11, 4 + (1 + i) * 13, 1, ("X"));
           break;
         }
       }
@@ -1384,11 +1385,16 @@ void update() {
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
       gameState->lastmode = gameState->mode;
     }
-    if (!doTimeout())
-      if (cross_input_b() || cross_input_a()) {
-        gameState->mode = 1;
-        gameState->enter = false;
-        setTimeout(1000);
+    if (!doTimeout()) {
+        if (cross_input_b() || cross_input_a()) {
+          gameState->mode = 1;
+          gameState->enter = false;
+          setTimeout(1000);
+        }
+        if (cross_input_left() || cross_input_right()) {
+          setTimeout(200);
+          gameState->paused = !gameState->paused;
+        }
       }
     break;
   case 99: // Tune Car

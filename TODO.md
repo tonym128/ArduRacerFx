@@ -1,4 +1,5 @@
 # TODO
+- Last lap isn't clear for changing lanes
 - Music and SFX
 - Update trophy screen for 20 levels
 - Simplify any levels too hard to get 99.99 sec
@@ -12,7 +13,7 @@
 - Integrate into a FX image with multiple games
 
 # Bugs
-- Save dazta fails to save first time (or maybe when there is a new record)
+- Save data fails to save first time in Ardens
     - FX Busy error
     - Save file at startup if it's not found
 - Car is too fast at high frame rates    

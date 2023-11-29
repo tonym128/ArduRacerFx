@@ -5,9 +5,13 @@
 Arduboy2 arduboy;
 uint16_t buffer[8]; 
 ArduboyTonesFX sound(arduboy.audio.enabled, buffer);
+//#define ARDBITMAP
+#ifdef ARDBITMAP
 #define ARDBITMAP_SBUF arduboy.getBuffer()
 #include "ArdBitmap.h"
 ArdBitmap<WIDTH, HEIGHT> ardbitmap;
+#endif
+
 unsigned long currentTime, frameTime, fps, frameMs = 0;
 const unsigned int FRAME_RATE = 60; // Frame rate in frames per second
 
@@ -149,8 +153,10 @@ void cross_drawVLine(int x, int y, int length, bool colour)
 
 static void cross_drawBitmapTile(int x, int y, int width, int height, int colour, int mirror, float zoom, __uint24 fximage)
 {
+    #ifdef ARDBITMAP
     ardbitmap.drawFXCompressedResized(x, y, fximage, colour, 0, mirror, zoom);
     // ardbitmap.drawFXBitmapResized(x, y, fximage, width, height, colour, 0, mirror, zoom);
+    #endif
 }
 
 bool cross_getPixel(int x, int y) {
