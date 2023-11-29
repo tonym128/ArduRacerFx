@@ -1401,6 +1401,7 @@ void update() {
     {
       gameState.lastmode = gameState.mode;
       gameState.menuItem = 1;
+      gameState.paused = 0;
       setTimeout(1000);
     }
     else
