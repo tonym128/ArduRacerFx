@@ -1,4 +1,4 @@
-# Ardu Racer FX
+# Ardu Racer FX 🏎️
 A time trail game, not for the faint of heart. Get your heart pumping, get your game face on and gun it down the striaghts and hammer it in the corners.
 
 This is a port of ArduRacer which includes usage of the FX chip on the ArduboyFX!
@@ -14,6 +14,11 @@ This is a port of ArduRacer which includes usage of the FX chip on the ArduboyFX
 ## New FX Features
 - Locked 60 FPS gameplay
 - 20 Stages
+- Beat the Dev Times
+  - 1st place is the best time possible with tuning and shortcuts
+  - 2nd place is the best time possible with no tuning and shortcuts
+  - 3rd place is a chosen time which should be possible with no tuning and no shortcuts and some leeway
+  - All times were done on an ArduboyFX, not using an emulator. Wanted to keep the playing field fair
 - Bigger maps for later levels
 - Car Tuning for optimising the performance to your preference or the track
 - 2x frames on car to track 16 directions
