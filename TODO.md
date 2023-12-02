@@ -90,5 +90,5 @@
     - Undoing my cross platform code
 
 # Failures
-- Getting to 4 colour grayscale
+- Getting framerate sufficient for grayscale
 
