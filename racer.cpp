@@ -586,8 +586,8 @@ void displayGameMode()
   Serial.write(string);
   split = getMs();
 #endif
-  uint8_t mapSize = gameState.levelSize;
-  if (mapSize > LEVEL_CACHE) mapSize = LEVEL_CACHE;
+  uint8_t mapSize = gameState.levelSize*2;
+  if (mapSize > LEVEL_CACHE*2) mapSize = LEVEL_CACHE*2;
 
   for (int i = 0; i < mapSize+6; i++)
   {
@@ -609,15 +609,21 @@ void displayGameMode()
 
     for (uint8_t j = 0; j < LEVEL_CACHE && j < gameState.levelSize; j++) {
       for (uint8_t i = 0; i < LEVEL_CACHE && i < gameState.levelSize; i++) {
-        cross_drawPixel(mapX+i,mapY+j,gameState.mapDisplay[i+j*LEVEL_CACHE]);
+        cross_drawPixel(mapX+i*2,mapY+j*2,gameState.mapDisplay[i+j*LEVEL_CACHE]);
+        cross_drawPixel(mapX+i*2+1,mapY+j*2,gameState.mapDisplay[i+j*LEVEL_CACHE]);
+        cross_drawPixel(mapX+i*2,mapY+j*2+1,gameState.mapDisplay[i+j*LEVEL_CACHE]);
+        cross_drawPixel(mapX+i*2+1,mapY+j*2+1,gameState.mapDisplay[i+j*LEVEL_CACHE]);
       }
     }
 
     // Overdraw player pixel ticking
-    int carMapX = FIXP_TO_INT(gameState.player1.X)/64;
-    int carMapY = FIXP_TO_INT(gameState.player1.Y)/64;
+    int carMapX = FIXP_TO_INT(gameState.player1.X)/64 * 2;
+    int carMapY = FIXP_TO_INT(gameState.player1.Y)/64 * 2;
 
-    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod,mapY+carMapY-gameState.levelMapYMod,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2,mapY+carMapY-gameState.levelMapYMod*2,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2+1,mapY+carMapY-gameState.levelMapYMod*2,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2,mapY+carMapY-gameState.levelMapYMod*2+1,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2+1,mapY+carMapY-gameState.levelMapYMod*2+1,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
   }
 
 #ifdef PERF_RENDER
@@ -628,12 +634,12 @@ void displayGameMode()
 #endif
 
   // Display Speed
-  int speed = FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*gameState.levelSize;
+  int speed = FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*mapSize;
   for (int i = 1; i <= speed; i++)
   {
     cross_drawVLine(mapX + i, 0, 7, 1);
   }
-  cross_drawHLine(mapX, 6, gameState.levelSize, 0);
+  cross_drawHLine(mapX, 6, mapSize, 0);
 
   if (gameState.paused)
   {
