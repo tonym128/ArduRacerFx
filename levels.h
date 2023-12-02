@@ -41,4 +41,26 @@ static uint8_t getLevelTile(__uint24 level, uint8_t x, uint8_t y, uint8_t levelm
   return FX::readIndexedUInt8(level+pos,0);
 }
 
+static __uint24 getTileSet(int pixelSize) {
+  if (pixelSize<7) { return FX_DATA_TILES_6; }
+  switch ((pixelSize-1)/8) {
+    case 0:
+      return FX_DATA_TILES_8;
+    case 1:
+      return FX_DATA_TILES_16;
+    case 2:
+      return FX_DATA_TILES_24;
+    case 3:
+      return FX_DATA_TILES_32;
+    case 4:
+      return FX_DATA_TILES_40;
+    case 5:
+      return FX_DATA_TILES_48;
+    case 6:
+      return FX_DATA_TILES_56;
+    default:
+      return FX_DATA_TILES_64;
+  }
+}
+
 #endif

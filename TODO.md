@@ -4,24 +4,21 @@
 - Play game through on Arduboy making times for every level
     - Once with mods as desired
     - Once without car mods
-    - With shortcuts, without shortcuts
-- Settings option for shortcuts and no shortcuts
+- Set 3rd place time to something fun to play
 - Reset maxlevel to 1
-- Move screen back when car is going faster
 - Integrate into a FX image with multiple games
 
 # Bugs
-- Last lap isn't clear for changing lanes (just gonna do it)
-- Update trophy screen for 20 levels
 - Save data fails to save first time in Ardens
     - FX Busy error
     - Save file at startup if it's not found
-- Car is too fast at high frame rates    
-- Work out why flashing text causes slow downs
 
 # DONE
-- Increase max time to 99.99 seconds (overflow, change to 32-bit)
-- Issues with saving 32 bit indexed int, change to uint16t
+- Work out why flashing text causes slow downs (Text is just slow, but fine for perf)
+- Car is too fast at high frame rates    
+- Update trophy screen for 20 levels
+- Increase max time to 99.99 seconds (overflow, change to 16-bit save and 32-bit gameplay to match millis)
+- Issues with saving 32 bit indexed int, changed to uint16t
 
 - Configure car performance
     - Max Speed
@@ -57,6 +54,8 @@
 - Add a win video (waste of space)
 - Add new car models (not without grayscale)
 - Use Grayscale (not rendering fast enough)
+- Move screen back when car is going faster
+- Last lap isn't clear for changing lanes (just gonna do it)
 
 
 # Features

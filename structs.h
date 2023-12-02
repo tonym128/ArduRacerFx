@@ -92,7 +92,7 @@ struct GameState {
   double max_turn_speed = 0.003;
   FIXPOINT max_speed = FLOAT_TO_FIXP(2.2f);
   FIXPOINT acceleration = FLOAT_TO_FIXP(0.003f);
-  FIXPOINT max_dec = 3*acceleration;
+  FIXPOINT max_dec = acceleration/5;
   FIXPOINT offroad = max_speed/3;
   FIXPOINT offroad_neg = max_speed/3;
 };

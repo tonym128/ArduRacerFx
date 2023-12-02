@@ -147,7 +147,7 @@ void cross_play_audio(bool makeSound, uint24_t fxsound) {
 }
 
 void cross_stop_audio(bool makeSound) {
-    if (makeSound && sound.playing) {
+    if (makeSound) {
         sound.noTone();
     }
 }

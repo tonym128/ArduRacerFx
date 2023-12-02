@@ -262,7 +262,7 @@ void processGameMode() {
 
   if (cross_input_b())
   {
-    gameState.player1.acceleration.force -= gameState.max_dec * tFrameMs;
+    gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
   }
 }
 
@@ -315,8 +315,6 @@ void updateGameMode()
  
   if (gameState.player1.acceleration.force > gameState.max_speed)
     gameState.player1.acceleration.force = gameState.max_speed;
-  else if (gameState.player1.acceleration.force < gameState.max_dec)
-    gameState.player1.acceleration.force = gameState.max_dec;
 
   // Drag
   if (gameState.player1.acceleration.force > 0)
@@ -594,7 +592,10 @@ void displayGameMode()
     cross_drawVLine(128 - mapSize + i, 0, 6, 0);
   }
 
-  if (gameState.player1.offRoad && gameState.player1.acceleration.force != 0)
+  if (!gameState.player1.offRoad && gameState.player1.acceleration.force != 0) {
+      cross_playSound(saveData.sound > 0, FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*500+rand()%30, 30);
+  }
+  else if (gameState.player1.offRoad && gameState.player1.acceleration.force != 0)
   {
     if (((gameState.laptimes[(gameState.curlap)] / 100) % 3) == 0)
       cross_playSound(saveData.sound > 0, 100, 30);
@@ -709,7 +710,7 @@ void processMenu()
     setTimeout(100);
   }
   else if (cross_input_b()) {
-    gameState.mode = 0;
+    gameState.mode = 1;
     gameState.menuItem = 0;
     gameState.enter = false;
   }
@@ -757,9 +758,9 @@ void updateOptionsMenu() {
       case 1:
         // Toggle Music
         if (doTimeout()) return;
+        cross_stop_audio(true);
         if (saveData.music == 0) { saveData.music = 1;}
         else saveData.music = 0;
-
         gameState.enter = false;
         setTimeout(100);
         cross_save(saveData);
@@ -969,27 +970,6 @@ void inputLevelInfo()
   }
 }
 
-static __uint24 getTileSet(int pixelSize) {
-  if (pixelSize<7) { return FX_DATA_TILES_6; }
-  switch ((pixelSize-1)/8) {
-    case 0:
-      return FX_DATA_TILES_8;
-    case 1:
-      return FX_DATA_TILES_16;
-    case 2:
-      return FX_DATA_TILES_24;
-    case 3:
-      return FX_DATA_TILES_32;
-    case 4:
-      return FX_DATA_TILES_40;
-    case 5:
-      return FX_DATA_TILES_48;
-    case 6:
-      return FX_DATA_TILES_56;
-    default:
-      return FX_DATA_TILES_64;
-  }
-}
 
 bool displayLevelZoom()
 {
@@ -1227,12 +1207,14 @@ void displayZoomer() {
       float mod = (1000.0f - distance) / 1000.0f;
       int numMod = (int)(32 * mod);
       cross_drawBitmapTile(32 + numMod, 0 + numMod, 64, 64, 1, 0, 1.0f - mod, getNumber(number));
-      if (number >= 0 && lastnumber != number)
-        cross_playSound(saveData.sound > 0, 440, 100);
+      if (gameState.timeout > 2900 and gameState.timeout < 3000) cross_playSound(saveData.sound > 0, 1000, 900);
+      else if (gameState.timeout > 1900 and gameState.timeout < 2000) cross_playSound(saveData.sound > 0, 1000, 900);
+      else if (gameState.timeout >  900 and gameState.timeout < 1000) cross_playSound(saveData.sound > 0, 1000, 900);
+      
       if (!doTimeout())
       {
         gameState.mode = 10;
-        cross_playSound(saveData.sound > 0, 440, 255);
+        cross_playSound(saveData.sound > 0, 1500, 1000);
       }
 }
 
@@ -1251,7 +1233,6 @@ void update() {
     if (gameState.lastmode != gameState.mode)
     {
       gameState.lastmode = gameState.mode;
-      cross_play_audio(saveData.music, FX_SOUND_INTRO);
       setTimeout(1000);
     }
     else
@@ -1265,6 +1246,7 @@ void update() {
   case 1: // Menu
     if (gameState.lastmode != gameState.mode)
     {
+      cross_stop_audio(saveData.music);
       cross_play_audio(saveData.music, FX_SOUND_INTRO);
       gameState.lastmode = gameState.mode;
     }
@@ -1308,6 +1290,7 @@ void update() {
     if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.sound || saveData.music);
+      cross_play_audio(saveData.music, FX_SOUND_LEVEL_SELECT);
       gameState.lastmode = gameState.mode;
       setTimeout(1000);
     }
@@ -1317,10 +1300,10 @@ void update() {
         inputLevelInfo();
     }
     break;
-  case 5: // Zoom in - Performance is bad - skipping!
+  case 5: // Zoom in
     if (gameState.lastmode != gameState.mode)
     {
-      cross_stop_audio(saveData.sound || saveData.music);
+      cross_stop_audio(saveData.music);
       gameState.lastmode = gameState.mode;
       setTimeout((int)ZOOM_TIME);
       setLevelDetails();
@@ -1363,13 +1346,11 @@ void update() {
   case 10: // Play Game
     if (gameState.lastmode != gameState.mode)
     {
-      cross_stop_audio(saveData.sound || saveData.music);
       setLevelDetails();
 //      void setCarMax() {
         gameState.max_turn_speed = gameState.default_max_turn_speed + (saveData.car_turn - 4) * gameState.mod_turn;
         gameState.max_speed = gameState.default_max_speed + (saveData.car_maxspeed -4)* gameState.mod_max_speed;
         gameState.acceleration = gameState.default_acceleration + (saveData.car_acceleration -4) * gameState.mod_acceleration;
-        gameState.max_dec = 3*gameState.acceleration;
         gameState.offroad = gameState.max_speed/4;
         gameState.offroad_neg = gameState.max_speed/4;
 //      }
@@ -1448,7 +1429,7 @@ void render() {
       displayLevelInfo();
     }
     break;
-  case 5: // Zoom in - Performance is bad - skipping!
+  case 5: // Zoom in
     if (gameState.lastmode == gameState.mode) {
       displayLevelZoom();
     }
@@ -1462,6 +1443,7 @@ void render() {
   case 8: // Win Screen / Next Level Select
     if (gameState.lastmode == gameState.mode) {
       drawTrophy();
+      cross_play_audio(saveData.music, FX_SOUND_TROPHY);
     }
 
     break;
