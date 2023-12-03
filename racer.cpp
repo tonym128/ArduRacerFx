@@ -221,13 +221,15 @@ void processGameMode() {
 
   if (cross_input_a())
   {
-    if (gameState.paused)
+    if (gameState.paused && !doTimeout())
       gameState.paused = false;
   }
 
   if (cross_input_up())
   {
     gameState.paused = true;
+    cross_stop_audio(saveData.sound);
+    setTimeout(400);
     return;
   }
 
@@ -588,12 +590,12 @@ void displayGameMode()
   }
 
   if (!gameState.player1.offRoad && gameState.player1.acceleration.force != 0) {
-      cross_playSound(saveData.sound > 0, FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*500+rand()%30, 30);
+      cross_playSound(!gameState.paused && (saveData.sound > 0), FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*500+rand()%30, 30);
   }
   else if (gameState.player1.offRoad && gameState.player1.acceleration.force != 0)
   {
     if (((gameState.laptimes[(gameState.curlap)] / 100) % 3) == 0)
-      cross_playSound(saveData.sound > 0, 100, 30);
+      cross_playSound(!gameState.paused && (saveData.sound > 0), 100, 30);
   }
  
   // Draw Map
@@ -616,10 +618,11 @@ void displayGameMode()
     int carMapX = FIXP_TO_INT(gameState.player1.X)/64 * 2;
     int carMapY = FIXP_TO_INT(gameState.player1.Y)/64 * 2;
 
-    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2,mapY+carMapY-gameState.levelMapYMod*2,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
-    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2+1,mapY+carMapY-gameState.levelMapYMod*2,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
-    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2,mapY+carMapY-gameState.levelMapYMod*2+1,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
-    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2+1,mapY+carMapY-gameState.levelMapYMod*2+1,(gameState.laptimes[(gameState.curlap)]/200)%2==0);
+    bool display = (getCurrentMs()/200)%2==0;
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2,mapY+carMapY-gameState.levelMapYMod*2,display);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2+1,mapY+carMapY-gameState.levelMapYMod*2,display);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2,mapY+carMapY-gameState.levelMapYMod*2+1,display);
+    cross_drawPixel(mapX+carMapX-gameState.levelMapXMod*2+1,mapY+carMapY-gameState.levelMapYMod*2+1,display);
   }
 
 #ifdef PERF_RENDER
@@ -1108,6 +1111,37 @@ void drawTrophySheet()
         }
       }
   }
+
+  uint8_t totalScore = 0;
+
+  for (int level = 0; level < 20; level++) {
+    if (saveData.BestLapTimes[level] > 0)
+      for (int i = 0; i < 3; i++)
+      {
+        if (saveData.BestLapTimes[level] < FX::readIndexedUInt16(FX_LEVEL_TIMES,level*3 + i))
+        {
+          switch (i) {
+          case 0:
+            //First Place
+            totalScore += 5;
+          break;
+          case 1:
+            //Second Place
+            totalScore += 3;
+          break;
+          case 2:
+            //Third Place
+            totalScore += 1;
+            break;
+          }
+
+          break;
+        }
+      }
+  }
+
+  sprintf(string, "Total Score : %3d/100", totalScore);
+  cross_print(24, 58, 1, string);
 }
 
 void drawGoalTimes()
