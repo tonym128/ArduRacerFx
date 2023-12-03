@@ -1,10 +1,15 @@
 # TODO
 - Music and SFX
-- Simplify any levels too hard to get 99.99 sec
+    - Music repeats on level select change
+    - Music for Zoom needs work
+    - Add Win music
+- Add points to the main screen (levels 1st = 5 points, 2nd = 3 points, 3rd = 1, haven't finished = 0)
+    - 20 levels = 100 points
 - Play game through on Arduboy making times for every level
     - Once with mods as desired
     - Once without car mods
 - Set 3rd place time to something fun to play
+- Simplify any levels too hard to get 99.99 sec
 - Reset maxlevel to 1
 - Integrate into a FX image with multiple games
 

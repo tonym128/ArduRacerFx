@@ -1304,6 +1304,7 @@ void update() {
     if (gameState.lastmode != gameState.mode)
     {
       cross_stop_audio(saveData.music);
+      cross_play_audio(saveData.music, FX_SOUND_LEVEL_ZOOM);
       gameState.lastmode = gameState.mode;
       setTimeout((int)ZOOM_TIME);
       setLevelDetails();
