@@ -219,7 +219,7 @@ void processGameMode() {
     }
   }
 
-  if (cross_input_a())
+  if (cross_input_a() || cross_input_b())
   {
     if (gameState.paused && !doTimeout())
       gameState.paused = false;
@@ -643,7 +643,7 @@ void displayGameMode()
   cross_drawHLine(mapX, 6, mapSize, 0);
   
   // Set LEDs
-  cross_set_leds(gameState.offroad ? 256 : 0, speed == mapSize ? 256 : 0, speed*25);
+  // cross_set_leds(gameState.offroad ? 256 : 0, speed == mapSize ? 256 : 0, speed*25);
 
   if (gameState.paused)
   {
