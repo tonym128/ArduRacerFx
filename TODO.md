@@ -1,10 +1,4 @@
 # TODO
-- Music and SFX
-    - Music repeats on level select change
-    - Music for Zoom needs work
-    - Add Win music
-- Add points to the main screen (levels 1st = 5 points, 2nd = 3 points, 3rd = 1, haven't finished = 0)
-    - 20 levels = 100 points
 - Play game through on Arduboy making times for every level
     - Once with mods as desired
     - Once without car mods
@@ -19,6 +13,12 @@
     - Save file at startup if it's not found
 
 # DONE
+- Music and SFX
+    - Music repeats on level select change
+    - Music for Zoom needs work
+    - Add Win music
+- Add points to the main screen (levels 1st = 5 points, 2nd = 3 points, 3rd = 1, haven't finished = 0)
+    - 20 levels = 100 points
 - Work out why flashing text causes slow downs (Text is just slow, but fine for perf)
 - Car is too fast at high frame rates    
 - Update trophy screen for 20 levels
