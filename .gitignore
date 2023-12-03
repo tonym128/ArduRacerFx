@@ -36,7 +36,4 @@
 /SDL2/
 /.vscode/
 
-# Build and test files
-*.ino
-*.eeprom
-*.hex
+
