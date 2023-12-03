@@ -5,13 +5,7 @@
                                       // Check out fxdata.txt to see how this is done.
 
 static __uint24 getNumber(uint8_t number) {
-  switch(number) {
-    case 1: return FX_DATA_1;
-    case 2: return FX_DATA_2;
-    case 3: return FX_DATA_3;
-  }
-  
-  return FX_DATA_1;
+  return FX_DATA_NUMBER + (number-1) * sizeof(__uint24);
 }
 
 #endif

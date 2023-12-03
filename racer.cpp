@@ -1203,10 +1203,14 @@ void displayZoomer() {
       int lastnumber = gameState.timeout == 3000 ? 4 : gameState.timeout / 1000 + 1;
 
       int distance = gameState.timeout % 1000;
-      int number = gameState.timeout / 1000 + 1;
+      int number = gameState.timeout / 1000;
+
+      if (number > 2) number = 2;
+      else if (number < 0) number = 0;
+
       float mod = (1000.0f - distance) / 1000.0f;
       int numMod = (int)(32 * mod);
-      cross_drawBitmapTile(32 + numMod, 0 + numMod, 64, 64, 1, 0, 1.0f - mod, getNumber(number));
+      cross_drawBitmapTile(32 + numMod, 0 + numMod, 64, 64, 1, 0, 1.0f - mod, FX::readIndexedUInt24(FX_DATA_NUMBERS,number));
       if (gameState.timeout > 2900 and gameState.timeout < 3000) cross_playSound(saveData.sound > 0, 1000, 900);
       else if (gameState.timeout > 1900 and gameState.timeout < 2000) cross_playSound(saveData.sound > 0, 1000, 900);
       else if (gameState.timeout >  900 and gameState.timeout < 1000) cross_playSound(saveData.sound > 0, 1000, 900);

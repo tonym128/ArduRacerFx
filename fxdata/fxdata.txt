@@ -93,6 +93,8 @@ uint8_t FX_DATA_3[] = {
 0x3d, 0xf2, 0xf7, 0x00,
 }
 
+uint24_t FX_DATA_NUMBERS[] = {FX_DATA_1,FX_DATA_2,FX_DATA_3}
+
 // FX_LEVELs
 
 uint8_t FX_LEVEL1[] = {

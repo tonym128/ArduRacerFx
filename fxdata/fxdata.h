@@ -7,7 +7,7 @@ using uint24_t = __uint24;
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
 constexpr uint16_t FX_DATA_PAGE  = 0xff2f;
-constexpr uint24_t FX_DATA_BYTES = 49260;
+constexpr uint24_t FX_DATA_BYTES = 49269;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
 constexpr uint24_t FX_SAVE_BYTES = 49;
@@ -15,114 +15,115 @@ constexpr uint24_t FX_SAVE_BYTES = 49;
 constexpr uint24_t FX_DATA_1 = 0x000000;
 constexpr uint24_t FX_DATA_2 = 0x00005B;
 constexpr uint24_t FX_DATA_3 = 0x0000D8;
-constexpr uint24_t FX_LEVEL1 = 0x00015C;
-constexpr uint24_t FX_LEVEL2 = 0x0001C0;
-constexpr uint24_t FX_LEVEL3 = 0x000224;
-constexpr uint24_t FX_LEVEL4 = 0x000288;
-constexpr uint24_t FX_LEVEL5 = 0x0002EC;
-constexpr uint24_t FX_LEVEL6 = 0x000350;
-constexpr uint24_t FX_LEVEL7 = 0x0003B4;
-constexpr uint24_t FX_LEVEL8 = 0x000418;
-constexpr uint24_t FX_LEVEL9 = 0x00047C;
-constexpr uint24_t FX_LEVEL10 = 0x0004E0;
-constexpr uint24_t FX_LEVEL11 = 0x000544;
-constexpr uint24_t FX_LEVEL12 = 0x000644;
-constexpr uint24_t FX_LEVEL13 = 0x000744;
-constexpr uint24_t FX_LEVEL14 = 0x000844;
-constexpr uint24_t FX_LEVEL15 = 0x000944;
-constexpr uint24_t FX_LEVEL16 = 0x000A44;
-constexpr uint24_t FX_LEVEL17 = 0x000B44;
-constexpr uint24_t FX_LEVEL18 = 0x000C44;
-constexpr uint24_t FX_LEVEL19 = 0x000D44;
-constexpr uint24_t FX_LEVEL20 = 0x0010C8;
-constexpr uint24_t FX_LEVEL_TIMES = 0x00144C;
-constexpr uint24_t FX_DATA_FONT46 = 0x0014C4;
+constexpr uint24_t FX_DATA_NUMBERS = 0x00015C;
+constexpr uint24_t FX_LEVEL1 = 0x000165;
+constexpr uint24_t FX_LEVEL2 = 0x0001C9;
+constexpr uint24_t FX_LEVEL3 = 0x00022D;
+constexpr uint24_t FX_LEVEL4 = 0x000291;
+constexpr uint24_t FX_LEVEL5 = 0x0002F5;
+constexpr uint24_t FX_LEVEL6 = 0x000359;
+constexpr uint24_t FX_LEVEL7 = 0x0003BD;
+constexpr uint24_t FX_LEVEL8 = 0x000421;
+constexpr uint24_t FX_LEVEL9 = 0x000485;
+constexpr uint24_t FX_LEVEL10 = 0x0004E9;
+constexpr uint24_t FX_LEVEL11 = 0x00054D;
+constexpr uint24_t FX_LEVEL12 = 0x00064D;
+constexpr uint24_t FX_LEVEL13 = 0x00074D;
+constexpr uint24_t FX_LEVEL14 = 0x00084D;
+constexpr uint24_t FX_LEVEL15 = 0x00094D;
+constexpr uint24_t FX_LEVEL16 = 0x000A4D;
+constexpr uint24_t FX_LEVEL17 = 0x000B4D;
+constexpr uint24_t FX_LEVEL18 = 0x000C4D;
+constexpr uint24_t FX_LEVEL19 = 0x000D4D;
+constexpr uint24_t FX_LEVEL20 = 0x0010D1;
+constexpr uint24_t FX_LEVEL_TIMES = 0x001455;
+constexpr uint24_t FX_DATA_FONT46 = 0x0014CD;
 constexpr uint16_t FX_DATA_FONT46_WIDTH  = 4;
 constexpr uint16_t FX_DATA_FONT46HEIGHT  = 6;
 constexpr uint8_t  FX_DATA_FONT46_FRAMES = 96;
 
-constexpr uint24_t FX_DATA_LOGO = 0x001648;
+constexpr uint24_t FX_DATA_LOGO = 0x001651;
 constexpr uint16_t FX_DATA_LOGO_WIDTH  = 128;
 constexpr uint16_t FX_DATA_LOGOHEIGHT  = 64;
 
-constexpr uint24_t FX_DATA_LOGO_FX = 0x001A4C;
+constexpr uint24_t FX_DATA_LOGO_FX = 0x001A55;
 constexpr uint16_t FX_DATA_LOGO_FX_WIDTH  = 32;
 constexpr uint16_t FX_DATA_LOGO_FXHEIGHT  = 20;
 
-constexpr uint24_t FX_DATA_TROPHY = 0x001B10;
+constexpr uint24_t FX_DATA_TROPHY = 0x001B19;
 constexpr uint16_t FX_DATA_TROPHY_WIDTH  = 64;
 constexpr uint16_t FX_DATA_TROPHYHEIGHT  = 64;
 
-constexpr uint24_t FX_DATA_CAR = 0x001D14;
+constexpr uint24_t FX_DATA_CAR = 0x001D1D;
 constexpr uint16_t FX_DATA_CAR_WIDTH  = 10;
 constexpr uint16_t FX_DATA_CARHEIGHT  = 10;
 constexpr uint8_t  FX_DATA_CAR_FRAMES = 8;
 
-constexpr uint24_t FX_DATA_CAR2 = 0x001E58;
+constexpr uint24_t FX_DATA_CAR2 = 0x001E61;
 constexpr uint16_t FX_DATA_CAR2_WIDTH  = 16;
 constexpr uint16_t FX_DATA_CAR2HEIGHT  = 16;
 constexpr uint8_t  FX_DATA_CAR2_FRAMES = 16;
 
-constexpr uint24_t FX_DATA_TILES_64 = 0x00225C;
+constexpr uint24_t FX_DATA_TILES_64 = 0x002265;
 constexpr uint16_t FX_DATA_TILES_64_WIDTH  = 64;
 constexpr uint16_t FX_DATA_TILES_64HEIGHT  = 64;
 constexpr uint8_t  FX_DATA_TILES_64_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_56 = 0x005260;
+constexpr uint24_t FX_DATA_TILES_56 = 0x005269;
 constexpr uint16_t FX_DATA_TILES_56_WIDTH  = 56;
 constexpr uint16_t FX_DATA_TILES_56HEIGHT  = 56;
 constexpr uint8_t  FX_DATA_TILES_56_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_48 = 0x007724;
+constexpr uint24_t FX_DATA_TILES_48 = 0x00772D;
 constexpr uint16_t FX_DATA_TILES_48_WIDTH  = 48;
 constexpr uint16_t FX_DATA_TILES_48HEIGHT  = 48;
 constexpr uint8_t  FX_DATA_TILES_48_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_40 = 0x009228;
+constexpr uint24_t FX_DATA_TILES_40 = 0x009231;
 constexpr uint16_t FX_DATA_TILES_40_WIDTH  = 40;
 constexpr uint16_t FX_DATA_TILES_40HEIGHT  = 40;
 constexpr uint8_t  FX_DATA_TILES_40_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_32 = 0x00A4EC;
+constexpr uint24_t FX_DATA_TILES_32 = 0x00A4F5;
 constexpr uint16_t FX_DATA_TILES_32_WIDTH  = 32;
 constexpr uint16_t FX_DATA_TILES_32HEIGHT  = 32;
 constexpr uint8_t  FX_DATA_TILES_32_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_24 = 0x00B0F0;
+constexpr uint24_t FX_DATA_TILES_24 = 0x00B0F9;
 constexpr uint16_t FX_DATA_TILES_24_WIDTH  = 24;
 constexpr uint16_t FX_DATA_TILES_24HEIGHT  = 24;
 constexpr uint8_t  FX_DATA_TILES_24_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_16 = 0x00B7B4;
+constexpr uint24_t FX_DATA_TILES_16 = 0x00B7BD;
 constexpr uint16_t FX_DATA_TILES_16_WIDTH  = 16;
 constexpr uint16_t FX_DATA_TILES_16HEIGHT  = 16;
 constexpr uint8_t  FX_DATA_TILES_16_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_8 = 0x00BAB8;
+constexpr uint24_t FX_DATA_TILES_8 = 0x00BAC1;
 constexpr uint16_t FX_DATA_TILES_8_WIDTH  = 8;
 constexpr uint16_t FX_DATA_TILES_8HEIGHT  = 8;
 constexpr uint8_t  FX_DATA_TILES_8_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_6 = 0x00BB7C;
+constexpr uint24_t FX_DATA_TILES_6 = 0x00BB85;
 constexpr uint16_t FX_DATA_TILES_6_WIDTH  = 6;
 constexpr uint16_t FX_DATA_TILES_6HEIGHT  = 6;
 constexpr uint8_t  FX_DATA_TILES_6_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_4 = 0x00BC10;
+constexpr uint24_t FX_DATA_TILES_4 = 0x00BC19;
 constexpr uint16_t FX_DATA_TILES_4_WIDTH  = 4;
 constexpr uint16_t FX_DATA_TILES_4HEIGHT  = 4;
 constexpr uint8_t  FX_DATA_TILES_4_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_TILES_2 = 0x00BC74;
+constexpr uint24_t FX_DATA_TILES_2 = 0x00BC7D;
 constexpr uint16_t FX_DATA_TILES_2_WIDTH  = 2;
 constexpr uint16_t FX_DATA_TILES_2HEIGHT  = 2;
 constexpr uint8_t  FX_DATA_TILES_2_FRAMES = 24;
 
-constexpr uint24_t FX_DATA_ABOUT = 0x00BCA8;
+constexpr uint24_t FX_DATA_ABOUT = 0x00BCB1;
 constexpr uint16_t FX_DATA_ABOUT_WIDTH  = 48;
 constexpr uint16_t FX_DATA_ABOUTHEIGHT  = 48;
 
-constexpr uint24_t FX_SOUND_INTRO = 0x00BDCC;
-constexpr uint24_t FX_SOUND_TROPHY = 0x00BE72;
-constexpr uint24_t FX_SOUND_LEVEL_SELECT = 0x00BF74;
-constexpr uint24_t FX_SOUND_LEVEL_ZOOM = 0x00BFF6;
+constexpr uint24_t FX_SOUND_INTRO = 0x00BDD5;
+constexpr uint24_t FX_SOUND_TROPHY = 0x00BE7B;
+constexpr uint24_t FX_SOUND_LEVEL_SELECT = 0x00BF7D;
+constexpr uint24_t FX_SOUND_LEVEL_ZOOM = 0x00BFFF;
