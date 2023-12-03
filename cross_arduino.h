@@ -30,6 +30,7 @@ void cross_print(int x, int y, int size, __uint24 address);
 void cross_drawPixel(int x, int y, bool colour);
 void cross_drawVLine(int x, int y, int length, bool colour);
 void cross_drawHLine(int x, int y, int length, bool colour);
+void cross_set_leds(uint8_t red, uint8_t green, uint8_t blue);
 void cross_drawBitmapTile(int x, int y, int width, int height, int colour, int mirror, float zoom, __uint24 fximage);
 bool cross_getPixel(int x, int y);
 void cross_setup();

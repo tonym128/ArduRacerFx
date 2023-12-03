@@ -255,12 +255,7 @@ void processGameMode() {
     }
   }
 
-  if (cross_input_a())
-  {
-    gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
-  }
-
-  if (cross_input_b())
+  if (cross_input_a() || cross_input_b())
   {
     gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
   }
@@ -636,11 +631,16 @@ void displayGameMode()
 
   // Display Speed
   int speed = FIXP_TO_FLOAT(gameState.player1.acceleration.force)/FIXP_TO_FLOAT(gameState.max_speed)*mapSize;
+  int lines = 0;
   for (int i = 1; i <= speed; i++)
   {
     cross_drawVLine(mapX + i, 0, 7, 1);
+
   }
   cross_drawHLine(mapX, 6, mapSize, 0);
+  
+  // Set LEDs
+  cross_set_leds(gameState.offroad ? 256 : 0, speed == mapSize ? 256 : 0, speed*25);
 
   if (gameState.paused)
   {
@@ -942,10 +942,9 @@ void inputLevelInfo()
 
   if (cross_input_up())
   {
-    setTimeout(100);
+    setTimeout(500);
     if (gameState.level < saveData.maxLevel)
        gameState.level++;
-    gameState.lastmode = -1;
     if (gameState.level > LEVELS)
       gameState.level = LEVELS;
     gameState.levelMap = getLevelMap(gameState.level);
@@ -954,9 +953,8 @@ void inputLevelInfo()
 
   if (cross_input_down())
   {
-      setTimeout(100);
+    setTimeout(500);
     gameState.level--;
-    gameState.lastmode = -1;
     if (gameState.level < 1)
       gameState.level = 1;
     gameState.levelMap = getLevelMap(gameState.level);
@@ -1265,7 +1263,8 @@ void update() {
   case 2: // Options Menu
     if (gameState.lastmode != gameState.mode)
     {
-      cross_play_audio(saveData.music, FX_SOUND_INTRO);
+      cross_stop_audio(saveData.music);
+      cross_play_audio(saveData.music, FX_SOUND_LEVEL_TUNE);
       gameState.lastmode = gameState.mode;
     }
     else
@@ -1279,13 +1278,16 @@ void update() {
   case 3: // About
     if (gameState.lastmode != gameState.mode)
     {
-      cross_play_audio(saveData.music, FX_SOUND_INTRO);
+      cross_stop_audio(saveData.music);
+      cross_play_audio(saveData.music, FX_SOUND_ABOUT);
       gameState.lastmode = gameState.mode;
       setTimeout(100);
     }
     if (!doTimeout()) {
       if (cross_input_a() || cross_input_b()) {
         setTimeout(100);
+        cross_stop_audio(saveData.music);
+        cross_play_audio(saveData.music, FX_SOUND_LEVEL_TUNE);
         gameState.mode = 2;
       }
     }
@@ -1293,7 +1295,7 @@ void update() {
   case 4: // Level Start
     if (gameState.lastmode != gameState.mode)
     {
-      cross_stop_audio(saveData.sound || saveData.music);
+      cross_stop_audio(saveData.music);
       cross_play_audio(saveData.music, FX_SOUND_LEVEL_SELECT);
       gameState.lastmode = gameState.mode;
       setTimeout(1000);
@@ -1373,7 +1375,8 @@ void update() {
   case 98: // Trophy Screen
     if (gameState.lastmode != gameState.mode)
     {
-      cross_play_audio(saveData.music, FX_SOUND_INTRO);
+      cross_stop_audio(saveData.music);
+      cross_play_audio(saveData.music, FX_SOUND_WIN);
       gameState.lastmode = gameState.mode;
     }
     if (!doTimeout()) {
@@ -1391,6 +1394,8 @@ void update() {
   case 99: // Tune Car
     if (gameState.lastmode != gameState.mode)
     {
+      cross_stop_audio(saveData.music);
+      cross_play_audio(saveData.music, FX_SOUND_LEVEL_TUNE);
       gameState.lastmode = gameState.mode;
       gameState.menuItem = 1;
       gameState.paused = 0;

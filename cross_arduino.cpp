@@ -124,6 +124,11 @@ void cross_drawVLine(int x, int y, int length, bool colour)
     arduboy.drawFastVLine(x,y,length,colour);
 }
 
+void cross_set_leds(uint8_t red, uint8_t green, uint8_t blue) 
+{
+    arduboy.setRGBled(red,green,blue);
+}
+
 static void cross_drawBitmapTile(int x, int y, int width, int height, int colour, int mirror, float zoom, __uint24 fximage)
 {
     #ifdef ARDBITMAP
