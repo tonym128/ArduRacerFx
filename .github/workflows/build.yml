@@ -30,7 +30,8 @@ jobs:
           # This works like this: when the platform is "arduino:samd", the
           # variable `fqbn` is set to "arduino:samd:nano_33_iot".
           - arduino-platform: "arduboy-homemade:avr"
-            fqbn: ""
+            fqbn: "arduboy-homemade:avr:arduboy-homemade:based_on=leonardo,boot=cathy3k,core=arduino-core"
+            additional-url: " --additional-urls https://raw.githubusercontent.com/MrBlinky/Arduboy-homemade-package/master/package_arduboy_homemade_index.json"
 
     # This is the platform GitHub will use to run our workflow, we
     # pick Windows for no particular reason.
@@ -53,19 +54,18 @@ jobs:
         run: |
           arduino-cli core update-index
           arduino-cli core install arduino:avr 
-          arduino-cli core install arduboy-homemade:avr --additional-urls https://raw.githubusercontent.com/MrBlinky/Arduboy-homemade-package/master/package_arduboy_homemade_index.json
+          arduino-cli core install ${{ matrix.arduino-platform }} ${{ matrix.additional-url }}
       
       # install arduboy libraries used 
       - name: Install Additional libraries
         run: |
           arduino-cli lib update-index
           arduino-cli lib install "Arduboy2"
-          arduino-cli lib install "ArduboyTones"
       
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile -e --fqbn=arduboy-homemade:avr:arduboy-homemade:based_on=leonardo,boot=cathy3k,core=arduino-core .\ArduRacerFx.ino
+        run: arduino-cli compile -e --fqbn=${{ matrix.fqbn }} .\ArduRacerFx.ino
     
       #prepare artificat folder 
       - name: prepare artifact
