@@ -2,7 +2,7 @@
 
 // #define DEBUG_MODE
 
-Arduboy2 arduboy;
+Arduboy2Base arduboy;
 uint16_t buffer[8]; 
 ArduboyTonesFX sound(arduboy.audio.enabled, buffer);
 #define ARDBITMAP
