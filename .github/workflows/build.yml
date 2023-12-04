@@ -80,6 +80,6 @@ jobs:
       - name: Store artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ArduRacerFX
+          name: ArduRacerFx
           path: release/
           # retention-days: 30
