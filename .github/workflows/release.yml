@@ -12,6 +12,9 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
     steps:
       #download artifact from last succesfull build
       - name: Download Artifacts
@@ -20,7 +23,7 @@ jobs:
           workflow: build.yaml
           workflow_conclusion: success
           path: artifacts
-      
+          repo-token: ${{ secrets.GITHUB_TOKEN }}      
       #rezip them
       - name: Rezip Artifacts
         working-directory: artifacts
