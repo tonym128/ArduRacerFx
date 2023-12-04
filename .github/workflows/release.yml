@@ -1,0 +1,37 @@
+name: Release A Version
+
+on:
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      #download artifact from last succesfull build
+      - name: Download Artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build.yaml
+          workflow_conclusion: success
+          path: artifacts
+      
+      #rezip them
+      - name: Rezip Artifacts
+        working-directory: artifacts
+        run: |
+          7z a "ArduRacerFx.zip" "./"
+      
+      #make a draf release
+      - name: Make Draft Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ArduRacerFx vx.x
+          draft: true
+          files: |
+            artifacts/ArduRacerFx.zip
