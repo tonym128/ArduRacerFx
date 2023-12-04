@@ -42,4 +42,26 @@ static __uint24 getTileSet(int pixelSize) {
   }
 }
 
+static uint8_t getTileSetOffset(int pixelSize) {
+  if (pixelSize<7) { return 6 - pixelSize; }
+  switch ((pixelSize-1)/8) {
+    case 0:
+      return 8 - pixelSize;
+    case 1:
+      return 16 - pixelSize;
+    case 2:
+      return 24 - pixelSize;
+    case 3:
+      return 32 - pixelSize;
+    case 4:
+      return 40 - pixelSize;
+    case 5:
+      return 48 - pixelSize;
+    case 6:
+      return 56 - pixelSize;
+    default:
+      return 64 - pixelSize;
+  }
+}
+
 #endif

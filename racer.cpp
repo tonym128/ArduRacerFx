@@ -1001,13 +1001,14 @@ bool displayLevelZoom()
 
   // Choose map
   __uint24 tiles = getTileSet(pixelSize);
+  uint8_t tileOffset = getTileSetOffset(pixelSize)/2;
 
   for (int y = 0; y < gameState.levelSize; y++)
   {
     for (int x = 0; x < gameState.levelSize; x++)
     {
       // Basic Screen Check
-      if ((x * pixelSize + pixelSize - headtox) > 0 && (y * pixelSize + pixelSize - headtoy) > 0 && (x * pixelSize - headtox) < endx && (y * pixelSize - headtoy < 64))
+      if ((x * pixelSize + pixelSize - headtox - tileOffset) > 0 && (y * pixelSize + pixelSize - headtoy - tileOffset) > 0 && (x * pixelSize - headtox - tileOffset) < endx && (y * pixelSize - headtoy - tileOffset < 64))
       {
         uint8_t levelTile = getLevelTile(gameState.levelMap, x, y, gameState.levelSize);
         int tilemap;
@@ -1028,7 +1029,7 @@ bool displayLevelZoom()
             tilemap = levelTile;
         }
 
-        FX::drawBitmap((int)(x * pixelSize - headtox),  (int)(y * pixelSize - headtoy), tiles, tilemap, dbmNormal);
+        FX::drawBitmap((int)(x * pixelSize - headtox - tileOffset),  (int)(y * pixelSize - headtoy - tileOffset), tiles, tilemap, dbmNormal);
       }
     }
   }

@@ -12,6 +12,11 @@
 - Github action
     - Build app and data
     - Build release artifact
+- Map explorer - Right press on level select
+    - Up down left right to pan
+    - A change zoom level 4x ?
+    - B exit back to level select
+- Fix zoom offset for tile zoomer
 
 # Bugs
 
