@@ -10,7 +10,7 @@ on: [push, pull_request]
 # started depends on how many configurations the matrix
 # will produce.
 jobs:
-  # This is the name of the job - can be whatever.
+  # This is the name of the job
   build-matrix:
 
     # Here we tell GitHub that the jobs must be determined
