@@ -51,8 +51,8 @@ jobs:
       # dynamically by the build matrix.
       - name: Install platform
         run: |
-          arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/MrBlinky/Arduboy-homemade-package/master/package_arduboy_homemade_index.json
-          arduino-cli core install arduboy-homemade:avr
+          arduino-cli core update-index
+          arduino-cli core install arduboy-homemade:avr --additional-urls https://raw.githubusercontent.com/MrBlinky/Arduboy-homemade-package/master/package_arduboy_homemade_index.json
       
       # install arduboy libraries used 
       - name: Install Additional libraries
