@@ -842,7 +842,7 @@ void displayMenu(int menuItem)
 
   cross_print(90, 30 + 0, 1, "Continue");
   cross_print(90, 30 + 8, 1, "Start");
-  cross_print(90, 30 + 16, 1,"Times");
+  cross_print(90, 30 + 16, 1,"Trophies");
   cross_print(90, 30 + 24, 1,"Options");
 
   cross_print(84, 30 + menuItem * 8, 1, ("*"));

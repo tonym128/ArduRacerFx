@@ -159,7 +159,7 @@ void cross_stop_audio(bool makeSound) {
 
 void cross_setup()
 {
-    arduboy.begin();
+    arduboy.boot();
     FX::begin(FX_DATA_PAGE, FX_SAVE_PAGE); // // initialise FX chip
     arduboy.initRandomSeed();
     arduboy.setFrameRate(FRAME_RATE);
