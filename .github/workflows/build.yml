@@ -60,7 +60,6 @@ jobs:
           arduino-cli lib update-index
           arduino-cli lib install "Arduboy2"
           arduino-cli lib install "ArduboyTones"
-          arduino-cli lib install --git-url https://github.com/MrBlinky/ArduboyFX.git
       
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
