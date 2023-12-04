@@ -22,7 +22,7 @@ This is a port of ArduRacer which includes usage of the FX chip on the ArduboyFX
 - Bigger maps for later levels
 - Car Tuning for optimising the performance to your preference or the track
 - 2x frames on car to track 16 directions
-- Integrated Map to give you some information of upcoming turns
+- Integrated Map to give you some information on upcoming turns
 - Much smoother intro zoom animations
 
 ## Technical callouts
@@ -34,5 +34,5 @@ This is a port of ArduRacer which includes usage of the FX chip on the ArduboyFX
 - Car Tuning feature
 - FX Save feature, no more eeprom issues
 - Integrated Map using dynamic map cache for high speed drawing
-- Bigger maps and allowing timing up to 99.99 seconds
-
+- Bigger maps
+- Allowing timing up to 99.99 seconds

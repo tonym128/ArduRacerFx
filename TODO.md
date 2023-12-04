@@ -1,18 +1,32 @@
 # TODO
 - Play game through on Arduboy making times for every level
-    - Once with mods as desired
-    - Once without car mods
-- Set 3rd place time to something fun to play
+    - Once without car mods, best time
+    - Set 3rd place time, okay time, no mods, no shortcuts
+    - Set better first place times
+- Run in online emulator
+- Write README.md for github repo with gameplay instructions
+- Write the Arduboy community topic
+- Add to http://www.bloggingadeadhorse.com/cart/Cart.html
+- Can I submit to ? https://arduboy.ried.cl/
+- Video demo
+- Github action
+    - Build app and data
+    - Build release artifact
+
+# Bugs
+
+# DONE
+- Arduino CLI compile works
+    - Removed bootscreen for a couple hundred bytes
+    - arduino-cli compile -e --fqbn=arduboy-homemade:avr:arduboy-homemade:based_on=leonardo,boot=cathy3k,core=arduino-core ArduRacerFx.ino
+- Play game through on Arduboy making times for every level
+    - First place, car tuning, everything goes, best possible time
+- Save data fails to save first time in Ardens (not an issue on device)
+    - FX Busy error
+    - Save file at startup if it's not found
 - Simplify any levels too hard to get 99.99 sec
 - Reset maxlevel to 1
 - Integrate into a FX image with multiple games
-
-# Bugs
-- Save data fails to save first time in Ardens
-    - FX Busy error
-    - Save file at startup if it's not found
-
-# DONE
 - Music and SFX
     - Music repeats on level select change
     - Music for Zoom needs work
