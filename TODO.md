@@ -3,19 +3,19 @@
     - Once without car mods, best time
     - Set 3rd place time, okay time, no mods, no shortcuts
     - Set better first place times
-- Run in online emulator
 - Write README.md for github repo with gameplay instructions
+    - Web Player - https://tiberiusbrown.github.io/Ardens/player.html?file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/ArduRacerFx.hex&file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/fxdata.bin
 - Write the Arduboy community topic
 - Add to http://www.bloggingadeadhorse.com/cart/Cart.html
 - Can I submit to ? https://arduboy.ried.cl/
 - Video demo
-- Github action
-    - Build app and data
-    - Build release artifact
 
 # Bugs
 
 # DONE
+- Run in online emulator
+- Github action
+    - Build app
 - Fix zoom offset for tile zoomer
 - Arduino CLI compile works
     - Removed bootscreen for a couple hundred bytes
