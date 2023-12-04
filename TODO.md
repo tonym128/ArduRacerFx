@@ -12,17 +12,14 @@
 - Github action
     - Build app and data
     - Build release artifact
-- Map explorer - Right press on level select
-    - Up down left right to pan
-    - A change zoom level 4x ?
-    - B exit back to level select
-- Fix zoom offset for tile zoomer
 
 # Bugs
 
 # DONE
+- Fix zoom offset for tile zoomer
 - Arduino CLI compile works
     - Removed bootscreen for a couple hundred bytes
+    - Used base for a bunch of space savings!
     - arduino-cli compile -e --fqbn=arduboy-homemade:avr:arduboy-homemade:based_on=leonardo,boot=cathy3k,core=arduino-core ArduRacerFx.ino
 - Play game through on Arduboy making times for every level
     - First place, car tuning, everything goes, best possible time
@@ -115,3 +112,9 @@
 # Failures
 - Getting framerate sufficient for grayscale
 
+# Skipped for release
+- Map explorer - Right press on level select
+    - Up down left right to pan
+    - A change zoom level 4x ?
+    - B exit back to level select
+- Custom map builder
