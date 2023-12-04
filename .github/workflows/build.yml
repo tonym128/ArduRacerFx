@@ -29,7 +29,7 @@ jobs:
         include:
           # This works like this: when the platform is "arduino:samd", the
           # variable `fqbn` is set to "arduino:samd:nano_33_iot".
-          - arduino-platform: "arduboy-homemade:avr"
+          - arduino-platform: "arduboy-homemade"
             fqbn: "arduboy-homemade:avr:arduboy-homemade:based_on=leonardo,boot=cathy3k,core=arduino-core"
 
     # This is the platform GitHub will use to run our workflow, we
@@ -70,7 +70,7 @@ jobs:
       - name: prepare artifact
         run: |
           mkdir release 
-          copy .\build\arduino.avr.leonardo\ArduRacerFx.ino.hex .\release\ArduRacerFx.hex
+          copy .\build\arduboy-homemade.avr.arduboy-homemade\ArduRacerFx.ino.hex .\release\ArduRacerFx.hex
           copy .\Extra\ArduRacerFx.png release\ArduRacerFx.png
           copy .\Extra\fxdata.bin release\fxdata.bin
           copy .\Extra\fxdata-data.bin release\fxdata-data.bin
