@@ -29,8 +29,8 @@ jobs:
         include:
           # This works like this: when the platform is "arduino:samd", the
           # variable `fqbn` is set to "arduino:samd:nano_33_iot".
-          - arduino-platform: "arduino:avr"
-            fqbn: "arduino:avr:leonardo"
+          - arduino-platform: "arduboy-homemade:avr"
+            fqbn: "arduboy-homemade:avr:arduboy-homemade:based_on=leonardo,boot=cathy3k,core=arduino-core"
 
     # This is the platform GitHub will use to run our workflow, we
     # pick Windows for no particular reason.
@@ -51,7 +51,7 @@ jobs:
       # dynamically by the build matrix.
       - name: Install platform
         run: |
-          arduino-cli core update-index
+          arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/MrBlinky/Arduboy-homemade-package/master/package_arduboy_homemade_index.json
           arduino-cli core install ${{ matrix.arduino-platform }}
       
       # install arduboy libraries used 
