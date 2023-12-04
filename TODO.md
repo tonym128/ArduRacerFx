@@ -16,6 +16,7 @@
 - Run in online emulator
 - Github action
     - Build app
+    - Build release
 - Fix zoom offset for tile zoomer
 - Arduino CLI compile works
     - Removed bootscreen for a couple hundred bytes
