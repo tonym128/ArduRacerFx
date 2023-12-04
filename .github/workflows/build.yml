@@ -64,7 +64,7 @@ jobs:
       # Finally, we compile the sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile -e --fqbn= ${{ matrix.fqbn }} .\ArduRacerFx.ino
+        run: arduino-cli compile -e --fqbn=${{ matrix.fqbn }} .\ArduRacerFx.ino
     
       #prepare artificat folder 
       - name: prepare artifact
