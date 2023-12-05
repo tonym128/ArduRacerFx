@@ -71,7 +71,7 @@ jobs:
       - name: prepare artifact
         run: |
           mkdir release 
-          copy .\build\arduboy-homemade.avr.arduboy-homemade\ArduRacerFx.ino.hex \release\ArduRacerFx.hex
+          copy .\build\arduboy-homemade.avr.arduboy-homemade\ArduRacerFx.ino.hex .\release\ArduRacerFx.hex
           copy .\Extra\ArduRacerFx.png release\ArduRacerFx.png
           copy .\Extra\fxdata.bin release\fxdata.bin
           copy .\Extra\fxdata-data.bin release\fxdata-data.bin
