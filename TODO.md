@@ -12,6 +12,11 @@
 
 # Bugs
 
+# Notable fixed bugs
+- Disabled brake, enabled dual acceleration
+- Could turn around in the pause menu
+- Max level was still locked at 10 when I was playing through
+
 # DONE
 - Run in online emulator
 - Github action

@@ -85,15 +85,11 @@ jobs:
           path: release/
           # retention-days: 30
 
-      # Download and release artifact, if tagged build
-      - uses: actions/download-artifact@v3
-        name: Download Artifacts
-        if: startsWith(github.ref, 'refs/tags/')
-        id: download
-        with:
-          path: artifacts
+      # release artifact, if tagged build
+      - name: Create release artifact, if tagged
+        run: zip -r -q ArduRacerFx.zip release
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts
+          files: ArduRacerFx.zip
