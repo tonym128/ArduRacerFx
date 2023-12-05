@@ -211,20 +211,24 @@ void processCarTune() {
 }
 
 void processGameMode() {
+  // Paused game processing
   if (gameState.paused)
   {
     if (cross_input_down())
     {
       gameState.mode = 4;
     }
+
+    if (cross_input_a() || cross_input_b())
+    {
+      if (gameState.paused && !doTimeout())
+        gameState.paused = false;
+    }
+    // Shortcut exit, we don't do anything else
+    return;
   }
 
-  if (cross_input_a() || cross_input_b())
-  {
-    if (gameState.paused && !doTimeout())
-      gameState.paused = false;
-  }
-
+  // Game play input
   if (cross_input_up())
   {
     gameState.paused = true;
@@ -243,23 +247,24 @@ void processGameMode() {
     gameState.player1.rotation += gameState.max_turn_speed * tFrameMs;
   }
 
+  // Process Player Rotation
   if (gameState.player1.rotation < 0)
     gameState.player1.rotation = PI * 2;
   if (gameState.player1.rotation > PI * 2)
     gameState.player1.rotation = 0;
 
-  if (gameState.laptimer && !gameState.paused)
+  if (cross_input_a() || cross_input_b())
+  {
+    gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
+  }
+
+  if (gameState.laptimer)
   {
     gameState.laptimes[(gameState.curlap)] += tFrameMs;
     if (gameState.laptimes[(gameState.curlap)] > 99990)
     {
       gameState.laptimes[(gameState.curlap)] = 99990;
     }
-  }
-
-  if (cross_input_a() || cross_input_b())
-  {
-    gameState.player1.acceleration.force += gameState.acceleration * tFrameMs;
   }
 }
 
