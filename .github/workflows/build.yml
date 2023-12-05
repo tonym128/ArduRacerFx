@@ -79,7 +79,7 @@ jobs:
           
       # upload our artifact
       - name: Store artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ArduRacerFx
           path: release/
