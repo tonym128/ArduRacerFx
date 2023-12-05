@@ -16,7 +16,8 @@ jobs:
         id: download
         with:
           name: 'ArduRacerFx'
+          path: /artifacts
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ArduRacerFx
+          files: /artifacts
