@@ -392,7 +392,7 @@ void updateGameMode()
               uint16_t levelTime = FX::readIndexedUInt16(FX_LEVEL_TIMES, (gameState.level - 1) * 3 + 2);
               if (saveData.BestLapTimes[gameState.level - 1] < levelTime)
               { // If the time is better than 3rd place, we can go forwards
-                if (saveData.maxLevel < gameState.level + 1 && gameState.level < 10)
+                if (saveData.maxLevel < gameState.level + 1 && gameState.level < LEVELS)
                   saveData.maxLevel = gameState.level + 1;
               }
 
