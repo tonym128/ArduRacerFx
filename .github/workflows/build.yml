@@ -87,7 +87,7 @@ jobs:
 
       # release artifact, if tagged build
       - name: Create release artifact, if tagged
-        run: zip -r -q ArduRacerFx.zip release
+        run: Compress-Archive -Path release/* -Destination ArduRacerFx.zip
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
