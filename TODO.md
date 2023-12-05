@@ -1,8 +1,4 @@
 # TODO
-- Play game through on Arduboy making times for every level
-    - Once without car mods, best time
-    - Set 3rd place time, okay time, no mods, no shortcuts
-    - Set better first place times
 - Write README.md for github repo with gameplay instructions
     - Web Player - https://tiberiusbrown.github.io/Ardens/player.html?file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/ArduRacerFx.hex&file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/fxdata.bin
 - Write the Arduboy community topic
@@ -18,6 +14,10 @@
 - Max level was still locked at 10 when I was playing through
 
 # DONE
+- Play game through on Arduboy making times for every level
+    - Once without car mods, best time
+    - Set 3rd place time, okay time, no mods, no shortcuts
+    - Set better first place times
 - Run in online emulator
 - Github action
     - Build app
@@ -108,6 +108,7 @@
 - Updated Draw routines for FX
 - ArduBitmap ported to FX for 1 use case
 - MipMap zooming using FX draw
+    - Doing the offset for the tile differences
 - Dynamic tilemap caching and windowing
 - Adding ArduTonesFX
 - Debugging
