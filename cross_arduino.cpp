@@ -30,7 +30,7 @@ SaveData cross_load() {
 }
 
 uint8_t checkDesired(uint8_t desired) {
-    uint8_t desiredKeyPresses[11] = {1,1,2,2,3,4,3,4,6,5,6};
+    uint8_t desiredKeyPresses[11] = {1,1,2,2,3,4,3,4,6,5,5};
     if (arduboy.justPressed(UP_BUTTON)) {
         // Serial.write("Pressed u\n");
         return desiredKeyPresses[desired] == 1 ? 2 : 1;
