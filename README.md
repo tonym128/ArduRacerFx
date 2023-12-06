@@ -156,13 +156,13 @@ If you beat 1st place, you beat the best time I could get, with the best tuning 
 - Left - Turn left
 - Right - Turn right
 - A - Accelerate
-- B - Accelerate (after months of testing, I decided you don't need brakes, and I didn't have space for an option to swap )
+- B - Accelerate (after months of testing, I decided you don't need brakes, and I didn't have space for an option to swap buttons)
 - Up - Pause the game
 
 ### Pause menu controls
 
 - A or B - Continue
-- Down - Return to level select, if you had recorded a best lap it will still be saved.
+- Down - Return to level select, if you recorded a best lap, it will still be saved.
 
 ### HUD On screen while racing
 
