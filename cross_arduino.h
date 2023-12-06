@@ -18,6 +18,7 @@ bool cross_input_right();
 bool cross_input_a();
 bool cross_input_b();
 
+uint8_t checkDesired(uint8_t desired);
 bool cross_input_up_now();
 bool cross_input_down_now();
 bool cross_input_left_now();

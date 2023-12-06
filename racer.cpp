@@ -845,6 +845,10 @@ void displayMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
+  if (gameState.desiredActivated) {
+    cross_print(90, 30 - 8, 1, "********");
+  }
+
   cross_print(90, 30 + 0, 1, "Continue");
   cross_print(90, 30 + 8, 1, "Start");
   cross_print(90, 30 + 16, 1,"Trophies");
@@ -1394,13 +1398,19 @@ void update() {
     if (gameState.lastmode != gameState.mode)
     {
       setLevelDetails();
-//      void setCarMax() {
+      if (gameState.desiredActivated) {
+        gameState.max_turn_speed = gameState.default_max_turn_speed + (4) * gameState.mod_turn;
+        gameState.max_speed = gameState.default_max_speed + (4)* gameState.mod_max_speed;
+        gameState.acceleration = gameState.default_acceleration + (4) * gameState.mod_acceleration;
+        gameState.offroad = gameState.max_speed/4;
+        gameState.offroad_neg = gameState.max_speed/4;
+      } else {
         gameState.max_turn_speed = gameState.default_max_turn_speed + (saveData.car_turn - 4) * gameState.mod_turn;
         gameState.max_speed = gameState.default_max_speed + (saveData.car_maxspeed -4)* gameState.mod_max_speed;
         gameState.acceleration = gameState.default_acceleration + (saveData.car_acceleration -4) * gameState.mod_acceleration;
         gameState.offroad = gameState.max_speed/4;
         gameState.offroad_neg = gameState.max_speed/4;
-//      }
+      }
       gameState.laptimer = true;
       gameState.lastmode = gameState.mode;
     }
@@ -1526,9 +1536,25 @@ double renderTime;
 
 void racerLoop()
 {
-  if (!cross_loop_start())
+  if (!cross_loop_start()) {
     return;
+  }
 
+  if (!gameState.desiredActivated) {
+    uint8_t keyCheck = checkDesired(gameState.currentKeyPress);
+    switch (keyCheck) {
+      case 1: 
+        gameState.currentKeyPress = 0;
+        break;
+      case 2:
+        gameState.currentKeyPress += 1;
+        break;
+    }
+
+    if (gameState.currentKeyPress == 11) {
+      gameState.desiredActivated = true;
+    }
+  }
 #ifdef PERF_RENDER
   renderTime = getMs();
 #endif

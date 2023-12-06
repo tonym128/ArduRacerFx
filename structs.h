@@ -40,7 +40,8 @@ struct SaveData
 };
 
 struct GameState {
-
+  uint8_t currentKeyPress = 0;
+  bool desiredActivated = false;
   uint8_t level;
   __uint24 levelMap;
   uint8_t levelSize;
