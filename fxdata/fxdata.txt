@@ -59,6 +59,33 @@
 ********************************************************************************
   ArduRacerFX
 *******************************************************************************/
+// FX Strings
+string FX_STR_PAUSED = "Paused"
+string FX_STR_CONTINUE = "Continue"
+string FX_STR_TROPHIES = "Trophies"
+string FX_STR_TIMES = "Times"
+string FX_STR_START = "Start"
+string FX_STR_OPTIONS = "Options"
+string FX_STR_ABOUT = "About"
+string FX_STR_SOUND = "SFX"
+string FX_STR_MUSIC = "Music"
+string FX_STR_MAP = "Map"
+string FX_STR_AB_CONT = "A_/_B_-_Continue"
+string FX_STR_LEVEL_SELECT = "Down_-_Level_Select"
+string FX_STR_MADE_BY = "Made_By"
+string FX_STR_GITHUB = "github"
+string FX_STR_TWITTER = "X"
+string FX_STR_TONYM128 = "tonym128"
+string FX_STR_PRESSA = "Press_A"
+string FX_STR_TOSTART = "To_Start"
+string FX_STR_NEXTRETRY = "A_-_Next\nB_-_Retry"
+string FX_STR_LTIMES = "L_-_Times"
+string FX_STR_RGOAL = "R_-_Goal"
+string FX_STR_LEFT = "Left_To"
+string FX_STR_TOTUNE = "Tune_Car"
+string FX_STR_STAR = "*"
+string FX_STR_MORE = ">"
+
 // FX Ardbitmaps
 // Compressed
 uint8_t FX_DATA_1[] = {

@@ -652,12 +652,12 @@ void displayGameMode()
 
   if (gameState.paused)
   {
-    cross_print(0, 20, 3, "Paused");
+    cross_print(0, 20, 3, FX_STR_PAUSED);
     for (int i = 0; i < 16; i++)
       cross_drawHLine(0, i + 48, 64, 0);
 
-    cross_print(0, 48, 1, "A / B - Continue");
-    cross_print(0, 56, 1, "Down - Level Select");
+    cross_print(0, 48, 1, FX_STR_AB_CONT);
+    cross_print(0, 56, 1, FX_STR_LEVEL_SELECT);
   }
 
 #ifdef PERF_RENDER
@@ -729,29 +729,29 @@ void displayOptionsMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, "About");
-  cross_print(90, 30 + 8, 1, "Music");
-  cross_print(90, 30 + 16, 1,"SFX");
-  cross_print(90, 30 + 24, 1,"Map");
+  cross_print(90, 30 + 0, 1, FX_STR_ABOUT);
+  cross_print(90, 30 + 8, 1, FX_STR_MUSIC);
+  cross_print(90, 30 + 16, 1,FX_STR_SOUND);
+  cross_print(90, 30 + 24, 1,FX_STR_MAP);
   
   if (saveData.music > 0)
-    cross_print(90 + 5 * 6, 30 + 8, 1, ("*"));
+    cross_print(90 + 5 * 6, 30 + 8, 1, FX_STR_STAR);
   if (saveData.sound > 0)
-    cross_print(90 + 5 * 6, 30 + 16, 1, ("*"));
+    cross_print(90 + 5 * 6, 30 + 16, 1, FX_STR_STAR);
   if (saveData.map > 0)
-    cross_print(90 + 5 * 6, 30 + 24, 1, ("*"));
+    cross_print(90 + 5 * 6, 30 + 24, 1, FX_STR_STAR);
 
-  cross_print(84, 30 + menuItem * 8, 1, ("*"));
+  cross_print(84, 30 + menuItem * 8, 1, FX_STR_STAR);
 }
 
 void displayAbout() {
   FX::drawBitmap(0, 0, FX_DATA_ABOUT, 0, dbmNormal);
 
-  cross_print(60, 0, 1,  "Made_By");
-  cross_print(60, 20, 1, "github");
-  cross_print(60, 40, 1, "X");
+  cross_print(60, 0, 1,  FX_STR_MADE_BY);
+  cross_print(60, 20, 1, FX_STR_GITHUB);
+  cross_print(60, 40, 1, FX_STR_TWITTER);
   for (int i = 0; i < 3; i++) {
-    cross_print(70, 10 + i * 20, 1, "tonym128");
+    cross_print(70, 10 + i * 20, 1, FX_STR_TONYM128);
   }
 }
 
@@ -845,15 +845,15 @@ void displayMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  cross_print(90, 30 + 0, 1, "Continue");
-  cross_print(90, 30 + 8, 1, "Start");
-  cross_print(90, 30 + 16, 1,"Trophies");
-  cross_print(90, 30 + 24, 1,"Options");
+  cross_print(90, 30 + 0, 1,  FX_STR_CONTINUE);
+  cross_print(90, 30 + 8, 1,  FX_STR_START);
+  cross_print(90, 30 + 16, 1, FX_STR_TROPHIES);
+  cross_print(90, 30 + 24, 1, FX_STR_OPTIONS);
 
   if (gameState.desiredActivated) {
-    cross_print(84, 30 + menuItem * 8, 1, "|");
+    cross_print(84, 30 + menuItem * 8, 1, FX_STR_MORE);
   } else {
-    cross_print(84, 30 + menuItem * 8, 1, "*");
+    cross_print(84, 30 + menuItem * 8, 1, FX_STR_STAR);
   }
 }
 
@@ -928,12 +928,12 @@ void displayLevelInfo()
   if (doTimeout()) {}
   else if ((getCurrentMs() / 1000) % 2 == 0)
     {
-      cross_print(64, 64 - 16, 1, "Press A");
-      cross_print(64, 64 - 8, 1,  "To Start");
+      cross_print(64, 64 - 16, 1, FX_STR_PRESSA);
+      cross_print(64, 64 - 8, 1,  FX_STR_TOSTART);
     }
   else {
-      cross_print(64, 64 - 16, 1, "Left To");
-      cross_print(64, 64 - 8, 1, "Tune Car");
+      cross_print(64, 64 - 16, 1, FX_STR_LEFT);
+      cross_print(64, 64 - 8, 1, FX_STR_TOTUNE);
   }
 };
 
@@ -1051,7 +1051,7 @@ void drawContinueMenu()
   if ((getCurrentMs() / 1000) % 2 == 0)
   {
     if (saveData.maxLevel > gameState.level)
-      cross_print(64, 64 - 16, 1, "A - Next\nB - Retry");
+      cross_print(64, 64 - 16, 1, FX_STR_NEXTRETRY);
   }
 }
 
@@ -1065,7 +1065,7 @@ void displayCarTune()
   cross_print(6, 2+45, 1, "Points");
   cross_print(6, 59, 1, "A - Save, B - Reset");
 
-  cross_print(0,2+5+10*gameState.menuItem,1,"*");
+  cross_print(0,2+5+10*gameState.menuItem,1,FX_STR_STAR);
 
   int i = 0;
   for (i = 15; i < 60; i += 10) 
@@ -1073,22 +1073,28 @@ void displayCarTune()
     
   for (i = 45; i < 116; i += 10) 
     cross_drawVLine(i, 15, 40, 1);
+  int speed = saveData.car_maxspeed;
+  int accel = saveData.car_acceleration;
+  int turn = saveData.car_turn;
+  int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+  if (gameState.desiredActivated) {
+    speed = accel = turn = freePoints = 7;
+  }
 
   int y = 18;
-  for (i = 0; i < gameState.desiredActivated ? 8 : saveData.car_maxspeed; i++) {
+  for (i = 0; i < speed; i++) {
     cross_print(3+45+i*10,y,1,"X");
   }
   y+=10;
-  for (i = 0; i < gameState.desiredActivated ? 8 : saveData.car_acceleration; i++) {
+  for (i = 0; i < accel; i++) {
     cross_print(3+45+i*10,y,1,"X");
   }
 
   y+=10;
-  for (i = 0; i < gameState.desiredActivated ? 8 : saveData.car_turn; i++) {
+  for (i = 0; i < turn; i++) {
     cross_print(3+45+i*10,y,1,"X");
   }
 
-  int freePoints = gameState.desiredActivated ? 8 : gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
   y+=10;
   for (i = 0; i < freePoints; i++) {
     cross_print(3+45+i*10,y,1,"X");
@@ -1169,7 +1175,7 @@ void drawGoalTimes()
   cross_drawHLine(64, 46, 64, 1);
 
   drawContinueMenu();
-  cross_print(0, 64 - 7, 1, "L - Times");
+  cross_print(0, 64 - 7, 1, FX_STR_LTIMES);
 }
 
 void drawAllTimes()
@@ -1185,7 +1191,7 @@ void drawAllTimes()
   }
 
   drawContinueMenu();
-  cross_print(0, 64 - 7, 1, "R - Goal");
+  cross_print(0, 64 - 7, 1, FX_STR_RGOAL);
   cross_drawHLine(64, 64 - 17, 128 - 64, 1);
 }
 
