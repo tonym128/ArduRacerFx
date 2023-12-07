@@ -32,22 +32,16 @@ SaveData cross_load() {
 uint8_t checkDesired(uint8_t desired) {
     uint8_t desiredKeyPresses[11] = {1,1,2,2,3,4,3,4,6,5,5};
     if (arduboy.justPressed(UP_BUTTON)) {
-        // Serial.write("Pressed u\n");
         return desiredKeyPresses[desired] == 1 ? 2 : 1;
     } else if (arduboy.justPressed(DOWN_BUTTON)) {
-        // Serial.write("Pressed d\n");
         return desiredKeyPresses[desired] == 2 ? 2 : 1;
     } else if (arduboy.justPressed(LEFT_BUTTON)) {
-        // Serial.write("Pressed l\n");
         return desiredKeyPresses[desired] == 3 ? 2 : 1;
     } else if (arduboy.justPressed(RIGHT_BUTTON)) {
-        // Serial.write("Pressed r\n");
         return desiredKeyPresses[desired] == 4 ? 2 : 1;
     } else if (arduboy.justPressed(A_BUTTON)) {
-        // Serial.write("Pressed a\n");
         return desiredKeyPresses[desired] == 5 ? 2 : 1;
     } else if (arduboy.justPressed(B_BUTTON)) {
-        // Serial.write("Pressed b\n");
         return desiredKeyPresses[desired] == 6 ? 2 : 1;
     };
     

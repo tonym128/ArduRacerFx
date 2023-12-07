@@ -141,7 +141,7 @@ void processCarTune() {
   if (cross_input_up()) {gameState.menuItem--;setTimeout(100);}
   if (cross_input_down()) {gameState.menuItem++;setTimeout(100);}
 
-  if (cross_input_left()) {
+  if (!gameState.desiredActivated && cross_input_left()) {
     switch (gameState.menuItem)
     {
     case 1: // Top Speed
@@ -165,7 +165,7 @@ void processCarTune() {
     }
   }
 
-  if (cross_input_right()) {
+  if (!gameState.desiredActivated && cross_input_right()) {
     int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
     if (freePoints <= 0) {
       return;
@@ -203,7 +203,7 @@ void processCarTune() {
     setTimeout(100);
   }
 
-  if (cross_input_b()) {
+  if (!gameState.desiredActivated && cross_input_b()) {
     saveData.car_maxspeed = 4;
     saveData.car_acceleration = 4;
     saveData.car_turn = 4;
@@ -845,16 +845,16 @@ void displayMenu(int menuItem)
   FX::drawBitmap(0 ,0 , FX_DATA_LOGO   , 0, dbmNormal);
   FX::drawBitmap(50,15, FX_DATA_LOGO_FX, 0, dbmMasked);
 
-  if (gameState.desiredActivated) {
-    cross_print(90, 30 - 8, 1, "********");
-  }
-
   cross_print(90, 30 + 0, 1, "Continue");
   cross_print(90, 30 + 8, 1, "Start");
   cross_print(90, 30 + 16, 1,"Trophies");
   cross_print(90, 30 + 24, 1,"Options");
 
-  cross_print(84, 30 + menuItem * 8, 1, ("*"));
+  if (gameState.desiredActivated) {
+    cross_print(84, 30 + menuItem * 8, 1, "|");
+  } else {
+    cross_print(84, 30 + menuItem * 8, 1, "*");
+  }
 }
 
 void displayMap()
@@ -1075,20 +1075,20 @@ void displayCarTune()
     cross_drawVLine(i, 15, 40, 1);
 
   int y = 18;
-  for (i = 0; i < saveData.car_maxspeed; i++) {
+  for (i = 0; i < gameState.desiredActivated ? 8 : saveData.car_maxspeed; i++) {
     cross_print(3+45+i*10,y,1,"X");
   }
   y+=10;
-  for (i = 0; i < saveData.car_acceleration; i++) {
+  for (i = 0; i < gameState.desiredActivated ? 8 : saveData.car_acceleration; i++) {
     cross_print(3+45+i*10,y,1,"X");
   }
 
   y+=10;
-  for (i = 0; i < saveData.car_turn; i++) {
+  for (i = 0; i < gameState.desiredActivated ? 8 : saveData.car_turn; i++) {
     cross_print(3+45+i*10,y,1,"X");
   }
 
-  int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+  int freePoints = gameState.desiredActivated ? 8 : gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
   y+=10;
   for (i = 0; i < freePoints; i++) {
     cross_print(3+45+i*10,y,1,"X");
@@ -1552,7 +1552,7 @@ void racerLoop()
     }
 
     if (gameState.currentKeyPress == 11) {
-      gameState.desiredActivated = true;
+        gameState.desiredActivated = true;
     }
   }
 #ifdef PERF_RENDER
