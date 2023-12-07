@@ -1077,6 +1077,7 @@ void displayCarTune()
   int accel = saveData.car_acceleration;
   int turn = saveData.car_turn;
   int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
+  
   if (gameState.desiredActivated) {
     speed = accel = turn = freePoints = 7;
   }
