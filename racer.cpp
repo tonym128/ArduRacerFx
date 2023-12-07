@@ -7,6 +7,7 @@ SaveData saveData;
 GameState gameState;
 unsigned long tFrameMs = 0;
 constexpr int ZOOM_TIME = 6000;
+uint24_t pointer = FX_STR_STAR;
 
 // #define DEBUG_MODE
 // #define PERF_RENDER
@@ -741,7 +742,7 @@ void displayOptionsMenu(int menuItem)
   if (saveData.map > 0)
     cross_print(90 + 5 * 6, 30 + 24, 1, FX_STR_STAR);
 
-  cross_print(84, 30 + menuItem * 8, 1, FX_STR_STAR);
+  cross_print(84, 30 + menuItem * 8, 1, pointer);
 }
 
 void displayAbout() {
@@ -850,11 +851,7 @@ void displayMenu(int menuItem)
   cross_print(90, 30 + 16, 1, FX_STR_TROPHIES);
   cross_print(90, 30 + 24, 1, FX_STR_OPTIONS);
 
-  if (gameState.desiredActivated) {
-    cross_print(84, 30 + menuItem * 8, 1, FX_STR_MORE);
-  } else {
-    cross_print(84, 30 + menuItem * 8, 1, FX_STR_STAR);
-  }
+  cross_print(84, 30 + menuItem * 8, 1, pointer);
 }
 
 void displayMap()
@@ -1065,7 +1062,7 @@ void displayCarTune()
   cross_print(6, 2+45, 1, "Points");
   cross_print(6, 59, 1, "A - Save, B - Reset");
 
-  cross_print(0,2+5+10*gameState.menuItem,1,FX_STR_STAR);
+  cross_print(0,2+5+10*gameState.menuItem,1,pointer);
 
   int i = 0;
   for (i = 15; i < 60; i += 10) 
@@ -1077,7 +1074,7 @@ void displayCarTune()
   int accel = saveData.car_acceleration;
   int turn = saveData.car_turn;
   int freePoints = gameState.car_tune_total - saveData.car_maxspeed - saveData.car_acceleration - saveData.car_turn;
-  
+
   if (gameState.desiredActivated) {
     speed = accel = turn = freePoints = 7;
   }
@@ -1560,6 +1557,7 @@ void racerLoop()
 
     if (gameState.currentKeyPress == 11) {
         gameState.desiredActivated = true;
+        pointer = FX_STR_MORE;
     }
   }
 #ifdef PERF_RENDER
