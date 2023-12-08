@@ -12,7 +12,8 @@ This is a port of [ArduRacer](https://community.arduboy.com/t/arduracer-a-trackm
 
 **Gameplay**
 
-![Game Play Gif](Extra/GamePlay.gif)
+[![Game Play Gif](Extra/GamePlay.gif)](https://tiberiusbrown.github.io/Ardens/player.html?file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/ArduRacerFx.hex&file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/fxdata.bin)
+[Click to play online](https://tiberiusbrown.github.io/Ardens/player.html?file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/ArduRacerFx.hex&file=https://raw.githubusercontent.com/tonym128/ArduRacerFx/main/Extra/fxdata.bin)
 
 ## New FX Features
 - Locked 60 FPS gameplay
