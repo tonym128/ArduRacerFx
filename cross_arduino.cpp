@@ -111,21 +111,21 @@ void cross_print(int x, int y, int size, char *string) {
     lineX = x;
     lineY = y;
 
-   for (int i = 0; i < strlen(string); i++) {
-        if (string[i]=='\n') {
+    for (const char * pointer = string; *pointer != '\0'; ++pointer) {
+        if (*pointer == '\n') {
             lineY += sizeY + spacingY;
             lineX = x;
             continue;
         }
         
-        if (i > 0) {
-            cross_drawVLine(lineX-spacingX,lineY,sizeY, 0);
+        if (pointer != string) {
+            cross_drawVLine(lineX - spacingX, lineY, sizeY, 0);
         }
 
-        int fontId = FXFONT(string[i]);
+        int fontId = FXFONT(*pointer);
         FX::drawBitmap(lineX, lineY, FX_DATA_FONT46, fontId, dbmNormal);
-        lineX += (sizeX+spacingX);
-   }
+        lineX += (sizeX + spacingX);
+    }
 }
 
 void cross_print(int x, int y, int size, __uint24 address) {
